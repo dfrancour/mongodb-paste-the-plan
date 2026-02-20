@@ -1,0 +1,302 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "airbnb.listingsAndReviews",
+    "parsedQuery": {
+      "$or": [
+        {
+          "accommodates": {
+            "$eq": 2
+          }
+        },
+        {
+          "room_type": {
+            "$eq": "Entire home/apt"
+          }
+        },
+        {
+          "bathrooms": {
+            "$gte": 2
+          }
+        }
+      ]
+    },
+    "indexFilterSet": false,
+    "queryHash": "ACAEE5AC",
+    "planCacheShapeHash": "ACAEE5AC",
+    "planCacheKey": "DC69F634",
+    "optimizationTimeMillis": 1,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "SUBPLAN",
+      "inputStage": {
+        "stage": "FETCH",
+        "inputStage": {
+          "stage": "OR",
+          "inputStages": [
+            {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "room_type": 1
+              },
+              "indexName": "room_type_1",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "room_type": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "room_type": [
+                  "[\"Entire home/apt\", \"Entire home/apt\"]"
+                ]
+              }
+            },
+            {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "accommodates": 1
+              },
+              "indexName": "accommodates_1",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "accommodates": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "accommodates": [
+                  "[2, 2]"
+                ]
+              }
+            },
+            {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "bathrooms": 1
+              },
+              "indexName": "bathrooms_1",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "bathrooms": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "bathrooms": [
+                  "[2, inf.0]"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 4779,
+    "executionTimeMillis": 3,
+    "totalKeysExamined": 6624,
+    "totalDocsExamined": 4779,
+    "executionStages": {
+      "isCached": false,
+      "stage": "SUBPLAN",
+      "nReturned": 4779,
+      "executionTimeMillisEstimate": 1,
+      "works": 6627,
+      "advanced": 4779,
+      "needTime": 1847,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "inputStage": {
+        "stage": "FETCH",
+        "nReturned": 4779,
+        "executionTimeMillisEstimate": 0,
+        "works": 6627,
+        "advanced": 4779,
+        "needTime": 1847,
+        "needYield": 0,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 1,
+        "docsExamined": 4779,
+        "alreadyHasObj": 0,
+        "inputStage": {
+          "stage": "OR",
+          "nReturned": 4779,
+          "executionTimeMillisEstimate": 0,
+          "works": 6627,
+          "advanced": 4779,
+          "needTime": 1847,
+          "needYield": 0,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 1,
+          "dupsTested": 6624,
+          "dupsDropped": 1845,
+          "inputStages": [
+            {
+              "stage": "IXSCAN",
+              "nReturned": 3489,
+              "executionTimeMillisEstimate": 0,
+              "works": 3490,
+              "advanced": 3489,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 0,
+              "restoreState": 0,
+              "isEOF": 1,
+              "keyPattern": {
+                "room_type": 1
+              },
+              "indexName": "room_type_1",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "room_type": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "room_type": [
+                  "[\"Entire home/apt\", \"Entire home/apt\"]"
+                ]
+              },
+              "keysExamined": 3489,
+              "seeks": 1,
+              "dupsTested": 0,
+              "dupsDropped": 0
+            },
+            {
+              "stage": "IXSCAN",
+              "nReturned": 2052,
+              "executionTimeMillisEstimate": 0,
+              "works": 2053,
+              "advanced": 2052,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 0,
+              "restoreState": 0,
+              "isEOF": 1,
+              "keyPattern": {
+                "accommodates": 1
+              },
+              "indexName": "accommodates_1",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "accommodates": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "accommodates": [
+                  "[2, 2]"
+                ]
+              },
+              "keysExamined": 2052,
+              "seeks": 1,
+              "dupsTested": 0,
+              "dupsDropped": 0
+            },
+            {
+              "stage": "IXSCAN",
+              "nReturned": 1083,
+              "executionTimeMillisEstimate": 0,
+              "works": 1084,
+              "advanced": 1083,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 0,
+              "restoreState": 0,
+              "isEOF": 1,
+              "keyPattern": {
+                "bathrooms": 1
+              },
+              "indexName": "bathrooms_1",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "bathrooms": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "bathrooms": [
+                  "[2, inf.0]"
+                ]
+              },
+              "keysExamined": 1083,
+              "seeks": 1,
+              "dupsTested": 0,
+              "dupsDropped": 0
+            }
+          ]
+        }
+      }
+    },
+    "allPlansExecution": []
+  },
+  "queryShapeHash": "B70E8B5B2045FC842C86B41C295357CF574A205780F8ECA5EB45EDD8CB79AE16",
+  "command": {
+    "find": "listingsAndReviews",
+    "filter": {
+      "$or": [
+        {
+          "accommodates": 2
+        },
+        {
+          "bathrooms": {
+            "$gte": 2
+          }
+        },
+        {
+          "room_type": "Entire home/apt"
+        }
+      ]
+    },
+    "$db": "airbnb"
+  },
+  "serverInfo": {
+    "host": "MacBook-Pro.local",
+    "port": 27017,
+    "version": "8.0.10",
+    "gitVersion": "9d03076bb2d5147d5b6fe381c7118b0b0478b682"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

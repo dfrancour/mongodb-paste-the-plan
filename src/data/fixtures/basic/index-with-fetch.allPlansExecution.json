@@ -1,0 +1,361 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "airbnb.listingsAndReviews",
+    "parsedQuery": {
+      "accommodates": {
+        "$eq": 4
+      }
+    },
+    "indexFilterSet": false,
+    "queryHash": "1B6B2E3E",
+    "planCacheShapeHash": "1B6B2E3E",
+    "planCacheKey": "D363102A",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "PROJECTION_SIMPLE",
+      "transformBy": {
+        "name": 1,
+        "price": 1,
+        "description": 1
+      },
+      "inputStage": {
+        "stage": "FETCH",
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "accommodates": 1
+          },
+          "indexName": "accommodates_1",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "accommodates": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "accommodates": [
+              "[4, 4]"
+            ]
+          }
+        }
+      }
+    },
+    "rejectedPlans": [
+      {
+        "isCached": false,
+        "stage": "PROJECTION_SIMPLE",
+        "transformBy": {
+          "name": 1,
+          "price": 1,
+          "description": 1
+        },
+        "inputStage": {
+          "stage": "FETCH",
+          "inputStage": {
+            "stage": "IXSCAN",
+            "keyPattern": {
+              "accommodates": 1,
+              "bedrooms": 1,
+              "bathrooms": 1
+            },
+            "indexName": "capacity_compound_idx",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "accommodates": [],
+              "bedrooms": [],
+              "bathrooms": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "accommodates": [
+                "[4, 4]"
+              ],
+              "bedrooms": [
+                "[MinKey, MaxKey]"
+              ],
+              "bathrooms": [
+                "[MinKey, MaxKey]"
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 1154,
+    "executionTimeMillis": 1,
+    "totalKeysExamined": 1154,
+    "totalDocsExamined": 1154,
+    "executionStages": {
+      "isCached": false,
+      "stage": "PROJECTION_SIMPLE",
+      "nReturned": 1154,
+      "executionTimeMillisEstimate": 0,
+      "works": 1155,
+      "advanced": 1154,
+      "needTime": 0,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "transformBy": {
+        "name": 1,
+        "price": 1,
+        "description": 1
+      },
+      "inputStage": {
+        "stage": "FETCH",
+        "nReturned": 1154,
+        "executionTimeMillisEstimate": 0,
+        "works": 1155,
+        "advanced": 1154,
+        "needTime": 0,
+        "needYield": 0,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 1,
+        "docsExamined": 1154,
+        "alreadyHasObj": 0,
+        "inputStage": {
+          "stage": "IXSCAN",
+          "nReturned": 1154,
+          "executionTimeMillisEstimate": 0,
+          "works": 1155,
+          "advanced": 1154,
+          "needTime": 0,
+          "needYield": 0,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 1,
+          "keyPattern": {
+            "accommodates": 1
+          },
+          "indexName": "accommodates_1",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "accommodates": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "accommodates": [
+              "[4, 4]"
+            ]
+          },
+          "keysExamined": 1154,
+          "seeks": 1,
+          "dupsTested": 0,
+          "dupsDropped": 0
+        }
+      }
+    },
+    "allPlansExecution": [
+      {
+        "nReturned": 101,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 101,
+        "totalDocsExamined": 101,
+        "score": 2.0002,
+        "executionStages": {
+          "isCached": false,
+          "stage": "PROJECTION_SIMPLE",
+          "nReturned": 101,
+          "executionTimeMillisEstimate": 0,
+          "works": 101,
+          "advanced": 101,
+          "needTime": 0,
+          "needYield": 0,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 0,
+          "transformBy": {
+            "name": 1,
+            "price": 1,
+            "description": 1
+          },
+          "inputStage": {
+            "stage": "FETCH",
+            "nReturned": 101,
+            "executionTimeMillisEstimate": 0,
+            "works": 101,
+            "advanced": 101,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 0,
+            "restoreState": 0,
+            "isEOF": 0,
+            "docsExamined": 101,
+            "alreadyHasObj": 0,
+            "inputStage": {
+              "stage": "IXSCAN",
+              "nReturned": 101,
+              "executionTimeMillisEstimate": 0,
+              "works": 101,
+              "advanced": 101,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 0,
+              "restoreState": 0,
+              "isEOF": 0,
+              "keyPattern": {
+                "accommodates": 1
+              },
+              "indexName": "accommodates_1",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "accommodates": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "accommodates": [
+                  "[4, 4]"
+                ]
+              },
+              "keysExamined": 101,
+              "seeks": 1,
+              "dupsTested": 0,
+              "dupsDropped": 0
+            }
+          }
+        }
+      },
+      {
+        "nReturned": 101,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 101,
+        "totalDocsExamined": 101,
+        "score": 2.0002,
+        "executionStages": {
+          "isCached": false,
+          "stage": "PROJECTION_SIMPLE",
+          "nReturned": 101,
+          "executionTimeMillisEstimate": 0,
+          "works": 101,
+          "advanced": 101,
+          "needTime": 0,
+          "needYield": 0,
+          "saveState": 1,
+          "restoreState": 0,
+          "isEOF": 0,
+          "transformBy": {
+            "name": 1,
+            "price": 1,
+            "description": 1
+          },
+          "inputStage": {
+            "stage": "FETCH",
+            "nReturned": 101,
+            "executionTimeMillisEstimate": 0,
+            "works": 101,
+            "advanced": 101,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 0,
+            "isEOF": 0,
+            "docsExamined": 101,
+            "alreadyHasObj": 0,
+            "inputStage": {
+              "stage": "IXSCAN",
+              "nReturned": 101,
+              "executionTimeMillisEstimate": 0,
+              "works": 101,
+              "advanced": 101,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 1,
+              "restoreState": 0,
+              "isEOF": 0,
+              "keyPattern": {
+                "accommodates": 1,
+                "bedrooms": 1,
+                "bathrooms": 1
+              },
+              "indexName": "capacity_compound_idx",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "accommodates": [],
+                "bedrooms": [],
+                "bathrooms": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "accommodates": [
+                  "[4, 4]"
+                ],
+                "bedrooms": [
+                  "[MinKey, MaxKey]"
+                ],
+                "bathrooms": [
+                  "[MinKey, MaxKey]"
+                ]
+              },
+              "keysExamined": 101,
+              "seeks": 1,
+              "dupsTested": 0,
+              "dupsDropped": 0
+            }
+          }
+        }
+      }
+    ]
+  },
+  "queryShapeHash": "7C0B8235D48A2C4F16C7410725D71CED4196B8F38D3A89BD1B5E6AB1123EDB92",
+  "command": {
+    "find": "listingsAndReviews",
+    "filter": {
+      "accommodates": 4
+    },
+    "projection": {
+      "name": 1,
+      "price": 1,
+      "description": 1
+    },
+    "$db": "airbnb"
+  },
+  "serverInfo": {
+    "host": "MacBook-Pro.local",
+    "port": 27017,
+    "version": "8.0.10",
+    "gitVersion": "9d03076bb2d5147d5b6fe381c7118b0b0478b682"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

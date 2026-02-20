@@ -1,0 +1,390 @@
+{
+  "explainVersion": "2",
+  "queryPlanner": {
+    "namespace": "airbnb.listingsAndReviews",
+    "parsedQuery": {
+      "$text": {
+        "$search": "beach ocean view",
+        "$language": "english",
+        "$caseSensitive": false,
+        "$diacriticSensitive": false
+      }
+    },
+    "indexFilterSet": false,
+    "queryHash": "42639D45",
+    "planCacheShapeHash": "42639D45",
+    "planCacheKey": "A0925424",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "queryPlan": {
+        "stage": "TEXT_MATCH",
+        "planNodeId": 6,
+        "indexPrefix": {},
+        "indexName": "name_text_description_text",
+        "parsedTextQuery": {
+          "terms": [
+            "beach",
+            "ocean",
+            "view"
+          ],
+          "negatedTerms": [],
+          "phrases": [],
+          "negatedPhrases": []
+        },
+        "textIndexVersion": 2,
+        "inputStage": {
+          "stage": "FETCH",
+          "planNodeId": 5,
+          "inputStage": {
+            "stage": "OR",
+            "planNodeId": 4,
+            "inputStages": [
+              {
+                "stage": "IXSCAN",
+                "planNodeId": 1,
+                "keyPattern": {
+                  "_fts": "text",
+                  "_ftsx": 1
+                },
+                "indexName": "name_text_description_text",
+                "isMultiKey": true,
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "backward",
+                "indexBounds": {}
+              },
+              {
+                "stage": "IXSCAN",
+                "planNodeId": 2,
+                "keyPattern": {
+                  "_fts": "text",
+                  "_ftsx": 1
+                },
+                "indexName": "name_text_description_text",
+                "isMultiKey": true,
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "backward",
+                "indexBounds": {}
+              },
+              {
+                "stage": "IXSCAN",
+                "planNodeId": 3,
+                "keyPattern": {
+                  "_fts": "text",
+                  "_ftsx": 1
+                },
+                "indexName": "name_text_description_text",
+                "isMultiKey": true,
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "backward",
+                "indexBounds": {}
+              }
+            ]
+          }
+        }
+      },
+      "slotBasedPlan": {
+        "slots": "$$RESULT=s19 env: { s5 = {\"_fts\" : \"text\", \"_ftsx\" : 1} }",
+        "stages": "[6] filter {\n    if isObject(s19) \n    then ftsMatch(FtsMatcher({\"terms\" : [\"beach\", \"ocean\", \"view\"], \"negatedTerms\" : [], \"phrases\" : [], \"negatedPhrases\" : []}), s19) \n    else fail(4623400, \"textmatch requires input to be an object\") \n} \n[5] nlj inner [] [s17, s18, s14, s15, s16] \n    left \n        [4] unique [s17] \n        [4] union [s14, s15, s16, s17, s18] \n            branch0 [s3, s4, s5, s1, s2] \n                [1] unique [s1] \n                [1] ixseek KS(3C6265616368002E77359400FE04) KS(3C626561636800290104) s4 s1 s2 s3 [] @\"3309fad1-79d9-4193-a51b-a46b969a6870\" @\"name_text_description_text\" false \n            branch1 [s8, s9, s5, s6, s7] \n                [2] unique [s6] \n                [2] ixseek KS(3C6F6365616E002E77359400FE04) KS(3C6F6365616E00290104) s9 s6 s7 s8 [] @\"3309fad1-79d9-4193-a51b-a46b969a6870\" @\"name_text_description_text\" false \n            branch2 [s12, s13, s5, s10, s11] \n                [3] unique [s10] \n                [3] ixseek KS(3C76696577002E77359400FE04) KS(3C7669657700290104) s13 s10 s11 s12 [] @\"3309fad1-79d9-4193-a51b-a46b969a6870\" @\"name_text_description_text\" false \n    right \n        [5] limit 1ll \n        [5] seek s17 s19 s20 s18 s14 s15 s16 none none [] @\"3309fad1-79d9-4193-a51b-a46b969a6870\" true false \n"
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 1839,
+    "executionTimeMillis": 3,
+    "totalKeysExamined": 2620,
+    "totalDocsExamined": 1839,
+    "executionStages": {
+      "stage": "filter",
+      "planNodeId": 6,
+      "nReturned": 1839,
+      "executionTimeMillisEstimate": 0,
+      "opens": 1,
+      "closes": 1,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "numTested": 1839,
+      "filter": "\n    if isObject(s19) \n    then ftsMatch(FtsMatcher({\"terms\" : [\"beach\", \"ocean\", \"view\"], \"negatedTerms\" : [], \"phrases\" : [], \"negatedPhrases\" : []}), s19) \n    else fail(4623400, \"textmatch requires input to be an object\") \n",
+      "inputStage": {
+        "stage": "nlj",
+        "planNodeId": 5,
+        "nReturned": 1839,
+        "executionTimeMillisEstimate": 0,
+        "opens": 1,
+        "closes": 1,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 1,
+        "totalDocsExamined": 1839,
+        "totalKeysExamined": 2620,
+        "collectionScans": 0,
+        "collectionSeeks": 1839,
+        "indexScans": 0,
+        "indexSeeks": 3,
+        "indexesUsed": [
+          "name_text_description_text",
+          "name_text_description_text",
+          "name_text_description_text"
+        ],
+        "innerOpens": 1839,
+        "innerCloses": 1,
+        "outerProjects": [],
+        "outerCorrelated": [
+          17,
+          18,
+          14,
+          15,
+          16
+        ],
+        "outerStage": {
+          "stage": "unique",
+          "planNodeId": 4,
+          "nReturned": 1839,
+          "executionTimeMillisEstimate": 0,
+          "opens": 1,
+          "closes": 1,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 1,
+          "dupsTested": 2620,
+          "dupsDropped": 781,
+          "keySlots": [
+            17
+          ],
+          "inputStage": {
+            "stage": "union",
+            "planNodeId": 4,
+            "nReturned": 2620,
+            "executionTimeMillisEstimate": 0,
+            "opens": 1,
+            "closes": 1,
+            "saveState": 0,
+            "restoreState": 0,
+            "isEOF": 1,
+            "inputSlots": [
+              3,
+              4,
+              5,
+              1,
+              2,
+              8,
+              9,
+              5,
+              6,
+              7,
+              12,
+              13,
+              5,
+              10,
+              11
+            ],
+            "outputSlots": [
+              14,
+              15,
+              16,
+              17,
+              18
+            ],
+            "inputStages": [
+              {
+                "stage": "unique",
+                "planNodeId": 1,
+                "nReturned": 1158,
+                "executionTimeMillisEstimate": 0,
+                "opens": 1,
+                "closes": 1,
+                "saveState": 0,
+                "restoreState": 0,
+                "isEOF": 1,
+                "dupsTested": 1158,
+                "dupsDropped": 0,
+                "keySlots": [
+                  1
+                ],
+                "inputStage": {
+                  "stage": "ixseek",
+                  "planNodeId": 1,
+                  "nReturned": 1158,
+                  "executionTimeMillisEstimate": 0,
+                  "opens": 1,
+                  "closes": 1,
+                  "saveState": 0,
+                  "restoreState": 0,
+                  "isEOF": 1,
+                  "indexName": "name_text_description_text",
+                  "keysExamined": 1158,
+                  "seeks": 1,
+                  "numReads": 1159,
+                  "indexKeySlot": 4,
+                  "recordIdSlot": 1,
+                  "snapshotIdSlot": 2,
+                  "indexIdentSlot": 3,
+                  "outputSlots": [],
+                  "indexKeysToInclude": "00000000000000000000000000000000",
+                  "seekKeyLow": "KS(3C6265616368002E77359400FE04) ",
+                  "seekKeyHigh": "KS(3C626561636800290104) "
+                }
+              },
+              {
+                "stage": "unique",
+                "planNodeId": 2,
+                "nReturned": 382,
+                "executionTimeMillisEstimate": 0,
+                "opens": 1,
+                "closes": 1,
+                "saveState": 0,
+                "restoreState": 0,
+                "isEOF": 1,
+                "dupsTested": 382,
+                "dupsDropped": 0,
+                "keySlots": [
+                  6
+                ],
+                "inputStage": {
+                  "stage": "ixseek",
+                  "planNodeId": 2,
+                  "nReturned": 382,
+                  "executionTimeMillisEstimate": 0,
+                  "opens": 1,
+                  "closes": 1,
+                  "saveState": 0,
+                  "restoreState": 0,
+                  "isEOF": 1,
+                  "indexName": "name_text_description_text",
+                  "keysExamined": 382,
+                  "seeks": 1,
+                  "numReads": 383,
+                  "indexKeySlot": 9,
+                  "recordIdSlot": 6,
+                  "snapshotIdSlot": 7,
+                  "indexIdentSlot": 8,
+                  "outputSlots": [],
+                  "indexKeysToInclude": "00000000000000000000000000000000",
+                  "seekKeyLow": "KS(3C6F6365616E002E77359400FE04) ",
+                  "seekKeyHigh": "KS(3C6F6365616E00290104) "
+                }
+              },
+              {
+                "stage": "unique",
+                "planNodeId": 3,
+                "nReturned": 1080,
+                "executionTimeMillisEstimate": 0,
+                "opens": 1,
+                "closes": 1,
+                "saveState": 0,
+                "restoreState": 0,
+                "isEOF": 1,
+                "dupsTested": 1080,
+                "dupsDropped": 0,
+                "keySlots": [
+                  10
+                ],
+                "inputStage": {
+                  "stage": "ixseek",
+                  "planNodeId": 3,
+                  "nReturned": 1080,
+                  "executionTimeMillisEstimate": 0,
+                  "opens": 1,
+                  "closes": 1,
+                  "saveState": 0,
+                  "restoreState": 0,
+                  "isEOF": 1,
+                  "indexName": "name_text_description_text",
+                  "keysExamined": 1080,
+                  "seeks": 1,
+                  "numReads": 1081,
+                  "indexKeySlot": 13,
+                  "recordIdSlot": 10,
+                  "snapshotIdSlot": 11,
+                  "indexIdentSlot": 12,
+                  "outputSlots": [],
+                  "indexKeysToInclude": "00000000000000000000000000000000",
+                  "seekKeyLow": "KS(3C76696577002E77359400FE04) ",
+                  "seekKeyHigh": "KS(3C7669657700290104) "
+                }
+              }
+            ]
+          }
+        },
+        "innerStage": {
+          "stage": "limit",
+          "planNodeId": 5,
+          "nReturned": 1839,
+          "executionTimeMillisEstimate": 0,
+          "opens": 1839,
+          "closes": 1,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 1,
+          "limit": 1,
+          "inputStage": {
+            "stage": "seek",
+            "planNodeId": 5,
+            "nReturned": 1839,
+            "executionTimeMillisEstimate": 0,
+            "opens": 1839,
+            "closes": 1,
+            "saveState": 0,
+            "restoreState": 0,
+            "isEOF": 0,
+            "numReads": 1839,
+            "recordSlot": 19,
+            "recordIdSlot": 20,
+            "seekRecordIdSlot": 17,
+            "snapshotIdSlot": 18,
+            "indexIdentSlot": 14,
+            "indexKeySlot": 15,
+            "indexKeyPatternSlot": 16,
+            "scanFieldNames": [],
+            "scanFieldSlots": []
+          }
+        }
+      }
+    }
+  },
+  "queryShapeHash": "0149E20305A38E5EA70B184466DED1C1EF6B48631BDF091E5E4BDC60F229422E",
+  "command": {
+    "find": "listingsAndReviews",
+    "filter": {
+      "$text": {
+        "$search": "beach ocean view"
+      }
+    },
+    "$db": "airbnb"
+  },
+  "serverInfo": {
+    "host": "MacBook-Pro.local",
+    "port": 27017,
+    "version": "8.0.10",
+    "gitVersion": "9d03076bb2d5147d5b6fe381c7118b0b0478b682"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeEngine",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

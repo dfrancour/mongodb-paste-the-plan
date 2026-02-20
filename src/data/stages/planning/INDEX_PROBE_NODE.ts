@@ -1,0 +1,26 @@
+import type { PlanningStage } from "../types";
+import { StageCategory, StageIds, QuerySolutionStageType } from "../types";
+
+export const INDEX_PROBE_NODE: PlanningStage = {
+  layer: "planning",
+  id: StageIds.planning("INDEX_PROBE_NODE"),
+  querySolutionStageType: QuerySolutionStageType.STAGE_INDEX_PROBE_NODE,
+
+  fullName: "Index Probe",
+  description:
+    "Probes an index to retrieve candidate documents for vector search. " +
+    "Used as the inner side of embedding join nodes to efficiently locate " +
+    "documents by indexed embedding vectors.",
+  category: StageCategory.IndexScan,
+  iconName: "Search",
+
+  blockingStage: false,
+  canSpillToDisk: false,
+
+  performanceNotes:
+    "Non-blocking streaming stage. Efficiency depends on index selectivity " +
+    "and the number of probes required by the parent join node.",
+
+  sourceFile:
+    "src/mongo/db/query/compiler/physical_model/query_solution/query_solution.h",
+} as const;

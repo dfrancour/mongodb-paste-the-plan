@@ -1,0 +1,651 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "airbnb.listingsAndReviews",
+    "parsedQuery": {
+      "$and": [
+        {
+          "amenities": {
+            "$eq": "Wifi"
+          }
+        },
+        {
+          "amenities": {
+            "$eq": "Kitchen"
+          }
+        },
+        {
+          "$expr": {
+            "$gte": [
+              {
+                "$size": [
+                  "$amenities"
+                ]
+              },
+              {
+                "$const": 10
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "indexFilterSet": false,
+    "queryHash": "BF64718D",
+    "planCacheShapeHash": "BF64718D",
+    "planCacheKey": "5A26ADB0",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "FETCH",
+      "filter": {
+        "$and": [
+          {
+            "$expr": {
+              "$gte": [
+                {
+                  "$size": [
+                    "$amenities"
+                  ]
+                },
+                {
+                  "$const": 10
+                }
+              ]
+            }
+          },
+          {
+            "amenities": {
+              "$eq": "Wifi"
+            }
+          }
+        ]
+      },
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "amenities": 1
+        },
+        "indexName": "amenities_idx",
+        "isMultiKey": true,
+        "multiKeyPaths": {
+          "amenities": [
+            "amenities"
+          ]
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "amenities": [
+            "[\"Kitchen\", \"Kitchen\"]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": [
+      {
+        "isCached": false,
+        "stage": "FETCH",
+        "filter": {
+          "$and": [
+            {
+              "$expr": {
+                "$gte": [
+                  {
+                    "$size": [
+                      "$amenities"
+                    ]
+                  },
+                  {
+                    "$const": 10
+                  }
+                ]
+              }
+            },
+            {
+              "amenities": {
+                "$eq": "Kitchen"
+              }
+            }
+          ]
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "amenities": 1
+          },
+          "indexName": "amenities_idx",
+          "isMultiKey": true,
+          "multiKeyPaths": {
+            "amenities": [
+              "amenities"
+            ]
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "amenities": [
+              "[\"Wifi\", \"Wifi\"]"
+            ]
+          }
+        }
+      },
+      {
+        "isCached": false,
+        "stage": "FETCH",
+        "filter": {
+          "$and": [
+            {
+              "amenities": {
+                "$eq": "Wifi"
+              }
+            },
+            {
+              "amenities": {
+                "$eq": "Kitchen"
+              }
+            },
+            {
+              "$expr": {
+                "$gte": [
+                  {
+                    "$size": [
+                      "$amenities"
+                    ]
+                  },
+                  {
+                    "$const": 10
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "inputStage": {
+          "stage": "AND_SORTED",
+          "inputStages": [
+            {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "amenities": 1
+              },
+              "indexName": "amenities_idx",
+              "isMultiKey": true,
+              "multiKeyPaths": {
+                "amenities": [
+                  "amenities"
+                ]
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "amenities": [
+                  "[\"Wifi\", \"Wifi\"]"
+                ]
+              }
+            },
+            {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "amenities": 1
+              },
+              "indexName": "amenities_idx",
+              "isMultiKey": true,
+              "multiKeyPaths": {
+                "amenities": [
+                  "amenities"
+                ]
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "amenities": [
+                  "[\"Kitchen\", \"Kitchen\"]"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 4462,
+    "executionTimeMillis": 9,
+    "totalKeysExamined": 4951,
+    "totalDocsExamined": 4951,
+    "executionStages": {
+      "isCached": false,
+      "stage": "FETCH",
+      "filter": {
+        "$and": [
+          {
+            "$expr": {
+              "$gte": [
+                {
+                  "$size": [
+                    "$amenities"
+                  ]
+                },
+                {
+                  "$const": 10
+                }
+              ]
+            }
+          },
+          {
+            "amenities": {
+              "$eq": "Wifi"
+            }
+          }
+        ]
+      },
+      "nReturned": 4462,
+      "executionTimeMillisEstimate": 8,
+      "works": 4952,
+      "advanced": 4462,
+      "needTime": 489,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "docsExamined": 4951,
+      "alreadyHasObj": 0,
+      "inputStage": {
+        "stage": "IXSCAN",
+        "nReturned": 4951,
+        "executionTimeMillisEstimate": 0,
+        "works": 4952,
+        "advanced": 4951,
+        "needTime": 0,
+        "needYield": 0,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 1,
+        "keyPattern": {
+          "amenities": 1
+        },
+        "indexName": "amenities_idx",
+        "isMultiKey": true,
+        "multiKeyPaths": {
+          "amenities": [
+            "amenities"
+          ]
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "amenities": [
+            "[\"Kitchen\", \"Kitchen\"]"
+          ]
+        },
+        "keysExamined": 4951,
+        "seeks": 1,
+        "dupsTested": 4951,
+        "dupsDropped": 0
+      }
+    },
+    "allPlansExecution": [
+      {
+        "nReturned": 101,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 111,
+        "totalDocsExamined": 111,
+        "score": 1.91010990990991,
+        "executionStages": {
+          "isCached": false,
+          "stage": "FETCH",
+          "filter": {
+            "$and": [
+              {
+                "$expr": {
+                  "$gte": [
+                    {
+                      "$size": [
+                        "$amenities"
+                      ]
+                    },
+                    {
+                      "$const": 10
+                    }
+                  ]
+                }
+              },
+              {
+                "amenities": {
+                  "$eq": "Wifi"
+                }
+              }
+            ]
+          },
+          "nReturned": 101,
+          "executionTimeMillisEstimate": 0,
+          "works": 111,
+          "advanced": 101,
+          "needTime": 10,
+          "needYield": 0,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 0,
+          "docsExamined": 111,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nReturned": 111,
+            "executionTimeMillisEstimate": 0,
+            "works": 111,
+            "advanced": 111,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 0,
+            "restoreState": 0,
+            "isEOF": 0,
+            "keyPattern": {
+              "amenities": 1
+            },
+            "indexName": "amenities_idx",
+            "isMultiKey": true,
+            "multiKeyPaths": {
+              "amenities": [
+                "amenities"
+              ]
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "amenities": [
+                "[\"Kitchen\", \"Kitchen\"]"
+              ]
+            },
+            "keysExamined": 111,
+            "seeks": 1,
+            "dupsTested": 111,
+            "dupsDropped": 0
+          }
+        }
+      },
+      {
+        "nReturned": 98,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 111,
+        "totalDocsExamined": 111,
+        "score": 1.8830828828828827,
+        "executionStages": {
+          "isCached": false,
+          "stage": "FETCH",
+          "filter": {
+            "$and": [
+              {
+                "$expr": {
+                  "$gte": [
+                    {
+                      "$size": [
+                        "$amenities"
+                      ]
+                    },
+                    {
+                      "$const": 10
+                    }
+                  ]
+                }
+              },
+              {
+                "amenities": {
+                  "$eq": "Kitchen"
+                }
+              }
+            ]
+          },
+          "nReturned": 98,
+          "executionTimeMillisEstimate": 0,
+          "works": 111,
+          "advanced": 98,
+          "needTime": 13,
+          "needYield": 0,
+          "saveState": 1,
+          "restoreState": 0,
+          "isEOF": 0,
+          "docsExamined": 111,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nReturned": 111,
+            "executionTimeMillisEstimate": 0,
+            "works": 111,
+            "advanced": 111,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 0,
+            "isEOF": 0,
+            "keyPattern": {
+              "amenities": 1
+            },
+            "indexName": "amenities_idx",
+            "isMultiKey": true,
+            "multiKeyPaths": {
+              "amenities": [
+                "amenities"
+              ]
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "amenities": [
+                "[\"Wifi\", \"Wifi\"]"
+              ]
+            },
+            "keysExamined": 111,
+            "seeks": 1,
+            "dupsTested": 111,
+            "dupsDropped": 0
+          }
+        }
+      },
+      {
+        "nReturned": 48,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 111,
+        "totalDocsExamined": 50,
+        "score": 1.4325324324324324,
+        "executionStages": {
+          "isCached": false,
+          "stage": "FETCH",
+          "filter": {
+            "$and": [
+              {
+                "amenities": {
+                  "$eq": "Wifi"
+                }
+              },
+              {
+                "amenities": {
+                  "$eq": "Kitchen"
+                }
+              },
+              {
+                "$expr": {
+                  "$gte": [
+                    {
+                      "$size": [
+                        "$amenities"
+                      ]
+                    },
+                    {
+                      "$const": 10
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "nReturned": 48,
+          "executionTimeMillisEstimate": 0,
+          "works": 111,
+          "advanced": 48,
+          "needTime": 63,
+          "needYield": 0,
+          "saveState": 1,
+          "restoreState": 0,
+          "isEOF": 0,
+          "docsExamined": 50,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "AND_SORTED",
+            "nReturned": 50,
+            "executionTimeMillisEstimate": 0,
+            "works": 111,
+            "advanced": 50,
+            "needTime": 61,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 0,
+            "isEOF": 0,
+            "failedAnd_0": 5,
+            "failedAnd_1": 1,
+            "inputStages": [
+              {
+                "stage": "IXSCAN",
+                "nReturned": 58,
+                "executionTimeMillisEstimate": 0,
+                "works": 58,
+                "advanced": 58,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 1,
+                "restoreState": 0,
+                "isEOF": 0,
+                "keyPattern": {
+                  "amenities": 1
+                },
+                "indexName": "amenities_idx",
+                "isMultiKey": true,
+                "multiKeyPaths": {
+                  "amenities": [
+                    "amenities"
+                  ]
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "amenities": [
+                    "[\"Wifi\", \"Wifi\"]"
+                  ]
+                },
+                "keysExamined": 58,
+                "seeks": 1,
+                "dupsTested": 58,
+                "dupsDropped": 0
+              },
+              {
+                "stage": "IXSCAN",
+                "nReturned": 53,
+                "executionTimeMillisEstimate": 0,
+                "works": 53,
+                "advanced": 53,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 1,
+                "restoreState": 0,
+                "isEOF": 0,
+                "keyPattern": {
+                  "amenities": 1
+                },
+                "indexName": "amenities_idx",
+                "isMultiKey": true,
+                "multiKeyPaths": {
+                  "amenities": [
+                    "amenities"
+                  ]
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "amenities": [
+                    "[\"Kitchen\", \"Kitchen\"]"
+                  ]
+                },
+                "keysExamined": 53,
+                "seeks": 1,
+                "dupsTested": 53,
+                "dupsDropped": 0
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "queryShapeHash": "14D5A2E3BFFC0CC70EDFC7DDDBB0D769A3B50AC6058BAB1BA06C5FD7CFB4D256",
+  "command": {
+    "find": "listingsAndReviews",
+    "filter": {
+      "amenities": {
+        "$all": [
+          "Wifi",
+          "Kitchen"
+        ]
+      },
+      "$expr": {
+        "$gte": [
+          {
+            "$size": "$amenities"
+          },
+          10
+        ]
+      }
+    },
+    "$db": "airbnb"
+  },
+  "serverInfo": {
+    "host": "MacBook-Pro.local",
+    "port": 27017,
+    "version": "8.0.10",
+    "gitVersion": "9d03076bb2d5147d5b6fe381c7118b0b0478b682"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

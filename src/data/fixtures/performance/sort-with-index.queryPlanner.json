@@ -1,0 +1,122 @@
+{
+  "explainVersion": "2",
+  "queryPlanner": {
+    "namespace": "airbnb.listingsAndReviews",
+    "parsedQuery": {
+      "accommodates": {
+        "$gte": 2
+      }
+    },
+    "indexFilterSet": false,
+    "queryHash": "D7D12967",
+    "planCacheShapeHash": "D7D12967",
+    "planCacheKey": "FC90B9A7",
+    "optimizationTimeMillis": 2,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "queryPlan": {
+        "stage": "FETCH",
+        "planNodeId": 2,
+        "inputStage": {
+          "stage": "IXSCAN",
+          "planNodeId": 1,
+          "keyPattern": {
+            "accommodates": 1
+          },
+          "indexName": "accommodates_1",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "accommodates": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "accommodates": [
+              "[2, inf.0]"
+            ]
+          }
+        }
+      },
+      "slotBasedPlan": {
+        "slots": "$$RESULT=s8 env: { s1 = KS(2B040104), s2 = KS(33FFFFFFFFFFFFFFFFFE04), s7 = {\"accommodates\" : 1} }",
+        "stages": "[2] nlj inner [] [s3, s4, s5, s6, s7] \n    left \n        [1] cfilter {(exists(s1) && exists(s2))} \n        [1] ixseek s1 s2 s6 s3 s4 s5 [] @\"3309fad1-79d9-4193-a51b-a46b969a6870\" @\"accommodates_1\" true \n    right \n        [2] limit 1ll \n        [2] seek s3 s8 s9 s4 s5 s6 s7 none none [] @\"3309fad1-79d9-4193-a51b-a46b969a6870\" true false \n"
+      }
+    },
+    "rejectedPlans": [
+      {
+        "isCached": false,
+        "stage": "FETCH",
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "accommodates": 1,
+            "bedrooms": 1,
+            "bathrooms": 1
+          },
+          "indexName": "capacity_compound_idx",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "accommodates": [],
+            "bedrooms": [],
+            "bathrooms": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "accommodates": [
+              "[2, inf.0]"
+            ],
+            "bedrooms": [
+              "[MinKey, MaxKey]"
+            ],
+            "bathrooms": [
+              "[MinKey, MaxKey]"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "queryShapeHash": "E98858DA77D9A7A52C95800FD305EBA50D540C86C333831B1A9091D0C68647B4",
+  "command": {
+    "find": "listingsAndReviews",
+    "filter": {
+      "accommodates": {
+        "$gte": 2
+      }
+    },
+    "sort": {
+      "accommodates": 1
+    },
+    "$db": "airbnb"
+  },
+  "serverInfo": {
+    "host": "MacBook-Pro.local",
+    "port": 27017,
+    "version": "8.0.10",
+    "gitVersion": "9d03076bb2d5147d5b6fe381c7118b0b0478b682"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeEngine",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

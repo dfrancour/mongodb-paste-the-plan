@@ -1,0 +1,340 @@
+{
+  "explainVersion": "2",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "airbnb.listingsAndReviews",
+          "parsedQuery": {
+            "$and": [
+              {
+                "room_type": {
+                  "$eq": "Entire home/apt"
+                }
+              },
+              {
+                "price": {
+                  "$lte": 200
+                }
+              }
+            ]
+          },
+          "indexFilterSet": false,
+          "queryHash": "28D196B8",
+          "planCacheShapeHash": "28D196B8",
+          "planCacheKey": "98D97C5B",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "queryPlan": {
+              "stage": "PROJECTION_DEFAULT",
+              "planNodeId": 3,
+              "transformBy": {
+                "accommodates": true,
+                "address": {
+                  "market": true
+                },
+                "amenities": true,
+                "price": true,
+                "_id": false
+              },
+              "inputStage": {
+                "stage": "FETCH",
+                "planNodeId": 2,
+                "inputStage": {
+                  "stage": "IXSCAN",
+                  "planNodeId": 1,
+                  "keyPattern": {
+                    "room_type": 1,
+                    "accommodates": 1,
+                    "price": 1
+                  },
+                  "indexName": "room_accom_price_idx",
+                  "isMultiKey": false,
+                  "multiKeyPaths": {
+                    "room_type": [],
+                    "accommodates": [],
+                    "price": []
+                  },
+                  "isUnique": false,
+                  "isSparse": false,
+                  "isPartial": false,
+                  "indexVersion": 2,
+                  "direction": "forward",
+                  "indexBounds": {
+                    "room_type": [
+                      "[\"Entire home/apt\", \"Entire home/apt\"]"
+                    ],
+                    "accommodates": [
+                      "[MinKey, MaxKey]"
+                    ],
+                    "price": [
+                      "[-inf.0, 200]"
+                    ]
+                  }
+                }
+              }
+            },
+            "slotBasedPlan": {
+              "slots": "$$RESULT=s24 env: { s2 = IndexBounds(\"field #0['room_type']: [CollationKey(0x456e7469726520686f6d652f617074), CollationKey(0x456e7469726520686f6d652f617074)], field #1['accommodates']: [MinKey, MaxK\"...), s6 = {\"room_type\" : 1, \"accommodates\" : 1, \"price\" : 1}, s10 = Nothing, s21 = true }",
+              "stages": "[3] project [s24 = makeBsonObj(MakeObjSpec([accommodates, address = MakeObj([market], Closed, RetNothing), amenities, price], Closed, RetNothing), s22, false)] \n[2] nlj inner [] [s16, s17, s18, s19, s20] \n    left \n        [1] branch {s21} [s16, s17, s18, s19, s20] \n        [s1, s3, s4, s5, s6] [1] ixscan_generic s2 s5 s1 s3 s4 lowPriority [] @\"3309fad1-79d9-4193-a51b-a46b969a6870\" @\"room_accom_price_idx\" true \n        [s7, s13, s14, s15, s6] [1] nlj inner [] [s8, s9] \n            left \n                [1] project [s8 = getField(s11, \"l\"), s9 = getField(s11, \"h\")] \n                [1] unwind s11 s12 s10 false \n                [1] limit 1ll \n                [1] coscan \n            right \n                [1] ixseek s8 s9 s15 s7 s13 s14 [] @\"3309fad1-79d9-4193-a51b-a46b969a6870\" @\"room_accom_price_idx\" true \n    right \n        [2] limit 1ll \n        [2] seek s16 s22 s23 s17 s18 s19 s20 none none [] @\"3309fad1-79d9-4193-a51b-a46b969a6870\" true false \n"
+            }
+          },
+          "rejectedPlans": [
+            {
+              "isCached": false,
+              "stage": "PROJECTION_DEFAULT",
+              "transformBy": {
+                "accommodates": 1,
+                "address.market": 1,
+                "amenities": 1,
+                "price": 1,
+                "_id": 0
+              },
+              "inputStage": {
+                "stage": "FETCH",
+                "filter": {
+                  "room_type": {
+                    "$eq": "Entire home/apt"
+                  }
+                },
+                "inputStage": {
+                  "stage": "IXSCAN",
+                  "keyPattern": {
+                    "price": 1
+                  },
+                  "indexName": "price_1",
+                  "isMultiKey": false,
+                  "multiKeyPaths": {
+                    "price": []
+                  },
+                  "isUnique": false,
+                  "isSparse": false,
+                  "isPartial": false,
+                  "indexVersion": 2,
+                  "direction": "forward",
+                  "indexBounds": {
+                    "price": [
+                      "[-inf.0, 200]"
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "isCached": false,
+              "stage": "PROJECTION_DEFAULT",
+              "transformBy": {
+                "accommodates": 1,
+                "address.market": 1,
+                "amenities": 1,
+                "price": 1,
+                "_id": 0
+              },
+              "inputStage": {
+                "stage": "FETCH",
+                "filter": {
+                  "price": {
+                    "$lte": 200
+                  }
+                },
+                "inputStage": {
+                  "stage": "IXSCAN",
+                  "keyPattern": {
+                    "room_type": 1
+                  },
+                  "indexName": "room_type_1",
+                  "isMultiKey": false,
+                  "multiKeyPaths": {
+                    "room_type": []
+                  },
+                  "isUnique": false,
+                  "isSparse": false,
+                  "isPartial": false,
+                  "indexVersion": 2,
+                  "direction": "forward",
+                  "indexBounds": {
+                    "room_type": [
+                      "[\"Entire home/apt\", \"Entire home/apt\"]"
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "$addFields": {
+        "price_per_guest": {
+          "$divide": [
+            "$price",
+            "$accommodates"
+          ]
+        },
+        "has_wifi": {
+          "$in": [
+            {
+              "$const": "Wifi"
+            },
+            "$amenities"
+          ]
+        },
+        "amenity_count": {
+          "$size": [
+            {
+              "$ifNull": [
+                "$amenities",
+                {
+                  "$const": []
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "$match": {
+        "$and": [
+          {
+            "has_wifi": {
+              "$eq": true
+            }
+          },
+          {
+            "amenity_count": {
+              "$gte": 5
+            }
+          }
+        ]
+      }
+    },
+    {
+      "$group": {
+        "_id": "$address.market",
+        "avg_price": {
+          "$avg": "$price"
+        },
+        "avg_price_per_guest": {
+          "$avg": "$price_per_guest"
+        },
+        "listing_count": {
+          "$sum": {
+            "$const": 1
+          }
+        },
+        "max_accommodates": {
+          "$max": "$accommodates"
+        }
+      }
+    },
+    {
+      "$sort": {
+        "sortKey": {
+          "listing_count": -1,
+          "avg_price": 1
+        },
+        "limit": 10
+      }
+    }
+  ],
+  "queryShapeHash": "2B409B830A7E8F38906C9FD78747F340C4B8389F02FB904B728A929E76E47DBF",
+  "serverInfo": {
+    "host": "MacBook-Pro.local",
+    "port": 27017,
+    "version": "8.0.10",
+    "gitVersion": "9d03076bb2d5147d5b6fe381c7118b0b0478b682"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeEngine",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "listingsAndReviews",
+    "pipeline": [
+      {
+        "$match": {
+          "room_type": "Entire home/apt",
+          "price": {
+            "$lte": 200
+          }
+        }
+      },
+      {
+        "$addFields": {
+          "price_per_guest": {
+            "$divide": [
+              "$price",
+              "$accommodates"
+            ]
+          },
+          "has_wifi": {
+            "$in": [
+              "Wifi",
+              "$amenities"
+            ]
+          },
+          "amenity_count": {
+            "$size": {
+              "$ifNull": [
+                "$amenities",
+                []
+              ]
+            }
+          }
+        }
+      },
+      {
+        "$match": {
+          "has_wifi": true,
+          "amenity_count": {
+            "$gte": 5
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "$address.market",
+          "avg_price": {
+            "$avg": "$price"
+          },
+          "avg_price_per_guest": {
+            "$avg": "$price_per_guest"
+          },
+          "listing_count": {
+            "$sum": 1
+          },
+          "max_accommodates": {
+            "$max": "$accommodates"
+          }
+        }
+      },
+      {
+        "$sort": {
+          "listing_count": -1,
+          "avg_price": 1
+        }
+      },
+      {
+        "$limit": 10
+      }
+    ],
+    "cursor": {},
+    "$db": "airbnb"
+  },
+  "ok": 1.0
+}

@@ -1,0 +1,195 @@
+{
+  "explainVersion": "2",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "airbnb.listingsAndReviews",
+          "parsedQuery": {
+            "$and": [
+              {
+                "amenities": {
+                  "$exists": true
+                }
+              },
+              {
+                "amenities": {
+                  "$not": {
+                    "$eq": []
+                  }
+                }
+              }
+            ]
+          },
+          "indexFilterSet": false,
+          "queryHash": "993BF8E9",
+          "planCacheShapeHash": "993BF8E9",
+          "planCacheKey": "C20A7093",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "queryPlan": {
+              "stage": "PROJECTION_SIMPLE",
+              "planNodeId": 3,
+              "transformBy": {
+                "amenities": true,
+                "price": true,
+                "_id": false
+              },
+              "inputStage": {
+                "stage": "FETCH",
+                "planNodeId": 2,
+                "filter": {
+                  "$and": [
+                    {
+                      "amenities": {
+                        "$exists": true
+                      }
+                    },
+                    {
+                      "amenities": {
+                        "$not": {
+                          "$eq": []
+                        }
+                      }
+                    }
+                  ]
+                },
+                "inputStage": {
+                  "stage": "IXSCAN",
+                  "planNodeId": 1,
+                  "keyPattern": {
+                    "amenities": 1
+                  },
+                  "indexName": "amenities_idx",
+                  "isMultiKey": true,
+                  "multiKeyPaths": {
+                    "amenities": [
+                      "amenities"
+                    ]
+                  },
+                  "isUnique": false,
+                  "isSparse": false,
+                  "isPartial": false,
+                  "indexVersion": 2,
+                  "direction": "forward",
+                  "indexBounds": {
+                    "amenities": [
+                      "[MinKey, MaxKey]"
+                    ]
+                  }
+                }
+              }
+            },
+            "slotBasedPlan": {
+              "slots": "$$RESULT=s9 env: { s5 = {\"amenities\" : 1} }",
+              "stages": "[3] project [s9 = makeBsonObj(MakeObjSpec([amenities, price], Closed, RetNothing), s6, false)] \n[2] filter {(exists(s8) && !(traverseF(s8, lambda(l3.0) { ((move(l3.0) == []) ?: false) }, true)))} \n[2] nlj inner [] [s1, s2, s3, s4, s5] \n    left \n        [1] unique [s1] \n        [1] ixseek KS(0A0104) KS(F0FE04) s4 s1 s2 s3 [] @\"3309fad1-79d9-4193-a51b-a46b969a6870\" @\"amenities_idx\" true \n    right \n        [2] limit 1ll \n        [2] seek s1 s6 s7 s2 s3 s4 s5 none none [s8 = amenities] @\"3309fad1-79d9-4193-a51b-a46b969a6870\" true false \n"
+            }
+          },
+          "rejectedPlans": []
+        }
+      }
+    },
+    {
+      "$unwind": {
+        "path": "$amenities"
+      }
+    },
+    {
+      "$group": {
+        "_id": "$amenities",
+        "listing_count": {
+          "$sum": {
+            "$const": 1
+          }
+        },
+        "avg_price": {
+          "$avg": "$price"
+        }
+      }
+    },
+    {
+      "$match": {
+        "listing_count": {
+          "$gte": 100
+        }
+      }
+    },
+    {
+      "$sort": {
+        "sortKey": {
+          "listing_count": -1
+        },
+        "limit": 20
+      }
+    }
+  ],
+  "queryShapeHash": "117B81025A3B66C81A7429CBA409956AD8EE448B2EECC8DFD2FE8DF3A0862056",
+  "serverInfo": {
+    "host": "MacBook-Pro.local",
+    "port": 27017,
+    "version": "8.0.10",
+    "gitVersion": "9d03076bb2d5147d5b6fe381c7118b0b0478b682"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeEngine",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "listingsAndReviews",
+    "pipeline": [
+      {
+        "$match": {
+          "amenities": {
+            "$exists": true,
+            "$ne": []
+          }
+        }
+      },
+      {
+        "$unwind": "$amenities"
+      },
+      {
+        "$group": {
+          "_id": "$amenities",
+          "listing_count": {
+            "$sum": 1
+          },
+          "avg_price": {
+            "$avg": "$price"
+          }
+        }
+      },
+      {
+        "$match": {
+          "listing_count": {
+            "$gte": 100
+          }
+        }
+      },
+      {
+        "$sort": {
+          "listing_count": -1
+        }
+      },
+      {
+        "$limit": 20
+      }
+    ],
+    "cursor": {},
+    "$db": "airbnb"
+  },
+  "ok": 1.0
+}

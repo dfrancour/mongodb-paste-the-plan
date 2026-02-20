@@ -1,0 +1,173 @@
+{
+  "serverInfo": {
+    "host": "mongos-host.example.com",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "splitPipeline": null,
+  "shards": {
+    "shard-0": {
+      "host": "shard0-host.example.com:27017",
+      "explainVersion": "2",
+      "queryPlanner": {
+        "namespace": "ecommerce.orders",
+        "parsedQuery": {
+          "$and": [
+            {"status": {"$eq": "completed"}},
+            {"region": {"$eq": "us-east"}},
+            {"category": {"$eq": "electronics"}}
+          ]
+        },
+        "indexFilterSet": false,
+        "queryHash": "ABCD1234",
+        "planCacheShapeHash": "ABCD1234",
+        "planCacheKey": "EFGH5678",
+        "optimizationTimeMillis": 0,
+        "optimizedPipeline": true,
+        "maxIndexedOrSolutionsReached": false,
+        "maxIndexedAndSolutionsReached": false,
+        "maxScansToExplodeReached": false,
+        "prunedSimilarIndexes": false,
+        "winningPlan": {
+          "isCached": false,
+          "queryPlan": {
+            "stage": "GROUP",
+            "planNodeId": 2,
+            "inputStage": {
+              "stage": "COUNT_SCAN",
+              "planNodeId": 1,
+              "keyPattern": {"region": 1, "status": 1, "category": 1},
+              "indexName": "region_1_status_1_category_1",
+              "isMultiKey": false,
+              "multiKeyPaths": {"region": [], "status": [], "category": []},
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "indexBounds": {
+                "startKey": {"region": "us-east", "status": "completed", "category": "electronics"},
+                "startKeyInclusive": true,
+                "endKey": {"region": "us-east", "status": "completed", "category": "electronics"},
+                "endKeyInclusive": true
+              }
+            }
+          },
+          "slotBasedPlan": {
+            "slots": "$$RESULT=s6 env: {  }",
+            "stages": "[2] project [s6 = newBsonObj(\"_id\", s4, \"n\", s5)] \n[2] project [s4 = null, s5 = (convert ( s3, int32) ?: s3)] \n[2] group [] [s3 = count()] spillSlots[s2] mergingExprs[sum(s2)] \n[1] ixseek KS(3C75732D65617374003C636F6D706C65746564003C656C656374726F6E696373000104) KS(3C75732D65617374003C636F6D706C65746564003C656C656374726F6E69637300FE04) none s1 none none [] @\"12345678-1234-1234-1234-123456789012\" @\"region_1_status_1_category_1\" true "
+          }
+        },
+        "rejectedPlans": []
+      },
+      "executionStats": {
+        "executionSuccess": true,
+        "nReturned": 1,
+        "executionTimeMillis": 29,
+        "totalKeysExamined": 161873,
+        "totalDocsExamined": 0,
+        "executionStages": {
+          "stage": "project",
+          "planNodeId": 2,
+          "nReturned": 1,
+          "executionTimeMillisEstimate": 28,
+          "opens": 1,
+          "closes": 1,
+          "saveState": 1,
+          "restoreState": 1,
+          "isEOF": 1,
+          "projections": {
+            "6": "newBsonObj(\"_id\", s4, \"n\", s5) "
+          },
+          "inputStage": {
+            "stage": "project",
+            "planNodeId": 2,
+            "nReturned": 1,
+            "executionTimeMillisEstimate": 28,
+            "opens": 1,
+            "closes": 1,
+            "saveState": 1,
+            "restoreState": 1,
+            "isEOF": 1,
+            "projections": {
+              "4": "null ",
+              "5": "(convert ( s3, int32) ?: s3) "
+            },
+            "inputStage": {
+              "stage": "group",
+              "planNodeId": 2,
+              "nReturned": 1,
+              "executionTimeMillisEstimate": 28,
+              "opens": 1,
+              "closes": 1,
+              "saveState": 1,
+              "restoreState": 1,
+              "isEOF": 1,
+              "groupBySlots": [],
+              "expressions": {
+                "3": "count() ",
+                "initExprs": {"3": null}
+              },
+              "mergingExprs": {"2": "sum(s2) "},
+              "usedDisk": false,
+              "spills": 0,
+              "spilledBytes": 0,
+              "spilledRecords": 0,
+              "spilledDataStorageSize": 0,
+              "inputStage": {
+                "stage": "ixseek",
+                "planNodeId": 1,
+                "nReturned": 161873,
+                "executionTimeMillisEstimate": 25,
+                "opens": 1,
+                "closes": 1,
+                "saveState": 1,
+                "restoreState": 1,
+                "isEOF": 1,
+                "indexName": "region_1_status_1_category_1",
+                "keysExamined": 161873,
+                "seeks": 1,
+                "numReads": 161874,
+                "recordIdSlot": 1,
+                "outputSlots": [],
+                "indexKeysToInclude": "00000000000000000000000000000000",
+                "seekKeyLow": "KS(3C75732D65617374003C636F6D706C65746564003C656C656374726F6E696373000104) ",
+                "seekKeyHigh": "KS(3C75732D65617374003C636F6D706C65746564003C656C656374726F6E69637300FE04) "
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "queryShapeHash": "1234567890ABCDEF1234567890ABCDEF12345678901234567890ABCDEF123456",
+  "command": {
+    "aggregate": "orders",
+    "pipeline": [
+      {"$match": {"region": "us-east", "category": "electronics", "status": "completed"}},
+      {"$group": {"_id": null, "n": {"$sum": 1}}}
+    ],
+    "cursor": {}
+  },
+  "ok": 1.0,
+  "$clusterTime": {
+    "clusterTime": {"$timestamp": {"t": 1700000000, "i": 1}},
+    "signature": {
+      "hash": {"$binary": {"base64": "ANONYMIZED_HASH", "subType": "00"}},
+      "keyId": 1234567890123456000
+    }
+  },
+  "operationTime": {"$timestamp": {"t": 1700000000, "i": 1}}
+}

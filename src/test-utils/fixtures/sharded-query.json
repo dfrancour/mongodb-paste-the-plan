@@ -1,0 +1,276 @@
+{
+  "queryPlanner": {
+    "plannerVersion": 1,
+    "namespace": "analytics.events",
+    "indexFilterSet": false,
+    "parsedQuery": {
+      "$and": [
+        {
+          "region": { "$eq": "us-east" }
+        },
+        {
+          "timestamp": {
+            "$gte": "2024-01-01T00:00:00.000Z",
+            "$lte": "2024-01-31T23:59:59.999Z"
+          }
+        }
+      ]
+    },
+    "winningPlan": {
+      "stage": "SHARD_MERGE",
+      "shards": [
+        {
+          "shardName": "shard01",
+          "connectionString": "shard01/mongodb-shard01-1:27017,mongodb-shard01-2:27017,mongodb-shard01-3:27017",
+          "serverInfo": {
+            "host": "mongodb-shard01-1",
+            "port": 27017,
+            "version": "6.0.8"
+          },
+          "plannerVersion": 1,
+          "namespace": "analytics.events",
+          "indexFilterSet": false,
+          "parsedQuery": {
+            "$and": [
+              {
+                "region": { "$eq": "us-east" }
+              },
+              {
+                "timestamp": {
+                  "$gte": "2024-01-01T00:00:00.000Z",
+                  "$lte": "2024-01-31T23:59:59.999Z"
+                }
+              }
+            ]
+          },
+          "winningPlan": {
+            "stage": "SHARDING_FILTER",
+            "inputStage": {
+              "stage": "FETCH",
+              "inputStage": {
+                "stage": "IXSCAN",
+                "keyPattern": { "region": 1, "timestamp": 1 },
+                "indexName": "region_1_timestamp_1",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "region": [],
+                  "timestamp": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "region": ["[\"us-east\", \"us-east\"]"],
+                  "timestamp": ["[\"2024-01-01T00:00:00.000Z\", \"2024-01-31T23:59:59.999Z\"]"]
+                }
+              }
+            }
+          }
+        },
+        {
+          "shardName": "shard02",
+          "connectionString": "shard02/mongodb-shard02-1:27017,mongodb-shard02-2:27017,mongodb-shard02-3:27017",
+          "serverInfo": {
+            "host": "mongodb-shard02-1",
+            "port": 27017,
+            "version": "6.0.8"
+          },
+          "plannerVersion": 1,
+          "namespace": "analytics.events",
+          "indexFilterSet": false,
+          "parsedQuery": {
+            "$and": [
+              {
+                "region": { "$eq": "us-east" }
+              },
+              {
+                "timestamp": {
+                  "$gte": "2024-01-01T00:00:00.000Z",
+                  "$lte": "2024-01-31T23:59:59.999Z"
+                }
+              }
+            ]
+          },
+          "winningPlan": {
+            "stage": "SHARDING_FILTER",
+            "inputStage": {
+              "stage": "FETCH",
+              "inputStage": {
+                "stage": "IXSCAN",
+                "keyPattern": { "region": 1, "timestamp": 1 },
+                "indexName": "region_1_timestamp_1",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "region": [],
+                  "timestamp": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "region": ["[\"us-east\", \"us-east\"]"],
+                  "timestamp": ["[\"2024-01-01T00:00:00.000Z\", \"2024-01-31T23:59:59.999Z\"]"]
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 45678,
+    "executionTimeMillis": 125,
+    "totalKeysExamined": 52000,
+    "totalDocsExamined": 46000,
+    "executionStages": {
+      "stage": "SHARD_MERGE",
+      "nReturned": 45678,
+      "executionTimeMillisEstimate": 120,
+      "works": 45681,
+      "advanced": 45678,
+      "needTime": 2,
+      "needYield": 0,
+      "saveState": 456,
+      "restoreState": 456,
+      "isEOF": 1,
+      "shards": [
+        {
+          "shardName": "shard01",
+          "executionSuccess": true,
+          "nReturned": 23456,
+          "executionTimeMillis": 85,
+          "totalKeysExamined": 26000,
+          "totalDocsExamined": 23500,
+          "executionStages": {
+            "stage": "SHARDING_FILTER",
+            "nReturned": 23456,
+            "executionTimeMillisEstimate": 82,
+            "works": 23459,
+            "advanced": 23456,
+            "needTime": 2,
+            "needYield": 0,
+            "saveState": 234,
+            "restoreState": 234,
+            "isEOF": 1,
+            "chunkSkips": 0,
+            "inputStage": {
+              "stage": "FETCH",
+              "nReturned": 23456,
+              "executionTimeMillisEstimate": 65,
+              "works": 23457,
+              "advanced": 23456,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 234,
+              "restoreState": 234,
+              "isEOF": 1,
+              "docsExamined": 23500,
+              "inputStage": {
+                "stage": "IXSCAN",
+                "nReturned": 23456,
+                "executionTimeMillisEstimate": 35,
+                "works": 23457,
+                "advanced": 23456,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 234,
+                "restoreState": 234,
+                "isEOF": 1,
+                "keyPattern": { "region": 1, "timestamp": 1 },
+                "indexName": "region_1_timestamp_1",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "region": [],
+                  "timestamp": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "region": ["[\"us-east\", \"us-east\"]"],
+                  "timestamp": ["[\"2024-01-01T00:00:00.000Z\", \"2024-01-31T23:59:59.999Z\"]"]
+                },
+                "keysExamined": 26000,
+                "docsExamined": 23456
+              }
+            }
+          }
+        },
+        {
+          "shardName": "shard02",
+          "executionSuccess": true,
+          "nReturned": 22222,
+          "executionTimeMillis": 78,
+          "totalKeysExamined": 26000,
+          "totalDocsExamined": 22500,
+          "executionStages": {
+            "stage": "SHARDING_FILTER",
+            "nReturned": 22222,
+            "executionTimeMillisEstimate": 75,
+            "works": 22225,
+            "advanced": 22222,
+            "needTime": 2,
+            "needYield": 0,
+            "saveState": 222,
+            "restoreState": 222,
+            "isEOF": 1,
+            "chunkSkips": 0,
+            "inputStage": {
+              "stage": "FETCH",
+              "nReturned": 22222,
+              "executionTimeMillisEstimate": 58,
+              "works": 22223,
+              "advanced": 22222,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 222,
+              "restoreState": 222,
+              "isEOF": 1,
+              "docsExamined": 22500,
+              "inputStage": {
+                "stage": "IXSCAN",
+                "nReturned": 22222,
+                "executionTimeMillisEstimate": 32,
+                "works": 22223,
+                "advanced": 22222,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 222,
+                "restoreState": 222,
+                "isEOF": 1,
+                "keyPattern": { "region": 1, "timestamp": 1 },
+                "indexName": "region_1_timestamp_1",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "region": [],
+                  "timestamp": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "region": ["[\"us-east\", \"us-east\"]"],
+                  "timestamp": ["[\"2024-01-01T00:00:00.000Z\", \"2024-01-31T23:59:59.999Z\"]"]
+                },
+                "keysExamined": 26000,
+                "docsExamined": 22222
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "allPlansExecution": []
+}

@@ -1,0 +1,154 @@
+{
+  "explainVersion": "2",
+  "queryPlanner": {
+    "namespace": "airbnb.listingsAndReviews",
+    "parsedQuery": {
+      "property_type": {
+        "$in": [
+          "Apartment",
+          "Bungalow",
+          "Cabin",
+          "Chalet",
+          "Condominium",
+          "Cottage",
+          "House",
+          "Loft",
+          "Townhouse",
+          "Villa"
+        ]
+      }
+    },
+    "indexFilterSet": false,
+    "queryHash": "A5849B7A",
+    "planCacheShapeHash": "A5849B7A",
+    "planCacheKey": "5074732F",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "queryPlan": {
+        "stage": "FETCH",
+        "planNodeId": 2,
+        "inputStage": {
+          "stage": "IXSCAN",
+          "planNodeId": 1,
+          "keyPattern": {
+            "property_type": 1
+          },
+          "indexName": "property_type_1",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "property_type": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "property_type": [
+              "[\"Apartment\", \"Apartment\"]",
+              "[\"Bungalow\", \"Bungalow\"]",
+              "[\"Cabin\", \"Cabin\"]",
+              "[\"Chalet\", \"Chalet\"]",
+              "[\"Condominium\", \"Condominium\"]",
+              "[\"Cottage\", \"Cottage\"]",
+              "[\"House\", \"House\"]",
+              "[\"Loft\", \"Loft\"]",
+              "[\"Townhouse\", \"Townhouse\"]",
+              "[\"Villa\", \"Villa\"]"
+            ]
+          }
+        }
+      },
+      "slotBasedPlan": {
+        "slots": "$$RESULT=s22 env: { s2 = Nothing, s6 = {\"property_type\" : 1}, s10 = [{\"l\" : KS(3C41706172746D656E74000104), \"h\" : KS(3C41706172746D656E7400FE04)}, {\"l\" : KS(3C42756E67616C6F77000104), \"h\" : KS(3C42756E67616C6F7700FE04)}, {\"l\" : KS(3C436162696E000104), \"h\" : KS(3C436162696E00FE04)}, {\"l\" : KS(3C4368616C6574000104), \"h\" : KS(3C4368616C657400FE04)}, {\"l\" : KS(3C436F6E646F6D696E69756D000104), \"h\" : KS(3C436F6E646F6D696E69756D00FE04)}, {\"l\" : KS(3C436F7474616765000104), \"h\" : KS(3C436F747461676500FE04)}, {\"l\" : KS(3C486F757365000104), \"h\" : KS(3C486F75736500FE04)}, {\"l\" : KS(3C4C6F6674000104), \"h\" : KS(3C4C6F667400FE04)}, {...}, ...], s21 = false }",
+        "stages": "[2] nlj inner [] [s16, s17, s18, s19, s20] \n    left \n        [1] branch {s21} [s16, s17, s18, s19, s20] \n        [s1, s3, s4, s5, s6] [1] ixscan_generic s2 s5 s1 s3 s4 lowPriority [] @\"3309fad1-79d9-4193-a51b-a46b969a6870\" @\"property_type_1\" true \n        [s7, s13, s14, s15, s6] [1] nlj inner [] [s8, s9] \n            left \n                [1] project [s8 = getField(s11, \"l\"), s9 = getField(s11, \"h\")] \n                [1] unwind s11 s12 s10 false \n                [1] limit 1ll \n                [1] coscan \n            right \n                [1] ixseek s8 s9 s15 s7 s13 s14 [] @\"3309fad1-79d9-4193-a51b-a46b969a6870\" @\"property_type_1\" true \n    right \n        [2] limit 1ll \n        [2] seek s16 s22 s23 s17 s18 s19 s20 none none [] @\"3309fad1-79d9-4193-a51b-a46b969a6870\" true false \n"
+      }
+    },
+    "rejectedPlans": [
+      {
+        "isCached": false,
+        "stage": "FETCH",
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "property_type": 1,
+            "bathrooms": 1
+          },
+          "indexName": "property_bathrooms_idx",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "property_type": [],
+            "bathrooms": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "property_type": [
+              "[\"Apartment\", \"Apartment\"]",
+              "[\"Bungalow\", \"Bungalow\"]",
+              "[\"Cabin\", \"Cabin\"]",
+              "[\"Chalet\", \"Chalet\"]",
+              "[\"Condominium\", \"Condominium\"]",
+              "[\"Cottage\", \"Cottage\"]",
+              "[\"House\", \"House\"]",
+              "[\"Loft\", \"Loft\"]",
+              "[\"Townhouse\", \"Townhouse\"]",
+              "[\"Villa\", \"Villa\"]"
+            ],
+            "bathrooms": [
+              "[MinKey, MaxKey]"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "queryShapeHash": "B870E75422BD51DBBAD0A9C56617204657EE98B5B2A9D47BD49EBB6AE24A005C",
+  "command": {
+    "find": "listingsAndReviews",
+    "filter": {
+      "property_type": {
+        "$in": [
+          "Apartment",
+          "House",
+          "Condominium",
+          "Townhouse",
+          "Loft",
+          "Villa",
+          "Cabin",
+          "Chalet",
+          "Cottage",
+          "Bungalow"
+        ]
+      }
+    },
+    "$db": "airbnb"
+  },
+  "serverInfo": {
+    "host": "MacBook-Pro.local",
+    "port": 27017,
+    "version": "8.0.10",
+    "gitVersion": "9d03076bb2d5147d5b6fe381c7118b0b0478b682"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeEngine",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

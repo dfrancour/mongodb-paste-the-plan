@@ -1,0 +1,524 @@
+{
+  "explainVersion": "2",
+  "queryPlanner": {
+    "namespace": "airbnb.listingsAndReviews",
+    "parsedQuery": {
+      "property_type": {
+        "$in": [
+          "Apartment",
+          "Bungalow",
+          "Cabin",
+          "Chalet",
+          "Condominium",
+          "Cottage",
+          "House",
+          "Loft",
+          "Townhouse",
+          "Villa"
+        ]
+      }
+    },
+    "indexFilterSet": false,
+    "queryHash": "A5849B7A",
+    "planCacheShapeHash": "A5849B7A",
+    "planCacheKey": "5074732F",
+    "optimizationTimeMillis": 1,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "queryPlan": {
+        "stage": "FETCH",
+        "planNodeId": 2,
+        "inputStage": {
+          "stage": "IXSCAN",
+          "planNodeId": 1,
+          "keyPattern": {
+            "property_type": 1
+          },
+          "indexName": "property_type_1",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "property_type": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "property_type": [
+              "[\"Apartment\", \"Apartment\"]",
+              "[\"Bungalow\", \"Bungalow\"]",
+              "[\"Cabin\", \"Cabin\"]",
+              "[\"Chalet\", \"Chalet\"]",
+              "[\"Condominium\", \"Condominium\"]",
+              "[\"Cottage\", \"Cottage\"]",
+              "[\"House\", \"House\"]",
+              "[\"Loft\", \"Loft\"]",
+              "[\"Townhouse\", \"Townhouse\"]",
+              "[\"Villa\", \"Villa\"]"
+            ]
+          }
+        }
+      },
+      "slotBasedPlan": {
+        "slots": "$$RESULT=s22 env: { s2 = Nothing, s6 = {\"property_type\" : 1}, s10 = [{\"l\" : KS(3C41706172746D656E74000104), \"h\" : KS(3C41706172746D656E7400FE04)}, {\"l\" : KS(3C42756E67616C6F77000104), \"h\" : KS(3C42756E67616C6F7700FE04)}, {\"l\" : KS(3C436162696E000104), \"h\" : KS(3C436162696E00FE04)}, {\"l\" : KS(3C4368616C6574000104), \"h\" : KS(3C4368616C657400FE04)}, {\"l\" : KS(3C436F6E646F6D696E69756D000104), \"h\" : KS(3C436F6E646F6D696E69756D00FE04)}, {\"l\" : KS(3C436F7474616765000104), \"h\" : KS(3C436F747461676500FE04)}, {\"l\" : KS(3C486F757365000104), \"h\" : KS(3C486F75736500FE04)}, {\"l\" : KS(3C4C6F6674000104), \"h\" : KS(3C4C6F667400FE04)}, {...}, ...], s21 = false }",
+        "stages": "[2] nlj inner [] [s16, s17, s18, s19, s20] \n    left \n        [1] branch {s21} [s16, s17, s18, s19, s20] \n        [s1, s3, s4, s5, s6] [1] ixscan_generic s2 s5 s1 s3 s4 lowPriority [] @\"3309fad1-79d9-4193-a51b-a46b969a6870\" @\"property_type_1\" true \n        [s7, s13, s14, s15, s6] [1] nlj inner [] [s8, s9] \n            left \n                [1] project [s8 = getField(s11, \"l\"), s9 = getField(s11, \"h\")] \n                [1] unwind s11 s12 s10 false \n                [1] limit 1ll \n                [1] coscan \n            right \n                [1] ixseek s8 s9 s15 s7 s13 s14 [] @\"3309fad1-79d9-4193-a51b-a46b969a6870\" @\"property_type_1\" true \n    right \n        [2] limit 1ll \n        [2] seek s16 s22 s23 s17 s18 s19 s20 none none [] @\"3309fad1-79d9-4193-a51b-a46b969a6870\" true false \n"
+      }
+    },
+    "rejectedPlans": [
+      {
+        "isCached": false,
+        "stage": "FETCH",
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "property_type": 1,
+            "bathrooms": 1
+          },
+          "indexName": "property_bathrooms_idx",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "property_type": [],
+            "bathrooms": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "property_type": [
+              "[\"Apartment\", \"Apartment\"]",
+              "[\"Bungalow\", \"Bungalow\"]",
+              "[\"Cabin\", \"Cabin\"]",
+              "[\"Chalet\", \"Chalet\"]",
+              "[\"Condominium\", \"Condominium\"]",
+              "[\"Cottage\", \"Cottage\"]",
+              "[\"House\", \"House\"]",
+              "[\"Loft\", \"Loft\"]",
+              "[\"Townhouse\", \"Townhouse\"]",
+              "[\"Villa\", \"Villa\"]"
+            ],
+            "bathrooms": [
+              "[MinKey, MaxKey]"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 4964,
+    "executionTimeMillis": 2,
+    "totalKeysExamined": 4964,
+    "totalDocsExamined": 4964,
+    "executionStages": {
+      "stage": "nlj",
+      "planNodeId": 2,
+      "nReturned": 4964,
+      "executionTimeMillisEstimate": 0,
+      "opens": 1,
+      "closes": 1,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "totalDocsExamined": 4964,
+      "totalKeysExamined": 4964,
+      "collectionScans": 0,
+      "collectionSeeks": 4964,
+      "indexScans": 0,
+      "indexSeeks": 10,
+      "indexesUsed": [
+        "property_type_1",
+        "property_type_1"
+      ],
+      "innerOpens": 4964,
+      "innerCloses": 1,
+      "outerProjects": [],
+      "outerCorrelated": [
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "outerStage": {
+        "stage": "branch",
+        "planNodeId": 1,
+        "nReturned": 4964,
+        "executionTimeMillisEstimate": 0,
+        "opens": 1,
+        "closes": 1,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 1,
+        "numTested": 1,
+        "thenBranchOpens": 0,
+        "thenBranchCloses": 0,
+        "elseBranchOpens": 1,
+        "elseBranchCloses": 1,
+        "filter": "s21 ",
+        "thenSlots": [
+          1,
+          3,
+          4,
+          5,
+          6
+        ],
+        "elseSlots": [
+          7,
+          13,
+          14,
+          15,
+          6
+        ],
+        "outputSlots": [
+          16,
+          17,
+          18,
+          19,
+          20
+        ],
+        "thenStage": {
+          "stage": "ixscan_generic",
+          "planNodeId": 1,
+          "nReturned": 0,
+          "executionTimeMillisEstimate": 0,
+          "opens": 0,
+          "closes": 0,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 0,
+          "indexName": "property_type_1",
+          "keysExamined": 0,
+          "seeks": 0,
+          "numReads": 0,
+          "indexKeySlot": 5,
+          "recordIdSlot": 1,
+          "snapshotIdSlot": 3,
+          "indexIdentSlot": 4,
+          "outputSlots": [],
+          "indexKeysToInclude": "00000000000000000000000000000000"
+        },
+        "elseStage": {
+          "stage": "nlj",
+          "planNodeId": 1,
+          "nReturned": 4964,
+          "executionTimeMillisEstimate": 0,
+          "opens": 1,
+          "closes": 1,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 1,
+          "totalDocsExamined": 0,
+          "totalKeysExamined": 4964,
+          "collectionScans": 0,
+          "collectionSeeks": 0,
+          "indexScans": 0,
+          "indexSeeks": 10,
+          "indexesUsed": [
+            "property_type_1"
+          ],
+          "innerOpens": 10,
+          "innerCloses": 1,
+          "outerProjects": [],
+          "outerCorrelated": [
+            8,
+            9
+          ],
+          "outerStage": {
+            "stage": "project",
+            "planNodeId": 1,
+            "nReturned": 10,
+            "executionTimeMillisEstimate": 0,
+            "opens": 1,
+            "closes": 1,
+            "saveState": 0,
+            "restoreState": 0,
+            "isEOF": 1,
+            "projections": {
+              "8": "getField(s11, \"l\") ",
+              "9": "getField(s11, \"h\") "
+            },
+            "inputStage": {
+              "stage": "unwind",
+              "planNodeId": 1,
+              "nReturned": 10,
+              "executionTimeMillisEstimate": 0,
+              "opens": 1,
+              "closes": 1,
+              "saveState": 0,
+              "restoreState": 0,
+              "isEOF": 1,
+              "inputSlot": 10,
+              "outSlot": 11,
+              "outIndexSlot": 12,
+              "preserveNullAndEmptyArrays": 0,
+              "inputStage": {
+                "stage": "limit",
+                "planNodeId": 1,
+                "nReturned": 1,
+                "executionTimeMillisEstimate": 0,
+                "opens": 1,
+                "closes": 1,
+                "saveState": 0,
+                "restoreState": 0,
+                "isEOF": 1,
+                "limit": 1,
+                "inputStage": {
+                  "stage": "coscan",
+                  "planNodeId": 1,
+                  "nReturned": 1,
+                  "executionTimeMillisEstimate": 0,
+                  "opens": 1,
+                  "closes": 1,
+                  "saveState": 0,
+                  "restoreState": 0,
+                  "isEOF": 0
+                }
+              }
+            }
+          },
+          "innerStage": {
+            "stage": "ixseek",
+            "planNodeId": 1,
+            "nReturned": 4964,
+            "executionTimeMillisEstimate": 0,
+            "opens": 10,
+            "closes": 1,
+            "saveState": 0,
+            "restoreState": 0,
+            "isEOF": 1,
+            "indexName": "property_type_1",
+            "keysExamined": 4964,
+            "seeks": 10,
+            "numReads": 4974,
+            "indexKeySlot": 15,
+            "recordIdSlot": 7,
+            "snapshotIdSlot": 13,
+            "indexIdentSlot": 14,
+            "outputSlots": [],
+            "indexKeysToInclude": "00000000000000000000000000000000",
+            "seekKeyLow": "s8 ",
+            "seekKeyHigh": "s9 "
+          }
+        }
+      },
+      "innerStage": {
+        "stage": "limit",
+        "planNodeId": 2,
+        "nReturned": 4964,
+        "executionTimeMillisEstimate": 0,
+        "opens": 4964,
+        "closes": 1,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 1,
+        "limit": 1,
+        "inputStage": {
+          "stage": "seek",
+          "planNodeId": 2,
+          "nReturned": 4964,
+          "executionTimeMillisEstimate": 0,
+          "opens": 4964,
+          "closes": 1,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 0,
+          "numReads": 4964,
+          "recordSlot": 22,
+          "recordIdSlot": 23,
+          "seekRecordIdSlot": 16,
+          "snapshotIdSlot": 17,
+          "indexIdentSlot": 18,
+          "indexKeySlot": 19,
+          "indexKeyPatternSlot": 20,
+          "scanFieldNames": [],
+          "scanFieldSlots": []
+        }
+      }
+    },
+    "allPlansExecution": [
+      {
+        "nReturned": 101,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 101,
+        "totalDocsExamined": 101,
+        "score": 2.0002,
+        "executionStages": {
+          "isCached": false,
+          "stage": "FETCH",
+          "nReturned": 101,
+          "executionTimeMillisEstimate": 0,
+          "works": 101,
+          "advanced": 101,
+          "needTime": 0,
+          "needYield": 0,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 0,
+          "docsExamined": 101,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nReturned": 101,
+            "executionTimeMillisEstimate": 0,
+            "works": 101,
+            "advanced": 101,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 0,
+            "restoreState": 0,
+            "isEOF": 0,
+            "keyPattern": {
+              "property_type": 1
+            },
+            "indexName": "property_type_1",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "property_type": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "property_type": [
+                "[\"Apartment\", \"Apartment\"]",
+                "[\"Bungalow\", \"Bungalow\"]",
+                "[\"Cabin\", \"Cabin\"]",
+                "[\"Chalet\", \"Chalet\"]",
+                "[\"Condominium\", \"Condominium\"]",
+                "[\"Cottage\", \"Cottage\"]",
+                "[\"House\", \"House\"]",
+                "[\"Loft\", \"Loft\"]",
+                "[\"Townhouse\", \"Townhouse\"]",
+                "[\"Villa\", \"Villa\"]"
+              ]
+            },
+            "keysExamined": 101,
+            "seeks": 1,
+            "dupsTested": 0,
+            "dupsDropped": 0
+          }
+        }
+      },
+      {
+        "nReturned": 101,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 101,
+        "totalDocsExamined": 101,
+        "score": 2.0002,
+        "executionStages": {
+          "isCached": false,
+          "stage": "FETCH",
+          "nReturned": 101,
+          "executionTimeMillisEstimate": 0,
+          "works": 101,
+          "advanced": 101,
+          "needTime": 0,
+          "needYield": 0,
+          "saveState": 1,
+          "restoreState": 0,
+          "isEOF": 0,
+          "docsExamined": 101,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nReturned": 101,
+            "executionTimeMillisEstimate": 0,
+            "works": 101,
+            "advanced": 101,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 0,
+            "isEOF": 0,
+            "keyPattern": {
+              "property_type": 1,
+              "bathrooms": 1
+            },
+            "indexName": "property_bathrooms_idx",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "property_type": [],
+              "bathrooms": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "property_type": [
+                "[\"Apartment\", \"Apartment\"]",
+                "[\"Bungalow\", \"Bungalow\"]",
+                "[\"Cabin\", \"Cabin\"]",
+                "[\"Chalet\", \"Chalet\"]",
+                "[\"Condominium\", \"Condominium\"]",
+                "[\"Cottage\", \"Cottage\"]",
+                "[\"House\", \"House\"]",
+                "[\"Loft\", \"Loft\"]",
+                "[\"Townhouse\", \"Townhouse\"]",
+                "[\"Villa\", \"Villa\"]"
+              ],
+              "bathrooms": [
+                "[MinKey, MaxKey]"
+              ]
+            },
+            "keysExamined": 101,
+            "seeks": 1,
+            "dupsTested": 0,
+            "dupsDropped": 0
+          }
+        }
+      }
+    ]
+  },
+  "queryShapeHash": "B870E75422BD51DBBAD0A9C56617204657EE98B5B2A9D47BD49EBB6AE24A005C",
+  "command": {
+    "find": "listingsAndReviews",
+    "filter": {
+      "property_type": {
+        "$in": [
+          "Apartment",
+          "House",
+          "Condominium",
+          "Townhouse",
+          "Loft",
+          "Villa",
+          "Cabin",
+          "Chalet",
+          "Cottage",
+          "Bungalow"
+        ]
+      }
+    },
+    "$db": "airbnb"
+  },
+  "serverInfo": {
+    "host": "MacBook-Pro.local",
+    "port": 27017,
+    "version": "8.0.10",
+    "gitVersion": "9d03076bb2d5147d5b6fe381c7118b0b0478b682"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeEngine",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

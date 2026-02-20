@@ -1,0 +1,360 @@
+{
+  "explainVersion": "2",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "airbnb.listingsAndReviews",
+          "parsedQuery": {
+            "$and": [
+              {
+                "amenities": {
+                  "$exists": true
+                }
+              },
+              {
+                "amenities": {
+                  "$not": {
+                    "$eq": []
+                  }
+                }
+              }
+            ]
+          },
+          "indexFilterSet": false,
+          "queryHash": "993BF8E9",
+          "planCacheShapeHash": "993BF8E9",
+          "planCacheKey": "C20A7093",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "queryPlan": {
+              "stage": "PROJECTION_SIMPLE",
+              "planNodeId": 3,
+              "transformBy": {
+                "amenities": true,
+                "price": true,
+                "_id": false
+              },
+              "inputStage": {
+                "stage": "FETCH",
+                "planNodeId": 2,
+                "filter": {
+                  "$and": [
+                    {
+                      "amenities": {
+                        "$exists": true
+                      }
+                    },
+                    {
+                      "amenities": {
+                        "$not": {
+                          "$eq": []
+                        }
+                      }
+                    }
+                  ]
+                },
+                "inputStage": {
+                  "stage": "IXSCAN",
+                  "planNodeId": 1,
+                  "keyPattern": {
+                    "amenities": 1
+                  },
+                  "indexName": "amenities_idx",
+                  "isMultiKey": true,
+                  "multiKeyPaths": {
+                    "amenities": [
+                      "amenities"
+                    ]
+                  },
+                  "isUnique": false,
+                  "isSparse": false,
+                  "isPartial": false,
+                  "indexVersion": 2,
+                  "direction": "forward",
+                  "indexBounds": {
+                    "amenities": [
+                      "[MinKey, MaxKey]"
+                    ]
+                  }
+                }
+              }
+            },
+            "slotBasedPlan": {
+              "slots": "$$RESULT=s9 env: { s5 = {\"amenities\" : 1} }",
+              "stages": "[3] project [s9 = makeBsonObj(MakeObjSpec([amenities, price], Closed, RetNothing), s6, false)] \n[2] filter {(exists(s8) && !(traverseF(s8, lambda(l3.0) { ((move(l3.0) == []) ?: false) }, true)))} \n[2] nlj inner [] [s1, s2, s3, s4, s5] \n    left \n        [1] unique [s1] \n        [1] ixseek KS(0A0104) KS(F0FE04) s4 s1 s2 s3 [] @\"3309fad1-79d9-4193-a51b-a46b969a6870\" @\"amenities_idx\" true \n    right \n        [2] limit 1ll \n        [2] seek s1 s6 s7 s2 s3 s4 s5 none none [s8 = amenities] @\"3309fad1-79d9-4193-a51b-a46b969a6870\" true false \n"
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 5555,
+          "executionTimeMillis": 38,
+          "totalKeysExamined": 120167,
+          "totalDocsExamined": 5555,
+          "executionStages": {
+            "stage": "project",
+            "planNodeId": 3,
+            "nReturned": 5555,
+            "executionTimeMillisEstimate": 14,
+            "opens": 1,
+            "closes": 1,
+            "saveState": 10,
+            "restoreState": 10,
+            "isEOF": 1,
+            "projections": {
+              "9": "makeBsonObj(MakeObjSpec([amenities, price], Closed, RetNothing), s6, false) "
+            },
+            "inputStage": {
+              "stage": "filter",
+              "planNodeId": 2,
+              "nReturned": 5555,
+              "executionTimeMillisEstimate": 14,
+              "opens": 1,
+              "closes": 1,
+              "saveState": 10,
+              "restoreState": 10,
+              "isEOF": 1,
+              "numTested": 5555,
+              "filter": "(exists(s8) && !(traverseF(s8, lambda(l3.0) { ((move(l3.0) == []) ?: false) }, true))) ",
+              "inputStage": {
+                "stage": "nlj",
+                "planNodeId": 2,
+                "nReturned": 5555,
+                "executionTimeMillisEstimate": 14,
+                "opens": 1,
+                "closes": 1,
+                "saveState": 10,
+                "restoreState": 10,
+                "isEOF": 1,
+                "totalDocsExamined": 5555,
+                "totalKeysExamined": 120167,
+                "collectionScans": 0,
+                "collectionSeeks": 5555,
+                "indexScans": 0,
+                "indexSeeks": 1,
+                "indexesUsed": [
+                  "amenities_idx"
+                ],
+                "innerOpens": 5555,
+                "innerCloses": 1,
+                "outerProjects": [],
+                "outerCorrelated": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "outerStage": {
+                  "stage": "unique",
+                  "planNodeId": 1,
+                  "nReturned": 5555,
+                  "executionTimeMillisEstimate": 14,
+                  "opens": 1,
+                  "closes": 1,
+                  "saveState": 10,
+                  "restoreState": 10,
+                  "isEOF": 1,
+                  "dupsTested": 120167,
+                  "dupsDropped": 114612,
+                  "keySlots": [
+                    1
+                  ],
+                  "inputStage": {
+                    "stage": "ixseek",
+                    "planNodeId": 1,
+                    "nReturned": 120167,
+                    "executionTimeMillisEstimate": 14,
+                    "opens": 1,
+                    "closes": 1,
+                    "saveState": 10,
+                    "restoreState": 10,
+                    "isEOF": 1,
+                    "indexName": "amenities_idx",
+                    "keysExamined": 120167,
+                    "seeks": 1,
+                    "numReads": 120168,
+                    "indexKeySlot": 4,
+                    "recordIdSlot": 1,
+                    "snapshotIdSlot": 2,
+                    "indexIdentSlot": 3,
+                    "outputSlots": [],
+                    "indexKeysToInclude": "00000000000000000000000000000000",
+                    "seekKeyLow": "KS(0A0104) ",
+                    "seekKeyHigh": "KS(F0FE04) "
+                  }
+                },
+                "innerStage": {
+                  "stage": "limit",
+                  "planNodeId": 2,
+                  "nReturned": 5555,
+                  "executionTimeMillisEstimate": 0,
+                  "opens": 5555,
+                  "closes": 1,
+                  "saveState": 10,
+                  "restoreState": 10,
+                  "isEOF": 1,
+                  "limit": 1,
+                  "inputStage": {
+                    "stage": "seek",
+                    "planNodeId": 2,
+                    "nReturned": 5555,
+                    "executionTimeMillisEstimate": 0,
+                    "opens": 5555,
+                    "closes": 1,
+                    "saveState": 10,
+                    "restoreState": 10,
+                    "isEOF": 0,
+                    "numReads": 5555,
+                    "recordSlot": 6,
+                    "recordIdSlot": 7,
+                    "seekRecordIdSlot": 1,
+                    "snapshotIdSlot": 2,
+                    "indexIdentSlot": 3,
+                    "indexKeySlot": 4,
+                    "indexKeyPatternSlot": 5,
+                    "scanFieldNames": [
+                      "amenities"
+                    ],
+                    "scanFieldSlots": [
+                      8
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "allPlansExecution": []
+        }
+      },
+      "nReturned": 5555,
+      "executionTimeMillisEstimate": 30
+    },
+    {
+      "$unwind": {
+        "path": "$amenities"
+      },
+      "nReturned": 121402,
+      "executionTimeMillisEstimate": 30
+    },
+    {
+      "$group": {
+        "_id": "$amenities",
+        "listing_count": {
+          "$sum": {
+            "$const": 1
+          }
+        },
+        "avg_price": {
+          "$avg": "$price"
+        }
+      },
+      "maxAccumulatorMemoryUsageBytes": {
+        "listing_count": 25296,
+        "avg_price": 19344
+      },
+      "totalOutputDataSizeBytes": 61637,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledDataStorageSize": 0,
+      "numBytesSpilledEstimate": 0,
+      "spilledRecords": 0,
+      "nReturned": 186,
+      "executionTimeMillisEstimate": 34
+    },
+    {
+      "$match": {
+        "listing_count": {
+          "$gte": 100
+        }
+      },
+      "nReturned": 97,
+      "executionTimeMillisEstimate": 34
+    },
+    {
+      "$sort": {
+        "sortKey": {
+          "listing_count": -1
+        },
+        "limit": 20
+      },
+      "totalDataSizeSortedBytesEstimate": 6551,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledDataStorageSize": 0,
+      "nReturned": 20,
+      "executionTimeMillisEstimate": 34
+    }
+  ],
+  "queryShapeHash": "117B81025A3B66C81A7429CBA409956AD8EE448B2EECC8DFD2FE8DF3A0862056",
+  "serverInfo": {
+    "host": "MacBook-Pro.local",
+    "port": 27017,
+    "version": "8.0.10",
+    "gitVersion": "9d03076bb2d5147d5b6fe381c7118b0b0478b682"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeEngine",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "listingsAndReviews",
+    "pipeline": [
+      {
+        "$match": {
+          "amenities": {
+            "$exists": true,
+            "$ne": []
+          }
+        }
+      },
+      {
+        "$unwind": "$amenities"
+      },
+      {
+        "$group": {
+          "_id": "$amenities",
+          "listing_count": {
+            "$sum": 1
+          },
+          "avg_price": {
+            "$avg": "$price"
+          }
+        }
+      },
+      {
+        "$match": {
+          "listing_count": {
+            "$gte": 100
+          }
+        }
+      },
+      {
+        "$sort": {
+          "listing_count": -1
+        }
+      },
+      {
+        "$limit": 20
+      }
+    ],
+    "cursor": {},
+    "$db": "airbnb"
+  },
+  "ok": 1.0
+}

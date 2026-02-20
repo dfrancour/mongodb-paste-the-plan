@@ -1,0 +1,302 @@
+{
+  "explainVersion": "2",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "airbnb.listingsAndReviews",
+          "parsedQuery": {
+            "host.host_id": {
+              "$exists": true
+            }
+          },
+          "indexFilterSet": false,
+          "queryHash": "0185ED24",
+          "planCacheShapeHash": "0185ED24",
+          "planCacheKey": "335F8215",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "queryPlan": {
+              "stage": "PROJECTION_DEFAULT",
+              "planNodeId": 3,
+              "transformBy": {
+                "_id": true,
+                "host": {
+                  "host_id": true
+                },
+                "name": true,
+                "price": true
+              },
+              "inputStage": {
+                "stage": "FETCH",
+                "planNodeId": 2,
+                "filter": {
+                  "host.host_id": {
+                    "$exists": true
+                  }
+                },
+                "inputStage": {
+                  "stage": "IXSCAN",
+                  "planNodeId": 1,
+                  "keyPattern": {
+                    "host.host_id": 1
+                  },
+                  "indexName": "host_id_idx",
+                  "isMultiKey": false,
+                  "multiKeyPaths": {
+                    "host.host_id": []
+                  },
+                  "isUnique": false,
+                  "isSparse": false,
+                  "isPartial": false,
+                  "indexVersion": 2,
+                  "direction": "forward",
+                  "indexBounds": {
+                    "host.host_id": [
+                      "[MinKey, MaxKey]"
+                    ]
+                  }
+                }
+              }
+            },
+            "slotBasedPlan": {
+              "slots": "$$RESULT=s9 env: { s5 = {\"host.host_id\" : 1} }",
+              "stages": "[3] project [s9 = makeBsonObj(MakeObjSpec([_id, host = MakeObj([host_id], Closed, RetNothing), name, price], Closed, RetNothing), s6, false)] \n[2] filter {traverseF(s8, lambda(l3.0) { exists(getField(move(l3.0), \"host_id\")) }, false)} \n[2] nlj inner [] [s1, s2, s3, s4, s5] \n    left \n        [1] ixseek KS(0A0104) KS(F0FE04) s4 s1 s2 s3 [] @\"3309fad1-79d9-4193-a51b-a46b969a6870\" @\"host_id_idx\" true \n    right \n        [2] limit 1ll \n        [2] seek s1 s6 s7 s2 s3 s4 s5 none none [s8 = host] @\"3309fad1-79d9-4193-a51b-a46b969a6870\" true false \n"
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 5555,
+          "executionTimeMillis": 35,
+          "totalKeysExamined": 5555,
+          "totalDocsExamined": 5555,
+          "executionStages": {
+            "stage": "project",
+            "planNodeId": 3,
+            "nReturned": 5555,
+            "executionTimeMillisEstimate": 1,
+            "opens": 1,
+            "closes": 1,
+            "saveState": 10,
+            "restoreState": 10,
+            "isEOF": 1,
+            "projections": {
+              "9": "makeBsonObj(MakeObjSpec([_id, host = MakeObj([host_id], Closed, RetNothing), name, price], Closed, RetNothing), s6, false) "
+            },
+            "inputStage": {
+              "stage": "filter",
+              "planNodeId": 2,
+              "nReturned": 5555,
+              "executionTimeMillisEstimate": 1,
+              "opens": 1,
+              "closes": 1,
+              "saveState": 10,
+              "restoreState": 10,
+              "isEOF": 1,
+              "numTested": 5555,
+              "filter": "traverseF(s8, lambda(l3.0) { exists(getField(move(l3.0), \"host_id\")) }, false) ",
+              "inputStage": {
+                "stage": "nlj",
+                "planNodeId": 2,
+                "nReturned": 5555,
+                "executionTimeMillisEstimate": 1,
+                "opens": 1,
+                "closes": 1,
+                "saveState": 10,
+                "restoreState": 10,
+                "isEOF": 1,
+                "totalDocsExamined": 5555,
+                "totalKeysExamined": 5555,
+                "collectionScans": 0,
+                "collectionSeeks": 5555,
+                "indexScans": 0,
+                "indexSeeks": 1,
+                "indexesUsed": [
+                  "host_id_idx"
+                ],
+                "innerOpens": 5555,
+                "innerCloses": 1,
+                "outerProjects": [],
+                "outerCorrelated": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ],
+                "outerStage": {
+                  "stage": "ixseek",
+                  "planNodeId": 1,
+                  "nReturned": 5555,
+                  "executionTimeMillisEstimate": 0,
+                  "opens": 1,
+                  "closes": 1,
+                  "saveState": 10,
+                  "restoreState": 10,
+                  "isEOF": 1,
+                  "indexName": "host_id_idx",
+                  "keysExamined": 5555,
+                  "seeks": 1,
+                  "numReads": 5556,
+                  "indexKeySlot": 4,
+                  "recordIdSlot": 1,
+                  "snapshotIdSlot": 2,
+                  "indexIdentSlot": 3,
+                  "outputSlots": [],
+                  "indexKeysToInclude": "00000000000000000000000000000000",
+                  "seekKeyLow": "KS(0A0104) ",
+                  "seekKeyHigh": "KS(F0FE04) "
+                },
+                "innerStage": {
+                  "stage": "limit",
+                  "planNodeId": 2,
+                  "nReturned": 5555,
+                  "executionTimeMillisEstimate": 1,
+                  "opens": 5555,
+                  "closes": 1,
+                  "saveState": 10,
+                  "restoreState": 10,
+                  "isEOF": 1,
+                  "limit": 1,
+                  "inputStage": {
+                    "stage": "seek",
+                    "planNodeId": 2,
+                    "nReturned": 5555,
+                    "executionTimeMillisEstimate": 1,
+                    "opens": 5555,
+                    "closes": 1,
+                    "saveState": 10,
+                    "restoreState": 10,
+                    "isEOF": 0,
+                    "numReads": 5555,
+                    "recordSlot": 6,
+                    "recordIdSlot": 7,
+                    "seekRecordIdSlot": 1,
+                    "snapshotIdSlot": 2,
+                    "indexIdentSlot": 3,
+                    "indexKeySlot": 4,
+                    "indexKeyPatternSlot": 5,
+                    "scanFieldNames": [
+                      "host"
+                    ],
+                    "scanFieldSlots": [
+                      8
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "allPlansExecution": []
+        }
+      },
+      "nReturned": 5555,
+      "executionTimeMillisEstimate": 1
+    },
+    {
+      "$lookup": {
+        "from": "hosts",
+        "as": "host_details",
+        "localField": "host.host_id",
+        "foreignField": "_id",
+        "unwinding": {
+          "preserveNullAndEmptyArrays": true
+        }
+      },
+      "totalDocsExamined": 0,
+      "totalKeysExamined": 0,
+      "collectionScans": 0,
+      "indexesUsed": [],
+      "nReturned": 5555,
+      "executionTimeMillisEstimate": 36
+    },
+    {
+      "$match": {
+        "host_details.host_is_superhost": {
+          "$eq": true
+        }
+      },
+      "nReturned": 0,
+      "executionTimeMillisEstimate": 36
+    },
+    {
+      "$project": {
+        "_id": true,
+        "name": true,
+        "price": true,
+        "host_name": "$host_details.host_name",
+        "host_since": "$host_details.host_since"
+      },
+      "nReturned": 0,
+      "executionTimeMillisEstimate": 36
+    }
+  ],
+  "queryShapeHash": "DF71315BD93AD8F2E4CA2446D3644F9BB5657B853FCBD2DA8BBC40BB1914B33D",
+  "serverInfo": {
+    "host": "MacBook-Pro.local",
+    "port": 27017,
+    "version": "8.0.10",
+    "gitVersion": "9d03076bb2d5147d5b6fe381c7118b0b0478b682"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeEngine",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "listingsAndReviews",
+    "pipeline": [
+      {
+        "$match": {
+          "host.host_id": {
+            "$exists": true
+          }
+        }
+      },
+      {
+        "$lookup": {
+          "from": "hosts",
+          "localField": "host.host_id",
+          "foreignField": "_id",
+          "as": "host_details"
+        }
+      },
+      {
+        "$unwind": {
+          "path": "$host_details",
+          "preserveNullAndEmptyArrays": true
+        }
+      },
+      {
+        "$match": {
+          "host_details.host_is_superhost": true
+        }
+      },
+      {
+        "$project": {
+          "name": 1,
+          "price": 1,
+          "host_name": "$host_details.host_name",
+          "host_since": "$host_details.host_since"
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "airbnb"
+  },
+  "ok": 1.0
+}

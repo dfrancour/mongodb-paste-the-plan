@@ -1,0 +1,261 @@
+{
+  "explainVersion": "2",
+  "queryPlanner": {
+    "namespace": "airbnb.listingsAndReviews",
+    "parsedQuery": {
+      "$and": [
+        {
+          "reviews_per_month": {
+            "$exists": true
+          }
+        },
+        {
+          "host.host_verifications": {
+            "$in": [
+              "email",
+              "phone"
+            ]
+          }
+        },
+        {
+          "reviews_per_month": {
+            "$not": {
+              "$eq": null
+            }
+          }
+        }
+      ]
+    },
+    "indexFilterSet": false,
+    "queryHash": "16E24ACF",
+    "planCacheShapeHash": "16E24ACF",
+    "planCacheKey": "47EADB72",
+    "optimizationTimeMillis": 1,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "queryPlan": {
+        "stage": "PROJECTION_DEFAULT",
+        "planNodeId": 4,
+        "transformBy": {
+          "host": {
+            "host_name": true
+          },
+          "reviews_per_month": true,
+          "_id": true
+        },
+        "inputStage": {
+          "stage": "SORT",
+          "planNodeId": 3,
+          "sortPattern": {
+            "number_of_reviews": -1
+          },
+          "memLimit": 104857600,
+          "type": "simple",
+          "inputStage": {
+            "stage": "FETCH",
+            "planNodeId": 2,
+            "filter": {
+              "host.host_verifications": {
+                "$in": [
+                  "email",
+                  "phone"
+                ]
+              }
+            },
+            "inputStage": {
+              "stage": "IXSCAN",
+              "planNodeId": 1,
+              "keyPattern": {
+                "reviews_per_month": 1
+              },
+              "indexName": "reviews_per_month_sparse_idx",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "reviews_per_month": []
+              },
+              "isUnique": false,
+              "isSparse": true,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "reviews_per_month": [
+                  "[MinKey, null)",
+                  "(null, MaxKey]"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "slotBasedPlan": {
+        "slots": "$$RESULT=s28 env: { s2 = IndexBounds(\"field #0['reviews_per_month']: [MinKey, null), (null, MaxKey]\"), s6 = {\"reviews_per_month\" : 1}, s10 = Nothing, s21 = true, s26 = InList(\"email\" \"phone\") }",
+        "stages": "[4] project [s28 = makeBsonObj(MakeObjSpec([host = MakeObj([host_name], Closed, RetNothing), reviews_per_month, _id], Closed, RetNothing), s22, false)] \n[3] sort [s27] [desc] [s22] \n[3] project [s27 = getSortKeyDesc(s24)] \n[2] filter {traverseF(s25, lambda(l3.0) { traverseF(getField(move(l3.0), \"host_verifications\"), lambda(l4.0) { isMember(move(l4.0), s26) }, false) }, false)} \n[2] nlj inner [] [s16, s17, s18, s19, s20] \n    left \n        [1] branch {s21} [s16, s17, s18, s19, s20] \n        [s1, s3, s4, s5, s6] [1] ixscan_generic s2 s5 s1 s3 s4 lowPriority [] @\"3309fad1-79d9-4193-a51b-a46b969a6870\" @\"reviews_per_month_sparse_idx\" true \n        [s7, s13, s14, s15, s6] [1] nlj inner [] [s8, s9] \n            left \n                [1] project [s8 = getField(s11, \"l\"), s9 = getField(s11, \"h\")] \n                [1] unwind s11 s12 s10 false \n                [1] limit 1ll \n                [1] coscan \n            right \n                [1] ixseek s8 s9 s15 s7 s13 s14 [] @\"3309fad1-79d9-4193-a51b-a46b969a6870\" @\"reviews_per_month_sparse_idx\" true \n    right \n        [2] limit 1ll \n        [2] seek s16 s22 s23 s17 s18 s19 s20 none none [s24 = number_of_reviews, s25 = host] @\"3309fad1-79d9-4193-a51b-a46b969a6870\" true false \n"
+      }
+    },
+    "rejectedPlans": [
+      {
+        "isCached": false,
+        "stage": "PROJECTION_DEFAULT",
+        "transformBy": {
+          "host.host_name": 1,
+          "reviews_per_month": 1
+        },
+        "inputStage": {
+          "stage": "SORT",
+          "sortPattern": {
+            "number_of_reviews": -1
+          },
+          "memLimit": 104857600,
+          "type": "simple",
+          "inputStage": {
+            "stage": "FETCH",
+            "filter": {
+              "$and": [
+                {
+                  "reviews_per_month": {
+                    "$not": {
+                      "$eq": null
+                    }
+                  }
+                },
+                {
+                  "reviews_per_month": {
+                    "$exists": true
+                  }
+                }
+              ]
+            },
+            "inputStage": {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "host.host_verifications": 1
+              },
+              "indexName": "host_verifications_idx",
+              "isMultiKey": true,
+              "multiKeyPaths": {
+                "host.host_verifications": [
+                  "host.host_verifications"
+                ]
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "host.host_verifications": [
+                  "[\"email\", \"email\"]",
+                  "[\"phone\", \"phone\"]"
+                ]
+              }
+            }
+          }
+        }
+      },
+      {
+        "isCached": false,
+        "stage": "PROJECTION_DEFAULT",
+        "transformBy": {
+          "host.host_name": 1,
+          "reviews_per_month": 1
+        },
+        "inputStage": {
+          "stage": "FETCH",
+          "filter": {
+            "$and": [
+              {
+                "reviews_per_month": {
+                  "$exists": true
+                }
+              },
+              {
+                "host.host_verifications": {
+                  "$in": [
+                    "email",
+                    "phone"
+                  ]
+                }
+              },
+              {
+                "reviews_per_month": {
+                  "$not": {
+                    "$eq": null
+                  }
+                }
+              }
+            ]
+          },
+          "inputStage": {
+            "stage": "IXSCAN",
+            "keyPattern": {
+              "number_of_reviews": 1
+            },
+            "indexName": "reviews_count_idx",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "number_of_reviews": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "backward",
+            "indexBounds": {
+              "number_of_reviews": [
+                "[MaxKey, MinKey]"
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "queryShapeHash": "99F7DE32E82498F022B09410F6180E36E2CCEBA6794D8DB8BC65E41290F44C6D",
+  "command": {
+    "find": "listingsAndReviews",
+    "filter": {
+      "host.host_verifications": {
+        "$in": [
+          "email",
+          "phone"
+        ]
+      },
+      "reviews_per_month": {
+        "$exists": true,
+        "$ne": null
+      }
+    },
+    "projection": {
+      "host.host_name": 1,
+      "reviews_per_month": 1
+    },
+    "sort": {
+      "number_of_reviews": -1
+    },
+    "$db": "airbnb"
+  },
+  "serverInfo": {
+    "host": "MacBook-Pro.local",
+    "port": 27017,
+    "version": "8.0.10",
+    "gitVersion": "9d03076bb2d5147d5b6fe381c7118b0b0478b682"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeEngine",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

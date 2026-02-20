@@ -1,0 +1,268 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "airbnb.listingsAndReviews",
+    "parsedQuery": {
+      "$and": [
+        {
+          "accommodates": {
+            "$eq": 2
+          }
+        },
+        {
+          "room_type": {
+            "$eq": "Private room"
+          }
+        },
+        {
+          "price": {
+            "$lte": 100
+          }
+        }
+      ]
+    },
+    "indexFilterSet": false,
+    "queryHash": "ADCCD956",
+    "planCacheShapeHash": "ADCCD956",
+    "planCacheKey": "305C9209",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "FETCH",
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "room_type": 1,
+          "accommodates": 1,
+          "price": 1
+        },
+        "indexName": "room_accom_price_idx",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "room_type": [],
+          "accommodates": [],
+          "price": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "room_type": [
+            "[\"Private room\", \"Private room\"]"
+          ],
+          "accommodates": [
+            "[2, 2]"
+          ],
+          "price": [
+            "[-inf.0, 100]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": [
+      {
+        "isCached": false,
+        "stage": "FETCH",
+        "filter": {
+          "$and": [
+            {
+              "accommodates": {
+                "$eq": 2
+              }
+            },
+            {
+              "room_type": {
+                "$eq": "Private room"
+              }
+            }
+          ]
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "price": 1
+          },
+          "indexName": "price_1",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "price": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "price": [
+              "[-inf.0, 100]"
+            ]
+          }
+        }
+      },
+      {
+        "isCached": false,
+        "stage": "FETCH",
+        "filter": {
+          "$and": [
+            {
+              "price": {
+                "$lte": 100
+              }
+            },
+            {
+              "room_type": {
+                "$eq": "Private room"
+              }
+            }
+          ]
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "accommodates": 1
+          },
+          "indexName": "accommodates_1",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "accommodates": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "accommodates": [
+              "[2, 2]"
+            ]
+          }
+        }
+      },
+      {
+        "isCached": false,
+        "stage": "FETCH",
+        "filter": {
+          "$and": [
+            {
+              "accommodates": {
+                "$eq": 2
+              }
+            },
+            {
+              "price": {
+                "$lte": 100
+              }
+            }
+          ]
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "room_type": 1
+          },
+          "indexName": "room_type_1",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "room_type": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "room_type": [
+              "[\"Private room\", \"Private room\"]"
+            ]
+          }
+        }
+      },
+      {
+        "isCached": false,
+        "stage": "FETCH",
+        "filter": {
+          "$and": [
+            {
+              "price": {
+                "$lte": 100
+              }
+            },
+            {
+              "room_type": {
+                "$eq": "Private room"
+              }
+            }
+          ]
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "accommodates": 1,
+            "bedrooms": 1,
+            "bathrooms": 1
+          },
+          "indexName": "capacity_compound_idx",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "accommodates": [],
+            "bedrooms": [],
+            "bathrooms": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "accommodates": [
+              "[2, 2]"
+            ],
+            "bedrooms": [
+              "[MinKey, MaxKey]"
+            ],
+            "bathrooms": [
+              "[MinKey, MaxKey]"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "queryShapeHash": "E029B68ED84D90749D430C7C7EDB28DE68078E6C573A73E802979C2FA9179662",
+  "command": {
+    "find": "listingsAndReviews",
+    "filter": {
+      "room_type": "Private room",
+      "accommodates": 2,
+      "price": {
+        "$lte": 100
+      }
+    },
+    "$db": "airbnb"
+  },
+  "serverInfo": {
+    "host": "MacBook-Pro.local",
+    "port": 27017,
+    "version": "8.0.10",
+    "gitVersion": "9d03076bb2d5147d5b6fe381c7118b0b0478b682"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

@@ -1,0 +1,692 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "airbnb.listingsAndReviews",
+    "parsedQuery": {
+      "$and": [
+        {
+          "accommodates": {
+            "$eq": 2
+          }
+        },
+        {
+          "room_type": {
+            "$eq": "Private room"
+          }
+        },
+        {
+          "price": {
+            "$lte": 100
+          }
+        }
+      ]
+    },
+    "indexFilterSet": false,
+    "queryHash": "ADCCD956",
+    "planCacheShapeHash": "ADCCD956",
+    "planCacheKey": "305C9209",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "FETCH",
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "room_type": 1,
+          "accommodates": 1,
+          "price": 1
+        },
+        "indexName": "room_accom_price_idx",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "room_type": [],
+          "accommodates": [],
+          "price": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "room_type": [
+            "[\"Private room\", \"Private room\"]"
+          ],
+          "accommodates": [
+            "[2, 2]"
+          ],
+          "price": [
+            "[-inf.0, 100]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": [
+      {
+        "isCached": false,
+        "stage": "FETCH",
+        "filter": {
+          "$and": [
+            {
+              "accommodates": {
+                "$eq": 2
+              }
+            },
+            {
+              "room_type": {
+                "$eq": "Private room"
+              }
+            }
+          ]
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "price": 1
+          },
+          "indexName": "price_1",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "price": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "price": [
+              "[-inf.0, 100]"
+            ]
+          }
+        }
+      },
+      {
+        "isCached": false,
+        "stage": "FETCH",
+        "filter": {
+          "$and": [
+            {
+              "price": {
+                "$lte": 100
+              }
+            },
+            {
+              "room_type": {
+                "$eq": "Private room"
+              }
+            }
+          ]
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "accommodates": 1
+          },
+          "indexName": "accommodates_1",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "accommodates": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "accommodates": [
+              "[2, 2]"
+            ]
+          }
+        }
+      },
+      {
+        "isCached": false,
+        "stage": "FETCH",
+        "filter": {
+          "$and": [
+            {
+              "accommodates": {
+                "$eq": 2
+              }
+            },
+            {
+              "price": {
+                "$lte": 100
+              }
+            }
+          ]
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "room_type": 1
+          },
+          "indexName": "room_type_1",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "room_type": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "room_type": [
+              "[\"Private room\", \"Private room\"]"
+            ]
+          }
+        }
+      },
+      {
+        "isCached": false,
+        "stage": "FETCH",
+        "filter": {
+          "$and": [
+            {
+              "price": {
+                "$lte": 100
+              }
+            },
+            {
+              "room_type": {
+                "$eq": "Private room"
+              }
+            }
+          ]
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "accommodates": 1,
+            "bedrooms": 1,
+            "bathrooms": 1
+          },
+          "indexName": "capacity_compound_idx",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "accommodates": [],
+            "bedrooms": [],
+            "bathrooms": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "accommodates": [
+              "[2, 2]"
+            ],
+            "bedrooms": [
+              "[MinKey, MaxKey]"
+            ],
+            "bathrooms": [
+              "[MinKey, MaxKey]"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 735,
+    "executionTimeMillis": 1,
+    "totalKeysExamined": 735,
+    "totalDocsExamined": 735,
+    "executionStages": {
+      "isCached": false,
+      "stage": "FETCH",
+      "nReturned": 735,
+      "executionTimeMillisEstimate": 0,
+      "works": 736,
+      "advanced": 735,
+      "needTime": 0,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "docsExamined": 735,
+      "alreadyHasObj": 0,
+      "inputStage": {
+        "stage": "IXSCAN",
+        "nReturned": 735,
+        "executionTimeMillisEstimate": 0,
+        "works": 736,
+        "advanced": 735,
+        "needTime": 0,
+        "needYield": 0,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 1,
+        "keyPattern": {
+          "room_type": 1,
+          "accommodates": 1,
+          "price": 1
+        },
+        "indexName": "room_accom_price_idx",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "room_type": [],
+          "accommodates": [],
+          "price": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "room_type": [
+            "[\"Private room\", \"Private room\"]"
+          ],
+          "accommodates": [
+            "[2, 2]"
+          ],
+          "price": [
+            "[-inf.0, 100]"
+          ]
+        },
+        "keysExamined": 735,
+        "seeks": 1,
+        "dupsTested": 0,
+        "dupsDropped": 0
+      }
+    },
+    "allPlansExecution": [
+      {
+        "nReturned": 101,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 101,
+        "totalDocsExamined": 101,
+        "score": 2.0002,
+        "executionStages": {
+          "isCached": false,
+          "stage": "FETCH",
+          "nReturned": 101,
+          "executionTimeMillisEstimate": 0,
+          "works": 101,
+          "advanced": 101,
+          "needTime": 0,
+          "needYield": 0,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 0,
+          "docsExamined": 101,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nReturned": 101,
+            "executionTimeMillisEstimate": 0,
+            "works": 101,
+            "advanced": 101,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 0,
+            "restoreState": 0,
+            "isEOF": 0,
+            "keyPattern": {
+              "room_type": 1,
+              "accommodates": 1,
+              "price": 1
+            },
+            "indexName": "room_accom_price_idx",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "room_type": [],
+              "accommodates": [],
+              "price": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "room_type": [
+                "[\"Private room\", \"Private room\"]"
+              ],
+              "accommodates": [
+                "[2, 2]"
+              ],
+              "price": [
+                "[-inf.0, 100]"
+              ]
+            },
+            "keysExamined": 101,
+            "seeks": 1,
+            "dupsTested": 0,
+            "dupsDropped": 0
+          }
+        }
+      },
+      {
+        "nReturned": 43,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 101,
+        "totalDocsExamined": 101,
+        "score": 1.4259425742574257,
+        "executionStages": {
+          "isCached": false,
+          "stage": "FETCH",
+          "filter": {
+            "$and": [
+              {
+                "accommodates": {
+                  "$eq": 2
+                }
+              },
+              {
+                "room_type": {
+                  "$eq": "Private room"
+                }
+              }
+            ]
+          },
+          "nReturned": 43,
+          "executionTimeMillisEstimate": 0,
+          "works": 101,
+          "advanced": 43,
+          "needTime": 58,
+          "needYield": 0,
+          "saveState": 1,
+          "restoreState": 0,
+          "isEOF": 0,
+          "docsExamined": 101,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nReturned": 101,
+            "executionTimeMillisEstimate": 0,
+            "works": 101,
+            "advanced": 101,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 0,
+            "isEOF": 0,
+            "keyPattern": {
+              "price": 1
+            },
+            "indexName": "price_1",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "price": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "price": [
+                "[-inf.0, 100]"
+              ]
+            },
+            "keysExamined": 101,
+            "seeks": 1,
+            "dupsTested": 0,
+            "dupsDropped": 0
+          }
+        }
+      },
+      {
+        "nReturned": 27,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 101,
+        "totalDocsExamined": 101,
+        "score": 1.2675267326732673,
+        "executionStages": {
+          "isCached": false,
+          "stage": "FETCH",
+          "filter": {
+            "$and": [
+              {
+                "price": {
+                  "$lte": 100
+                }
+              },
+              {
+                "room_type": {
+                  "$eq": "Private room"
+                }
+              }
+            ]
+          },
+          "nReturned": 27,
+          "executionTimeMillisEstimate": 0,
+          "works": 101,
+          "advanced": 27,
+          "needTime": 74,
+          "needYield": 0,
+          "saveState": 1,
+          "restoreState": 0,
+          "isEOF": 0,
+          "docsExamined": 101,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nReturned": 101,
+            "executionTimeMillisEstimate": 0,
+            "works": 101,
+            "advanced": 101,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 0,
+            "isEOF": 0,
+            "keyPattern": {
+              "accommodates": 1
+            },
+            "indexName": "accommodates_1",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "accommodates": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "accommodates": [
+                "[2, 2]"
+              ]
+            },
+            "keysExamined": 101,
+            "seeks": 1,
+            "dupsTested": 0,
+            "dupsDropped": 0
+          }
+        }
+      },
+      {
+        "nReturned": 31,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 101,
+        "totalDocsExamined": 101,
+        "score": 1.307130693069307,
+        "executionStages": {
+          "isCached": false,
+          "stage": "FETCH",
+          "filter": {
+            "$and": [
+              {
+                "accommodates": {
+                  "$eq": 2
+                }
+              },
+              {
+                "price": {
+                  "$lte": 100
+                }
+              }
+            ]
+          },
+          "nReturned": 31,
+          "executionTimeMillisEstimate": 0,
+          "works": 101,
+          "advanced": 31,
+          "needTime": 70,
+          "needYield": 0,
+          "saveState": 1,
+          "restoreState": 0,
+          "isEOF": 0,
+          "docsExamined": 101,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nReturned": 101,
+            "executionTimeMillisEstimate": 0,
+            "works": 101,
+            "advanced": 101,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 0,
+            "isEOF": 0,
+            "keyPattern": {
+              "room_type": 1
+            },
+            "indexName": "room_type_1",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "room_type": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "room_type": [
+                "[\"Private room\", \"Private room\"]"
+              ]
+            },
+            "keysExamined": 101,
+            "seeks": 1,
+            "dupsTested": 0,
+            "dupsDropped": 0
+          }
+        }
+      },
+      {
+        "nReturned": 5,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 101,
+        "totalDocsExamined": 101,
+        "score": 1.0497049504950495,
+        "executionStages": {
+          "isCached": false,
+          "stage": "FETCH",
+          "filter": {
+            "$and": [
+              {
+                "price": {
+                  "$lte": 100
+                }
+              },
+              {
+                "room_type": {
+                  "$eq": "Private room"
+                }
+              }
+            ]
+          },
+          "nReturned": 5,
+          "executionTimeMillisEstimate": 0,
+          "works": 101,
+          "advanced": 5,
+          "needTime": 96,
+          "needYield": 0,
+          "saveState": 1,
+          "restoreState": 0,
+          "isEOF": 0,
+          "docsExamined": 101,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nReturned": 101,
+            "executionTimeMillisEstimate": 0,
+            "works": 101,
+            "advanced": 101,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 0,
+            "isEOF": 0,
+            "keyPattern": {
+              "accommodates": 1,
+              "bedrooms": 1,
+              "bathrooms": 1
+            },
+            "indexName": "capacity_compound_idx",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "accommodates": [],
+              "bedrooms": [],
+              "bathrooms": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "accommodates": [
+                "[2, 2]"
+              ],
+              "bedrooms": [
+                "[MinKey, MaxKey]"
+              ],
+              "bathrooms": [
+                "[MinKey, MaxKey]"
+              ]
+            },
+            "keysExamined": 101,
+            "seeks": 1,
+            "dupsTested": 0,
+            "dupsDropped": 0
+          }
+        }
+      }
+    ]
+  },
+  "queryShapeHash": "E029B68ED84D90749D430C7C7EDB28DE68078E6C573A73E802979C2FA9179662",
+  "command": {
+    "find": "listingsAndReviews",
+    "filter": {
+      "room_type": "Private room",
+      "accommodates": 2,
+      "price": {
+        "$lte": 100
+      }
+    },
+    "$db": "airbnb"
+  },
+  "serverInfo": {
+    "host": "MacBook-Pro.local",
+    "port": 27017,
+    "version": "8.0.10",
+    "gitVersion": "9d03076bb2d5147d5b6fe381c7118b0b0478b682"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

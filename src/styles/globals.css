@@ -1,0 +1,271 @@
+@import "tailwindcss";
+@import "./components.css";
+
+@theme {
+  --default-transition-duration: 300ms;
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  --color-neutral-50: oklch(98% 0.005 220);
+  --color-neutral-100: oklch(95% 0.008 220);
+  --color-neutral-200: oklch(88% 0.012 220);
+  --color-neutral-300: oklch(78% 0.015 220);
+  --color-neutral-400: oklch(65% 0.018 220);
+  --color-neutral-500: oklch(52% 0.020 220);
+  --color-neutral-600: oklch(42% 0.018 220);
+  --color-neutral-700: oklch(32% 0.015 220);
+  --color-neutral-800: oklch(24% 0.012 220);
+  --color-neutral-900: oklch(18% 0.008 220);
+  --color-neutral-950: oklch(12% 0.005 220);
+
+  --color-primary: oklch(45% 0.18 310);
+  --color-primary-hover: oklch(50% 0.20 310);
+  --color-primary-light: oklch(92% 0.08 310);
+  --color-primary-dark: oklch(25% 0.15 310);
+
+  --color-performance-good: oklch(70% 0.12 160);
+  --color-performance-moderate: oklch(80% 0.15 85);
+  --color-performance-poor: oklch(68% 0.15 25);
+
+  --radius: 0.5rem;
+}
+
+@variant dark (.dark &);
+
+/* Global background and text colors to prevent white flashes */
+html,
+body {
+  height: 100%;
+  @apply bg-neutral-50 text-neutral-900 transition-colors duration-300;
+}
+
+html.dark,
+html.dark body {
+  @apply bg-neutral-900 text-neutral-100;
+}
+
+/* Subtle scrollbar for embedded scrollable regions */
+.scrollbar-subtle {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(78% 0.015 220) transparent;
+}
+
+.dark .scrollbar-subtle {
+  scrollbar-color: oklch(32% 0.015 220) transparent;
+}
+
+/* Pipeline stage styling for proper wrapping behavior */
+.pipeline-stage {
+  margin-left: -16px;
+}
+
+.pipeline-stage-first-on-line {
+  margin-left: 0 !important;
+}
+
+/* ==========================================================================
+   Syntax Highlighting - GitHub Theme (Light/Dark)
+   Based on highlight.js github and github-dark themes
+   ========================================================================== */
+
+/* Base code block styling */
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+}
+
+code.hljs {
+  padding: 3px 5px;
+}
+
+/* --------------------------------------------------------------------------
+   Light Mode (GitHub Light Theme)
+   -------------------------------------------------------------------------- */
+.hljs {
+  color: #24292e;
+  background: transparent;
+}
+
+.hljs-doctag,
+.hljs-keyword,
+.hljs-meta .hljs-keyword,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-type,
+.hljs-variable.language_ {
+  color: #d73a49;
+}
+
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.class_.inherited__,
+.hljs-title.function_ {
+  color: #6f42c1;
+}
+
+.hljs-attr,
+.hljs-attribute,
+.hljs-literal,
+.hljs-meta,
+.hljs-number,
+.hljs-operator,
+.hljs-variable,
+.hljs-selector-attr,
+.hljs-selector-class,
+.hljs-selector-id {
+  color: #005cc5;
+}
+
+.hljs-regexp,
+.hljs-string,
+.hljs-meta .hljs-string {
+  color: #032f62;
+}
+
+.hljs-built_in,
+.hljs-symbol {
+  color: #e36209;
+}
+
+.hljs-comment,
+.hljs-code,
+.hljs-formula {
+  color: #6a737d;
+}
+
+.hljs-name,
+.hljs-quote,
+.hljs-selector-tag,
+.hljs-selector-pseudo {
+  color: #22863a;
+}
+
+.hljs-subst {
+  color: #24292e;
+}
+
+.hljs-section {
+  color: #005cc5;
+  font-weight: bold;
+}
+
+.hljs-bullet {
+  color: #735c0f;
+}
+
+.hljs-emphasis {
+  color: #24292e;
+  font-style: italic;
+}
+
+.hljs-strong {
+  color: #24292e;
+  font-weight: bold;
+}
+
+.hljs-addition {
+  color: #22863a;
+  background-color: #f0fff4;
+}
+
+.hljs-deletion {
+  color: #b31d28;
+  background-color: #ffeef0;
+}
+
+/* --------------------------------------------------------------------------
+   Dark Mode (GitHub Dark Theme)
+   -------------------------------------------------------------------------- */
+.dark .hljs {
+  color: #c9d1d9;
+  background: transparent;
+}
+
+.dark .hljs-doctag,
+.dark .hljs-keyword,
+.dark .hljs-meta .hljs-keyword,
+.dark .hljs-template-tag,
+.dark .hljs-template-variable,
+.dark .hljs-type,
+.dark .hljs-variable.language_ {
+  color: #ff7b72;
+}
+
+.dark .hljs-title,
+.dark .hljs-title.class_,
+.dark .hljs-title.class_.inherited__,
+.dark .hljs-title.function_ {
+  color: #d2a8ff;
+}
+
+.dark .hljs-attr,
+.dark .hljs-attribute,
+.dark .hljs-literal,
+.dark .hljs-meta,
+.dark .hljs-number,
+.dark .hljs-operator,
+.dark .hljs-variable,
+.dark .hljs-selector-attr,
+.dark .hljs-selector-class,
+.dark .hljs-selector-id {
+  color: #79c0ff;
+}
+
+.dark .hljs-regexp,
+.dark .hljs-string,
+.dark .hljs-meta .hljs-string {
+  color: #a5d6ff;
+}
+
+.dark .hljs-built_in,
+.dark .hljs-symbol {
+  color: #ffa657;
+}
+
+.dark .hljs-comment,
+.dark .hljs-code,
+.dark .hljs-formula {
+  color: #8b949e;
+}
+
+.dark .hljs-name,
+.dark .hljs-quote,
+.dark .hljs-selector-tag,
+.dark .hljs-selector-pseudo {
+  color: #7ee787;
+}
+
+.dark .hljs-subst {
+  color: #c9d1d9;
+}
+
+.dark .hljs-section {
+  color: #1f6feb;
+  font-weight: bold;
+}
+
+.dark .hljs-bullet {
+  color: #f2cc60;
+}
+
+.dark .hljs-emphasis {
+  color: #c9d1d9;
+  font-style: italic;
+}
+
+.dark .hljs-strong {
+  color: #c9d1d9;
+  font-weight: bold;
+}
+
+.dark .hljs-addition {
+  color: #aff5b4;
+  background-color: #033a16;
+}
+
+.dark .hljs-deletion {
+  color: #ffdcd7;
+  background-color: #67060c;
+}

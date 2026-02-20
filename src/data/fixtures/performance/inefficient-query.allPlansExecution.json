@@ -1,0 +1,92 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "airbnb.listingsAndReviews",
+    "parsedQuery": {
+      "space": {
+        "$regex": ".*balcony.*",
+        "$options": "i"
+      }
+    },
+    "indexFilterSet": false,
+    "queryHash": "B6A9E24A",
+    "planCacheShapeHash": "B6A9E24A",
+    "planCacheKey": "AB58AF22",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "COLLSCAN",
+      "filter": {
+        "space": {
+          "$regex": ".*balcony.*",
+          "$options": "i"
+        }
+      },
+      "direction": "forward"
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 358,
+    "executionTimeMillis": 18,
+    "totalKeysExamined": 0,
+    "totalDocsExamined": 5555,
+    "executionStages": {
+      "isCached": false,
+      "stage": "COLLSCAN",
+      "filter": {
+        "space": {
+          "$regex": ".*balcony.*",
+          "$options": "i"
+        }
+      },
+      "nReturned": 358,
+      "executionTimeMillisEstimate": 13,
+      "works": 5556,
+      "advanced": 358,
+      "needTime": 5197,
+      "needYield": 0,
+      "saveState": 1,
+      "restoreState": 1,
+      "isEOF": 1,
+      "direction": "forward",
+      "docsExamined": 5555
+    },
+    "allPlansExecution": []
+  },
+  "queryShapeHash": "6387492F87EF0A773883FC102419A1167AC501D21055883463D2D472C728D1E6",
+  "command": {
+    "find": "listingsAndReviews",
+    "filter": {
+      "space": {
+        "$regex": ".*balcony.*",
+        "$options": "i"
+      }
+    },
+    "$db": "airbnb"
+  },
+  "serverInfo": {
+    "host": "MacBook-Pro.local",
+    "port": 27017,
+    "version": "8.0.10",
+    "gitVersion": "9d03076bb2d5147d5b6fe381c7118b0b0478b682"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

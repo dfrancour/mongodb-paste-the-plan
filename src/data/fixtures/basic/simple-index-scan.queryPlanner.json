@@ -1,0 +1,109 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "airbnb.listingsAndReviews",
+    "parsedQuery": {
+      "room_type": {
+        "$eq": "Entire home/apt"
+      }
+    },
+    "indexFilterSet": false,
+    "queryHash": "2AB94D10",
+    "planCacheShapeHash": "2AB94D10",
+    "planCacheKey": "0BEC7232",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "FETCH",
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "room_type": 1
+        },
+        "indexName": "room_type_1",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "room_type": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "room_type": [
+            "[\"Entire home/apt\", \"Entire home/apt\"]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": [
+      {
+        "isCached": false,
+        "stage": "FETCH",
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "room_type": 1,
+            "accommodates": 1,
+            "price": 1
+          },
+          "indexName": "room_accom_price_idx",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "room_type": [],
+            "accommodates": [],
+            "price": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "room_type": [
+              "[\"Entire home/apt\", \"Entire home/apt\"]"
+            ],
+            "accommodates": [
+              "[MinKey, MaxKey]"
+            ],
+            "price": [
+              "[MinKey, MaxKey]"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "queryShapeHash": "7EB3D85B9E6217211ABA109D18F396616F901C43D2B5AD564E87E762B192E87E",
+  "command": {
+    "find": "listingsAndReviews",
+    "filter": {
+      "room_type": "Entire home/apt"
+    },
+    "$db": "airbnb"
+  },
+  "serverInfo": {
+    "host": "MacBook-Pro.local",
+    "port": 27017,
+    "version": "8.0.10",
+    "gitVersion": "9d03076bb2d5147d5b6fe381c7118b0b0478b682"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

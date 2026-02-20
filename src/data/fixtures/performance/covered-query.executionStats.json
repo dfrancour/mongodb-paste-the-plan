@@ -1,0 +1,179 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "airbnb.listingsAndReviews",
+    "parsedQuery": {
+      "accommodates": {
+        "$eq": 4
+      }
+    },
+    "indexFilterSet": false,
+    "queryHash": "B4C8216B",
+    "planCacheShapeHash": "B4C8216B",
+    "planCacheKey": "A70DAE82",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "PROJECTION_COVERED",
+      "transformBy": {
+        "_id": 0,
+        "accommodates": 1
+      },
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "accommodates": 1
+        },
+        "indexName": "accommodates_1",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "accommodates": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "accommodates": [
+            "[4, 4]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": [
+      {
+        "isCached": false,
+        "stage": "PROJECTION_COVERED",
+        "transformBy": {
+          "_id": 0,
+          "accommodates": 1
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "accommodates": 1,
+            "bedrooms": 1,
+            "bathrooms": 1
+          },
+          "indexName": "capacity_compound_idx",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "accommodates": [],
+            "bedrooms": [],
+            "bathrooms": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "accommodates": [
+              "[4, 4]"
+            ],
+            "bedrooms": [
+              "[MinKey, MaxKey]"
+            ],
+            "bathrooms": [
+              "[MinKey, MaxKey]"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 1154,
+    "executionTimeMillis": 0,
+    "totalKeysExamined": 1154,
+    "totalDocsExamined": 0,
+    "executionStages": {
+      "isCached": false,
+      "stage": "PROJECTION_COVERED",
+      "nReturned": 1154,
+      "executionTimeMillisEstimate": 0,
+      "works": 1155,
+      "advanced": 1154,
+      "needTime": 0,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "transformBy": {
+        "_id": 0,
+        "accommodates": 1
+      },
+      "inputStage": {
+        "stage": "IXSCAN",
+        "nReturned": 1154,
+        "executionTimeMillisEstimate": 0,
+        "works": 1155,
+        "advanced": 1154,
+        "needTime": 0,
+        "needYield": 0,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 1,
+        "keyPattern": {
+          "accommodates": 1
+        },
+        "indexName": "accommodates_1",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "accommodates": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "accommodates": [
+            "[4, 4]"
+          ]
+        },
+        "keysExamined": 1154,
+        "seeks": 1,
+        "dupsTested": 0,
+        "dupsDropped": 0
+      }
+    }
+  },
+  "queryShapeHash": "9CD40FD6FE44163AEF7C363DDAC7B8460695B8F038CD6121E4FBDAF0AA5854E6",
+  "command": {
+    "find": "listingsAndReviews",
+    "filter": {
+      "accommodates": 4
+    },
+    "projection": {
+      "_id": 0,
+      "accommodates": 1
+    },
+    "$db": "airbnb"
+  },
+  "serverInfo": {
+    "host": "MacBook-Pro.local",
+    "port": 27017,
+    "version": "8.0.10",
+    "gitVersion": "9d03076bb2d5147d5b6fe381c7118b0b0478b682"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}
