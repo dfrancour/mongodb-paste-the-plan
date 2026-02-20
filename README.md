@@ -1,6 +1,6 @@
 # MongoDB Paste the Plan
 
-Browser-based tool to analyze and share MongoDB explain plans with execution flow diagrams, SBE support, and indexing insights.
+Browser-based tool to analyze and share MongoDB query explain plans with execution flow diagrams, SBE support, and indexing insights.
 
 **[Try it live](https://dfrancour.dev/tools/mongodb-paste-the-plan)**
 

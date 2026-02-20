@@ -87,20 +87,17 @@ Note that Classic execution stages use UPPER_CASE, identical to planning stage n
 | Execution | `ExecutionStage` | `lower_case` (SBE) / `UPPER_CASE` (Classic) |
 | Mongos | `MongosStage` | varies |
 
-### Dictionaries
+### Stage store
 
-Planning stages and Classic execution stages share UPPER_CASE names, so they live in separate dictionaries to avoid key collisions:
+All stages live in a single `STAGES` object, keyed by layer. Planning and classic execution stages both use UPPER_CASE names, but they live in separate sub-dictionaries so there's no ambiguity.
 
-- **`PLANNING_STAGE_DEFINITIONS`** -- planning stages only
-- **`STAGE_DEFINITIONS`** -- pipeline + execution + mongos (no collisions: `$group`, `group`, and `COLLSCAN` are distinct keys)
-
-Context-aware lookup functions route to the correct dictionary:
+The primary lookup function is `getStage(layer, name)` — the caller must declare which layer they're asking about, because the same string (e.g. `"COLLSCAN"`) means different things in different sections of explain output:
 
 ```typescript
-resolvePlanningStage("GROUP")      // → planning GROUP (from queryPlan tree)
-resolveExecutionStage("group")     // → SBE group (from executionStages tree)
-resolveExecutionStage("COLLSCAN")  // → classic COLLSCAN (from executionStages tree)
-resolveExplainStageName("GROUP")   // → planning GROUP (checks planning first)
+getStage("planning", "GROUP")      // → planning GROUP (from queryPlan tree)
+getStage("execution", "group")     // → SBE group (from executionStages tree)
+getStage("execution", "COLLSCAN")  // → classic COLLSCAN (from executionStages tree)
+getStage("pipeline", "$match")     // → pipeline $match
 ```
 
 ### Cross-layer relationships
@@ -127,7 +124,6 @@ Mirrors the C++ `StageType` enum in `stage_types.h`. The `QUERY_SOLUTION_TYPE_TO
 Special cases:
 - `STAGE_SORT_DEFAULT` and `STAGE_SORT_SIMPLE` both produce `"SORT"` in explain output
 - `STAGE_COLLSCAN` conditionally produces `"CLUSTERED_IXSCAN"` when the collection has a clustered index
-- Several enum values are intentionally omitted (`STAGE_MOCK`, `STAGE_QUEUED_DATA`, `STAGE_UNKNOWN`, `STAGE_SENTINEL`, `STAGE_VIRTUAL_SCAN`) -- they never appear in user-facing explain output
 - `UNPACK_SAMPLED_TS_BUCKET` and `INDEX_PROBE_NODE` have no corresponding execution stage -- they exist in the query solution tree but have no SBE builder implementation
 
 ## Type system
@@ -182,19 +178,15 @@ if (isPlanningStage(stage)) {
 }
 ```
 
-## API reference
+## API overview
 
-### Lookup functions
+All exports live in `stage_utilities.ts`. See the source for full signatures.
 
-| Function | Input | Returns | Use when |
-|----------|-------|---------|----------|
-| `resolvePlanningStage(name)` | `"GROUP"` | Planning stage | Parsing `queryPlan` tree |
-| `resolveExecutionStage(name)` | `"group"` or `"COLLSCAN"` | Execution stage | Parsing `executionStages` tree |
-| `resolveExplainStageName(name)` | Any stage name | Any stage | Don't know which section |
-| `getStageDefinition(name)` | Any non-planning name | Pipeline/execution/mongos | Legacy lookup (no planning) |
-| `getStageIconName(name)` | Any stage name | Icon name string | Rendering icons |
+**Primary lookup:** `getStage(layer, name)` — returns a stage definition or `undefined`. The caller must specify the layer.
 
-### Relationship functions
+**Enumeration:** `getAllStages()` returns every stage across all layers. `getStageAnchorId(stage)` produces a unique anchor string (e.g. `classic-COLLSCAN`, `planning-GROUP`).
+
+**Cross-layer traversal:**
 
 | Function | What it does |
 |----------|-------------|
