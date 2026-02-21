@@ -75,6 +75,7 @@ export function ExplainPlanInput({
 
   // Track if we've already processed the initial plan from URL
   const hasProcessedInitialPlan = useRef(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
     register,
@@ -84,9 +85,12 @@ export function ExplainPlanInput({
     formState: { errors },
   } = useForm<ExplainPlanForm>({
     resolver: zodResolver(explainPlanSchema),
+    defaultValues: { planJson: "" },
   });
 
   const planJson = watch("planJson");
+  const { onChange: rhfOnChange, ...planJsonRegistration } =
+    register("planJson");
 
   // Auto-process plan loaded from URL
   useEffect(() => {
@@ -284,6 +288,15 @@ export function ExplainPlanInput({
     handleInputChange(text);
   };
 
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleFileDrop(file);
+    }
+    // Reset so the same file can be re-selected
+    e.target.value = "";
+  };
+
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(true);
@@ -373,7 +386,7 @@ export function ExplainPlanInput({
                   onDrop={handleDrop}
                 >
                   <textarea
-                    {...register("planJson")}
+                    {...planJsonRegistration}
                     id="planJson"
                     rows={12}
                     readOnly={hasAnalyzedPlan}
@@ -386,34 +399,60 @@ export function ExplainPlanInput({
                         ? "border-primary border-2 border-dashed"
                         : "border-neutral-300 dark:border-neutral-600"
                     }`}
-                    placeholder="Drag and drop or paste your explain plan JSON..."
-                    onChange={(e) => handleInputChange(e.target.value)}
+                    placeholder="Paste, upload, or drag and drop a MongoDB explain plan .json file"
+                    onChange={(e) => {
+                      rhfOnChange(e);
+                      handleInputChange(e.target.value);
+                    }}
                   />
-                  {/* Copy & Download buttons */}
-                  {planJson?.trim() && !isDragging && (
+                  {/* Textarea action buttons */}
+                  {!isDragging && (
                     <div className="absolute top-2 right-2 z-10 flex gap-1">
-                      <button
-                        type="button"
-                        onClick={handleCopy}
-                        className="flex cursor-pointer items-center gap-1 rounded border border-neutral-200 bg-white px-2 py-1 text-xs text-neutral-600 shadow transition-all duration-200 hover:bg-neutral-50 hover:text-neutral-800 dark:border-neutral-600 dark:bg-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-600 dark:hover:text-neutral-200"
-                        title={copied ? "Copied!" : "Copy to clipboard"}
-                      >
-                        {copied ? (
-                          <Check className="h-3 w-3" />
-                        ) : (
-                          <Copy className="h-3 w-3" />
-                        )}
-                        {copied ? "Copied!" : "Copy"}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleDownload}
-                        className="flex cursor-pointer items-center gap-1 rounded border border-neutral-200 bg-white px-2 py-1 text-xs text-neutral-600 shadow transition-all duration-200 hover:bg-neutral-50 hover:text-neutral-800 dark:border-neutral-600 dark:bg-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-600 dark:hover:text-neutral-200"
-                        title="Download as JSON file"
-                      >
-                        <Download className="h-3 w-3" />
-                        Download
-                      </button>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept=".json"
+                        onChange={handleFileInputChange}
+                        className="hidden"
+                        aria-label="Upload explain plan JSON file"
+                      />
+                      {!hasAnalyzedPlan && (
+                        <button
+                          type="button"
+                          onClick={() => fileInputRef.current?.click()}
+                          className="flex cursor-pointer items-center gap-1 rounded border border-neutral-200 bg-white px-2 py-1 text-xs text-neutral-600 shadow transition-all duration-200 hover:bg-neutral-50 hover:text-neutral-800 dark:border-neutral-600 dark:bg-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-600 dark:hover:text-neutral-200"
+                          title="Upload .json file"
+                        >
+                          <Upload className="h-3 w-3" />
+                          Upload
+                        </button>
+                      )}
+                      {planJson?.trim() && (
+                        <button
+                          type="button"
+                          onClick={handleCopy}
+                          className="flex cursor-pointer items-center gap-1 rounded border border-neutral-200 bg-white px-2 py-1 text-xs text-neutral-600 shadow transition-all duration-200 hover:bg-neutral-50 hover:text-neutral-800 dark:border-neutral-600 dark:bg-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-600 dark:hover:text-neutral-200"
+                          title={copied ? "Copied!" : "Copy to clipboard"}
+                        >
+                          {copied ? (
+                            <Check className="h-3 w-3" />
+                          ) : (
+                            <Copy className="h-3 w-3" />
+                          )}
+                          {copied ? "Copied!" : "Copy"}
+                        </button>
+                      )}
+                      {hasAnalyzedPlan && (
+                        <button
+                          type="button"
+                          onClick={handleDownload}
+                          className="flex cursor-pointer items-center gap-1 rounded border border-neutral-200 bg-white px-2 py-1 text-xs text-neutral-600 shadow transition-all duration-200 hover:bg-neutral-50 hover:text-neutral-800 dark:border-neutral-600 dark:bg-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-600 dark:hover:text-neutral-200"
+                          title="Download as JSON file"
+                        >
+                          <Download className="h-3 w-3" />
+                          Download
+                        </button>
+                      )}
                     </div>
                   )}
                   {isDragging && (
