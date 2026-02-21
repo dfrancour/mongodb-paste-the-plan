@@ -5,6 +5,7 @@ import type { StageDefinition } from "#data/stages/types";
 import { getStageAnchorId } from "#data/stages";
 import { Tooltip } from "#components/common/Tooltip";
 import { InfoButton } from "#components/shared/InfoButton";
+import { LayerBadge } from "#components/shared/LayerBadge";
 
 interface StageInfoTooltipProps {
   readonly stageDef: StageDefinition;
@@ -18,9 +19,12 @@ interface StageInfoTooltipProps {
 function StageInfoContent({ stageDef }: StageInfoTooltipProps) {
   return (
     <div className="max-w-xs space-y-2">
-      {/* Full name */}
-      <div className="font-semibold text-neutral-900 dark:text-neutral-100">
-        {stageDef.fullName}
+      {/* Full name + layer badge */}
+      <div className="flex items-start justify-between gap-2">
+        <span className="font-semibold text-neutral-900 dark:text-neutral-100">
+          {stageDef.fullName}
+        </span>
+        <LayerBadge stage={stageDef} />
       </div>
 
       {/* Description */}

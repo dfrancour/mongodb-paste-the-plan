@@ -9,63 +9,12 @@ import {
 } from "lucide-react";
 import type { StageDefinition } from "#data/stages/types";
 import {
-  isPipelineStage,
-  isPlanningStage,
-  isSbeStage,
   isExecutionStage,
+  isPlanningStage,
   isMongosStage,
 } from "#data/stages/types";
 import { StageIcons } from "#lib/visualization/stageIcons";
-
-/**
- * Get badge styling based on stage type.
- * - Pipeline stages: teal
- * - SBE execution stages: purple
- * - Classic execution stages: blue
- * - Mongos stages: orange
- */
-function getStageTypeBadge(stage: StageDefinition): {
-  label: string;
-  className: string;
-} {
-  if (isPipelineStage(stage)) {
-    return {
-      label: "Pipeline",
-      className:
-        "bg-teal-100 text-teal-700 dark:bg-teal-900 dark:text-teal-300",
-    };
-  }
-
-  if (isPlanningStage(stage)) {
-    return {
-      label: "Planning",
-      className:
-        "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300",
-    };
-  }
-
-  if (isSbeStage(stage)) {
-    return {
-      label: "SBE",
-      className:
-        "bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300",
-    };
-  }
-
-  if (isMongosStage(stage)) {
-    return {
-      label: "Mongos",
-      className:
-        "bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300",
-    };
-  }
-
-  // Classic execution stage
-  return {
-    label: "Classic",
-    className: "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300",
-  };
-}
+import { LayerBadge } from "#components/shared/LayerBadge";
 
 interface StageCardProps {
   readonly stage: StageDefinition;
@@ -124,16 +73,7 @@ export function StageCard({ stage, anchorId, isHighlighted }: StageCardProps) {
           </span>
 
           {/* Stage type badge */}
-          {(() => {
-            const typeBadge = getStageTypeBadge(stage);
-            return (
-              <span
-                className={`rounded-full px-3 py-1 text-xs font-medium ${typeBadge.className}`}
-              >
-                {typeBadge.label}
-              </span>
-            );
-          })()}
+          <LayerBadge stage={stage} />
 
           {stage.introducedIn && (
             <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">
