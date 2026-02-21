@@ -5,6 +5,7 @@ import {
   loadTestFixture,
   findDeepestStages,
 } from "#test-utils/test-helpers";
+import { StageCategory } from "#data/stages/types";
 
 describe("Sharded Query Parsing Completeness", () => {
   it("should extract execution stages from all shards, not just root SHARD_MERGE", () => {
@@ -72,6 +73,27 @@ describe("Sharded Query Parsing Completeness", () => {
       const normalized = PlanParser.normalizePlan(parsed);
       expect(normalized.stage).toBeDefined();
     }).not.toThrow();
+  });
+
+  it("should resolve mongos stage icons and categories in execution view", () => {
+    const shardedPlan = loadTestFixture("sharded-query.json");
+    const parsed = PlanParser.parse(shardedPlan);
+    const normalized = PlanParser.normalizeExecution(parsed);
+
+    // Root SHARD_MERGE should have its mongos-layer icon, not the fallback
+    expect(normalized.stage).toBe("SHARD_MERGE");
+    expect(normalized.iconName).toBe("Merge");
+    expect(normalized.category).toBe(StageCategory.Internal);
+  });
+
+  it("should resolve mongos stage icons and categories in planning view", () => {
+    const shardedPlan = loadTestFixture("sharded-query.json");
+    const parsed = PlanParser.parse(shardedPlan);
+    const normalized = PlanParser.normalizePlan(parsed);
+
+    // Root stage in planning view should also resolve mongos icons
+    expect(normalized.iconName).not.toBe("CircleQuestionMark");
+    expect(normalized.category).not.toBe(StageCategory.Unknown);
   });
 
   it("should identify sharded queries correctly from plan structure", () => {

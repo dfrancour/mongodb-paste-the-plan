@@ -950,7 +950,8 @@ export class PlanParser {
     }
 
     const stageName = this.getStringMetric(stage, "stage") ?? "UNKNOWN";
-    const definition = getStage("planning", stageName);
+    const definition =
+      getStage("planning", stageName) ?? getStage("mongos", stageName);
 
     return {
       id: path,
@@ -1129,7 +1130,8 @@ export class PlanParser {
     }
 
     const stageName = this.getStringMetric(stage, "stage") ?? "UNKNOWN";
-    const definition = getStage("execution", stageName);
+    const definition =
+      getStage("execution", stageName) ?? getStage("mongos", stageName);
 
     return {
       id: path,
