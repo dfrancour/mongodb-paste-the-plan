@@ -2,6 +2,20 @@ import { describe, it, expect } from "vitest";
 import { selfTimeAnalysis, calculateSelfTime } from "./self_time_analysis";
 import { createMockNormalizedStage } from "../test-helpers";
 import type { SubtreeInput } from "../types";
+import type { MongosStage } from "#data/stages/types";
+import { StageCategory, StageIds } from "#data/stages/types";
+
+const PARALLEL_DEFINITION: MongosStage = {
+  layer: "mongos",
+  id: StageIds.mongos("SHARD_MERGE"),
+  fullName: "Shard Merge",
+  description: "Test parallel stage",
+  category: StageCategory.Internal,
+  iconName: "Merge",
+  hasParallelChildren: true,
+  blockingStage: false,
+  canSpillToDisk: false,
+};
 
 describe("calculateSelfTime", () => {
   it("sets selfTimeMillis equal to executionTimeMillis for leaf nodes", () => {
@@ -100,6 +114,103 @@ describe("calculateSelfTime", () => {
     expect(parent.metrics.selfTimeMillis).toBe(70);
     expect(childWithTime.metrics.selfTimeMillis).toBe(30);
     expect(childWithoutTime.metrics.selfTimeMillis).toBeUndefined();
+  });
+
+  it("uses max for parallel children (hasParallelChildren)", () => {
+    const shard1 = createMockNormalizedStage({
+      id: "shard1",
+      metrics: { executionTimeMillis: 80 },
+    });
+    const shard2 = createMockNormalizedStage({
+      id: "shard2",
+      metrics: { executionTimeMillis: 90 },
+    });
+    const parent = createMockNormalizedStage({
+      id: "parent",
+      stage: "SHARD_MERGE",
+      metrics: { executionTimeMillis: 100 },
+      definition: PARALLEL_DEFINITION,
+      children: [shard1, shard2],
+    });
+
+    calculateSelfTime(parent);
+
+    // selfTime = 100 - max(80, 90) = 10ms (merge overhead)
+    expect(parent.metrics.selfTimeMillis).toBe(10);
+    expect(shard1.metrics.selfTimeMillis).toBe(80);
+    expect(shard2.metrics.selfTimeMillis).toBe(90);
+  });
+
+  it("uses max for parallel stage with a single child", () => {
+    const shard = createMockNormalizedStage({
+      id: "shard",
+      metrics: { executionTimeMillis: 80 },
+    });
+    const parent = createMockNormalizedStage({
+      id: "parent",
+      stage: "SINGLE_SHARD",
+      metrics: { executionTimeMillis: 85 },
+      definition: PARALLEL_DEFINITION,
+      children: [shard],
+    });
+
+    calculateSelfTime(parent);
+
+    // selfTime = 85 - max(80) = 5ms
+    expect(parent.metrics.selfTimeMillis).toBe(5);
+  });
+
+  it("still uses sum for non-parallel multi-children stages", () => {
+    const child1 = createMockNormalizedStage({
+      id: "child1",
+      metrics: { executionTimeMillis: 20 },
+    });
+    const child2 = createMockNormalizedStage({
+      id: "child2",
+      metrics: { executionTimeMillis: 30 },
+    });
+    const parent = createMockNormalizedStage({
+      id: "parent",
+      stage: "OR",
+      metrics: { executionTimeMillis: 100 },
+      // no definition with hasParallelChildren
+      children: [child1, child2],
+    });
+
+    calculateSelfTime(parent);
+
+    // selfTime = 100 - (20 + 30) = 50ms (sum behavior)
+    expect(parent.metrics.selfTimeMillis).toBe(50);
+  });
+
+  it("allows sum of self-times to exceed root time for parallel trees", () => {
+    const shard1 = createMockNormalizedStage({
+      id: "shard1",
+      metrics: { executionTimeMillis: 80 },
+    });
+    const shard2 = createMockNormalizedStage({
+      id: "shard2",
+      metrics: { executionTimeMillis: 90 },
+    });
+    const root = createMockNormalizedStage({
+      id: "root",
+      stage: "SHARD_MERGE",
+      metrics: { executionTimeMillis: 100 },
+      definition: PARALLEL_DEFINITION,
+      children: [shard1, shard2],
+    });
+
+    calculateSelfTime(root);
+
+    // sum of all self-times: 10 (root) + 80 (shard1) + 90 (shard2) = 180
+    // This exceeds root.executionTimeMillis (100) — expected for parallel execution
+    const sumSelfTimes = (stage: typeof root): number => {
+      const self = stage.metrics.selfTimeMillis ?? 0;
+      return self + stage.children.reduce((sum, c) => sum + sumSelfTimes(c), 0);
+    };
+
+    expect(sumSelfTimes(root)).toBe(180);
+    expect(sumSelfTimes(root)).toBeGreaterThan(100);
   });
 
   it("ensures all self times sum to root executionTimeMillis", () => {

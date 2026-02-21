@@ -1092,6 +1092,7 @@ export class PlanParser {
     }
 
     // Sharded queries: SHARD_MERGE has a shards array with per-shard executionStages
+    // Insert synthetic SHARD_EXECUTION nodes to preserve shard identity and timing
     if ("shards" in stage && Array.isArray(stage.shards)) {
       (stage.shards as unknown[]).forEach((shard, index) => {
         if (
@@ -1102,14 +1103,58 @@ export class PlanParser {
             (shard as Record<string, unknown>).executionStages,
           )
         ) {
-          children.push(
-            this.normalizeExecutionStageRecursive(
-              (shard as Record<string, unknown>)
-                .executionStages as ExecutionStage,
-              depth + 1,
-              `${path}.${index}`,
-            ),
+          const shardRecord = shard as Record<string, unknown>;
+          const shardName =
+            typeof shardRecord.shardName === "string"
+              ? shardRecord.shardName
+              : `shard${index}`;
+          const executionSuccess =
+            typeof shardRecord.executionSuccess === "boolean"
+              ? shardRecord.executionSuccess
+              : undefined;
+
+          const shardDefinition = getStage("mongos", "SHARD_EXECUTION");
+
+          // Recursively normalize the actual execution stages as children of the synthetic node
+          const shardChild = this.normalizeExecutionStageRecursive(
+            shardRecord.executionStages as ExecutionStage,
+            depth + 2,
+            `${path}.shard.${index}.exec`,
           );
+
+          const shardNode: NormalizedExecutionStage = {
+            id: `${path}.shard.${index}`,
+            stage: "SHARD_EXECUTION",
+            category: shardDefinition?.category ?? StageCategory.Internal,
+            iconName: shardDefinition?.iconName ?? "Server",
+            definition: shardDefinition,
+            structure: {},
+            shardName,
+            executionSuccess,
+            // MongoDB uses "total*" prefix at shard level (totalDocsExamined, totalKeysExamined)
+            metrics: {
+              executionTimeMillis:
+                typeof shardRecord.executionTimeMillis === "number"
+                  ? shardRecord.executionTimeMillis
+                  : undefined,
+              nReturned:
+                typeof shardRecord.nReturned === "number"
+                  ? shardRecord.nReturned
+                  : undefined,
+              docsExamined:
+                typeof shardRecord.totalDocsExamined === "number"
+                  ? shardRecord.totalDocsExamined
+                  : undefined,
+              keysExamined:
+                typeof shardRecord.totalKeysExamined === "number"
+                  ? shardRecord.totalKeysExamined
+                  : undefined,
+            },
+            children: [shardChild],
+            depth: depth + 1,
+          };
+
+          children.push(shardNode);
         }
       });
     }

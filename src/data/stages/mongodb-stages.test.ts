@@ -34,7 +34,7 @@ describe("MongoDB Stage Definitions", () => {
 
   describe("stage counts", () => {
     it("has expected total stage count", () => {
-      expect(allStages.length).toBe(189);
+      expect(allStages.length).toBe(190);
     });
 
     it("has expected pipeline stage count", () => {
@@ -54,7 +54,7 @@ describe("MongoDB Stage Definitions", () => {
     });
 
     it("has expected mongos stage count", () => {
-      expect(mongosStages.length).toBe(4);
+      expect(mongosStages.length).toBe(5);
     });
 
     it("execution stages = SBE + Classic", () => {

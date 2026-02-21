@@ -171,6 +171,8 @@ type BaseStageMetadata = {
   readonly analysisNote?: string;
   /** True if this stage indicates a covered query (data served entirely from index). */
   readonly isCoveredQueryIndicator?: boolean;
+  /** True if this stage's children execute in parallel (e.g., shards). Affects self-time calculation. */
+  readonly hasParallelChildren?: boolean;
 };
 
 type ExecutionCharacteristics = {

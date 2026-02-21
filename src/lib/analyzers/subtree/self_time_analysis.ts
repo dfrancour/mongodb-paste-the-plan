@@ -4,7 +4,11 @@
  * Calculates and analyzes the "self time" of each stage - the time spent
  * executing the stage's own work, excluding time spent in child stages.
  *
- * Self time = stage.executionTimeMillis - sum(children.executionTimeMillis)
+ * For sequential children (default):
+ *   selfTime = stage.executionTimeMillis - sum(children.executionTimeMillis)
+ *
+ * For parallel children (e.g., sharded queries where children run on separate shards):
+ *   selfTime = stage.executionTimeMillis - max(children.executionTimeMillis)
  *
  * This helps identify stages that are doing expensive work themselves,
  * separate from the work done by their children.
@@ -28,7 +32,8 @@ import { AnalyzerIds } from "../types";
  * Walks the stage tree and computes `selfTimeMillis` on every node.
  *
  * - Leaf nodes: selfTimeMillis = executionTimeMillis
- * - Parent nodes: selfTimeMillis = executionTimeMillis - sum(children.executionTimeMillis)
+ * - Sequential parents: selfTimeMillis = executionTimeMillis - sum(children.executionTimeMillis)
+ * - Parallel parents (hasParallelChildren): selfTimeMillis = executionTimeMillis - max(children.executionTimeMillis)
  * - Clamped to 0 (clock rounding can produce small negatives)
  * - Skipped when executionTimeMillis is undefined (plan-only mode)
  *
@@ -51,9 +56,14 @@ export function calculateSelfTime(root: NormalizedStage): void {
   if (root.children.length === 0) {
     root.metrics.selfTimeMillis = stageTime;
   } else {
-    const childrenTime = root.children.reduce((sum, child) => {
-      return sum + (child.metrics?.executionTimeMillis ?? 0);
-    }, 0);
+    const childrenTime = root.definition?.hasParallelChildren
+      ? Math.max(
+          ...root.children.map((c) => c.metrics?.executionTimeMillis ?? 0),
+        )
+      : root.children.reduce(
+          (sum, child) => sum + (child.metrics?.executionTimeMillis ?? 0),
+          0,
+        );
     root.metrics.selfTimeMillis = Math.max(0, stageTime - childrenTime);
   }
 }

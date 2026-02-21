@@ -12,6 +12,7 @@ export const SHARD_MERGE_SORT: MongosStage = {
   category: StageCategory.Sort,
   iconName: "Merge",
 
+  hasParallelChildren: true,
   blockingStage: false,
   canSpillToDisk: false,
 

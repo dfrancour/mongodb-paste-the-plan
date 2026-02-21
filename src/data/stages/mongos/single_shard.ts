@@ -12,6 +12,7 @@ export const SINGLE_SHARD: MongosStage = {
   category: StageCategory.Internal,
   iconName: "Server",
 
+  hasParallelChildren: true,
   blockingStage: false,
   canSpillToDisk: false,
 

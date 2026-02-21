@@ -13,6 +13,7 @@ import type {
   FlowStage,
   FlowInteractionEvents,
 } from "#types/flow-visualization";
+import { hasExecutionMetrics } from "#types/explain-plan";
 import { extractGridMetrics } from "#lib/visualization/stageDisplayFormatter";
 import { safeRenderJson, isNonEmptyObject } from "#lib/utils/jsxUtils";
 import { FlowNodeLogic } from "#lib/visualization/flowNodeLogic";
@@ -129,9 +130,16 @@ export const FlowNode = forwardRef<HTMLDivElement, FlowNodeProps>(
         <div className="mb-2 flex items-center justify-between">
           <div className="flex items-center gap-2">
             {StageIcons.renderIcon(stageIconName, `h-6 w-6 ${stageIconColor}`)}
-            <span className={`text-sm font-semibold ${stageNameClasses}`}>
-              {stage.stage}
-            </span>
+            <div className="flex flex-col">
+              <span className={`text-sm font-semibold ${stageNameClasses}`}>
+                {stage.stage}
+              </span>
+              {hasExecutionMetrics(stage) && stage.shardName && (
+                <span className="text-xs text-neutral-500 dark:text-neutral-400">
+                  {stage.shardName}
+                </span>
+              )}
+            </div>
             {stage.definition && (
               <StageInfoTooltip stageDef={stage.definition} />
             )}

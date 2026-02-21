@@ -670,6 +670,8 @@ export type NormalizedExecutionStage = {
   iconName: string;
   definition?: StageDefinition;
   structure: StageStructure;
+  shardName?: string;
+  executionSuccess?: boolean;
   metrics: {
     nReturned?: number;
     docsExamined?: number;
