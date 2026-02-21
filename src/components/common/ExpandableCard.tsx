@@ -15,6 +15,7 @@ interface ExpandableCardProps {
   icon: React.ReactNode;
   subtitle?: string;
   badge?: React.ReactNode;
+  headerAction?: React.ReactNode;
   analysisContent: React.ReactNode;
   jsonContent: React.ReactNode;
   asciiContent?: React.ReactNode;
@@ -37,6 +38,7 @@ export function ExpandableCard({
   icon,
   subtitle,
   badge,
+  headerAction,
   analysisContent,
   jsonContent,
   asciiContent,
@@ -94,6 +96,7 @@ export function ExpandableCard({
           )}
         </div>
         <div className="flex items-center gap-2">
+          {headerAction}
           {badge}
           {isCollapsible &&
             (isExpanded ? (

@@ -11,6 +11,7 @@ import {
   isMongosStage,
 } from "#data/stages";
 import type { StageCategory } from "#data/stages/types";
+import { ContributeLink } from "#components/common/ContributeLink";
 import { ExpandableCard } from "#components/common/ExpandableCard";
 import { Icon } from "#components/common/Icon";
 import { SearchInput } from "#components/shared/SearchInput";
@@ -208,6 +209,7 @@ export function GlossaryContainer() {
       <ExpandableCard
         title="MongoDB Stage Glossary"
         icon={<Icon icon={Book} variant="primary" />}
+        headerAction={<ContributeLink />}
         featured={true}
         showTabs={false}
         analysisContent={

@@ -23,6 +23,7 @@ import type {
   HybridSBEPlan,
 } from "#types/explain-plan";
 import { HowToUse } from "./HowToUse";
+import { ContributeLink } from "#components/common/ContributeLink";
 import { ExpandableCard } from "#components/common/ExpandableCard";
 import { CodeViewer } from "#components/common/CodeViewer";
 import { SharePlanButton } from "./SharePlanButton";
@@ -344,14 +345,7 @@ export function ExplainPlanInput({
       <ExpandableCard
         title="MongoDB Paste the Plan"
         icon={<Icon icon={TextCursorInput} variant="primary" />}
-        badge={
-          hasAnalyzedPlan && (
-            <div className="flex items-center gap-1 rounded bg-green-100 px-2 py-1 text-xs text-green-800 dark:bg-green-900 dark:text-green-200">
-              <Icon icon={CheckCircle} size="sm" variant="success" />
-              Analyzed
-            </div>
-          )
-        }
+        headerAction={<ContributeLink />}
         featured={true}
         showTabs={hasAnalyzedPlan}
         analysisContent={
