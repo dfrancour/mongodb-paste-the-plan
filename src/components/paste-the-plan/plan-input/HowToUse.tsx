@@ -249,9 +249,10 @@ export function HowToUse({ onPlanSelect }: HowToUseProps) {
             </div>
             <div className="px-2 pb-2 pl-6">
               <p className="text-sm text-neutral-700 dark:text-neutral-300">
-                The explain plan is not saved when you use the &quot;Generate
-                Plan Share URL&quot; button, rather it is encoded into the URL.
-                Therefore, anyone with the link can view it. Treat the URL as
+                &quot;Generate Plan Share URL&quot; compresses and encodes the
+                explain plan into the URL hash fragment, which browsers never
+                include in HTTP requests. This does mean, however, that anyone
+                with the link can recreate the plan, so treat plan share URLs as
                 you would the explain plan itself.
               </p>
             </div>
