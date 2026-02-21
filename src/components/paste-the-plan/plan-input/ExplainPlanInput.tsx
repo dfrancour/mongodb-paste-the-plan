@@ -340,6 +340,51 @@ export function ExplainPlanInput({
     URL.revokeObjectURL(url);
   };
 
+  const btnClass =
+    "flex cursor-pointer items-center gap-1 rounded border border-neutral-200 bg-white px-2 py-1 text-xs text-neutral-600 shadow transition-all duration-200 hover:bg-neutral-50 hover:text-neutral-800 dark:border-neutral-600 dark:bg-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-600 dark:hover:text-neutral-200";
+
+  const actionButtons = (
+    <>
+      {!hasAnalyzedPlan && (
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          className={btnClass}
+          title="Upload .json file"
+        >
+          <Upload className="h-3 w-3" />
+          Upload
+        </button>
+      )}
+      {planJson?.trim() && (
+        <button
+          type="button"
+          onClick={handleCopy}
+          className={btnClass}
+          title={copied ? "Copied!" : "Copy to clipboard"}
+        >
+          {copied ? (
+            <Check className="h-3 w-3" />
+          ) : (
+            <Copy className="h-3 w-3" />
+          )}
+          {copied ? "Copied!" : "Copy"}
+        </button>
+      )}
+      {hasAnalyzedPlan && (
+        <button
+          type="button"
+          onClick={handleDownload}
+          className={btnClass}
+          title="Download as JSON file"
+        >
+          <Download className="h-3 w-3" />
+          Download
+        </button>
+      )}
+    </>
+  );
+
   return (
     <div className="spacing-component">
       <ExpandableCard
@@ -382,9 +427,9 @@ export function ExplainPlanInput({
                   <textarea
                     {...planJsonRegistration}
                     id="planJson"
-                    rows={12}
+                    rows={6}
                     readOnly={hasAnalyzedPlan}
-                    className={`w-full rounded-md border px-3 py-2 font-mono text-sm shadow-sm ${
+                    className={`w-full rounded-md border px-3 py-2 font-mono text-sm shadow-sm sm:h-72 ${
                       hasAnalyzedPlan
                         ? "cursor-default bg-neutral-50 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300"
                         : "focus:ring-primary focus:border-primary bg-white text-neutral-900 placeholder-neutral-500 dark:bg-neutral-700 dark:text-neutral-100 dark:placeholder-neutral-400"
@@ -393,64 +438,28 @@ export function ExplainPlanInput({
                         ? "border-primary border-2 border-dashed"
                         : "border-neutral-300 dark:border-neutral-600"
                     }`}
-                    placeholder="Paste, upload, or drag and drop a MongoDB explain plan .json file"
+                    placeholder="Paste, upload, or drag and drop a MongoDB explain plan JSON"
                     onChange={(e) => {
                       rhfOnChange(e);
                       handleInputChange(e.target.value);
                     }}
                   />
-                  {/* Textarea action buttons */}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".json"
+                    onChange={handleFileInputChange}
+                    className="hidden"
+                    aria-label="Upload explain plan JSON file"
+                  />
+                  {/* Desktop: buttons float inside textarea top-right */}
                   {!isDragging && (
-                    <div className="absolute top-2 right-2 z-10 flex gap-1">
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept=".json"
-                        onChange={handleFileInputChange}
-                        className="hidden"
-                        aria-label="Upload explain plan JSON file"
-                      />
-                      {!hasAnalyzedPlan && (
-                        <button
-                          type="button"
-                          onClick={() => fileInputRef.current?.click()}
-                          className="flex cursor-pointer items-center gap-1 rounded border border-neutral-200 bg-white px-2 py-1 text-xs text-neutral-600 shadow transition-all duration-200 hover:bg-neutral-50 hover:text-neutral-800 dark:border-neutral-600 dark:bg-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-600 dark:hover:text-neutral-200"
-                          title="Upload .json file"
-                        >
-                          <Upload className="h-3 w-3" />
-                          Upload
-                        </button>
-                      )}
-                      {planJson?.trim() && (
-                        <button
-                          type="button"
-                          onClick={handleCopy}
-                          className="flex cursor-pointer items-center gap-1 rounded border border-neutral-200 bg-white px-2 py-1 text-xs text-neutral-600 shadow transition-all duration-200 hover:bg-neutral-50 hover:text-neutral-800 dark:border-neutral-600 dark:bg-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-600 dark:hover:text-neutral-200"
-                          title={copied ? "Copied!" : "Copy to clipboard"}
-                        >
-                          {copied ? (
-                            <Check className="h-3 w-3" />
-                          ) : (
-                            <Copy className="h-3 w-3" />
-                          )}
-                          {copied ? "Copied!" : "Copy"}
-                        </button>
-                      )}
-                      {hasAnalyzedPlan && (
-                        <button
-                          type="button"
-                          onClick={handleDownload}
-                          className="flex cursor-pointer items-center gap-1 rounded border border-neutral-200 bg-white px-2 py-1 text-xs text-neutral-600 shadow transition-all duration-200 hover:bg-neutral-50 hover:text-neutral-800 dark:border-neutral-600 dark:bg-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-600 dark:hover:text-neutral-200"
-                          title="Download as JSON file"
-                        >
-                          <Download className="h-3 w-3" />
-                          Download
-                        </button>
-                      )}
+                    <div className="absolute top-2 right-2 z-10 hidden gap-1 sm:flex">
+                      {actionButtons}
                     </div>
                   )}
                   {isDragging && (
-                    <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center rounded-md bg-white/90 dark:bg-neutral-800/90">
+                    <div className="pointer-events-none absolute inset-0 hidden flex-col items-center justify-center rounded-md bg-white/90 sm:flex dark:bg-neutral-800/90">
                       <Icon icon={Upload} size="lg" variant="primary" />
                       <span className="mt-2 text-sm font-medium text-neutral-700 dark:text-neutral-300">
                         Drop .json file here
@@ -458,6 +467,12 @@ export function ExplainPlanInput({
                     </div>
                   )}
                 </div>
+                {/* Mobile: buttons in a toolbar row below textarea */}
+                {!isDragging && (
+                  <div className="flex gap-1 pt-2 sm:hidden">
+                    {actionButtons}
+                  </div>
+                )}
                 {errors.planJson && (
                   <p className="text-performance-poor mt-1 text-sm">
                     {errors.planJson.message}
