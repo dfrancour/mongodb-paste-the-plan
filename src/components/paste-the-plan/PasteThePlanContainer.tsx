@@ -36,9 +36,15 @@ export function PasteThePlanContainer() {
     setLastAnalyzedPlan(null);
   };
 
-  // Memoize visualization configs — ParsedPlan already has normalized trees
-  const vizConfigs = useMemo(() => {
-    if (!lastAnalyzedPlan) return { planConfig: null, execConfig: null };
+  // Memoize all analysis derived from the parsed plan
+  const analysis = useMemo(() => {
+    if (!lastAnalyzedPlan)
+      return {
+        planConfig: null,
+        execConfig: null,
+        planSelection: null,
+        esrAnalyses: null,
+      };
 
     try {
       const { plan, execution, raw, sbe, isSBE } = lastAnalyzedPlan;
@@ -90,9 +96,17 @@ export function PasteThePlanContainer() {
               };
       }
 
-      return { planConfig, execConfig };
+      const planSelection = analyzePlanSelection(raw);
+      const esrAnalyses = analyzeExplainPlan(raw);
+
+      return { planConfig, execConfig, planSelection, esrAnalyses };
     } catch {
-      return { planConfig: null, execConfig: null };
+      return {
+        planConfig: null,
+        execConfig: null,
+        planSelection: null,
+        esrAnalyses: null,
+      };
     }
   }, [lastAnalyzedPlan]);
 
@@ -126,45 +140,33 @@ export function PasteThePlanContainer() {
       )}
 
       {/* Plan Analysis (Selection or Single Plan) */}
-      {lastAnalyzedPlan &&
-        (() => {
-          const planSelectionAnalysis = analyzePlanSelection(
-            lastAnalyzedPlan.raw,
-          );
-          return planSelectionAnalysis ? (
-            <PlanSelection
-              analysis={planSelectionAnalysis}
-              rawExplainPlan={lastAnalyzedPlan.raw}
-              className=""
-            />
-          ) : null;
-        })()}
+      {analysis.planSelection && lastAnalyzedPlan && (
+        <PlanSelection
+          analysis={analysis.planSelection}
+          rawExplainPlan={lastAnalyzedPlan.raw}
+          className=""
+        />
+      )}
 
       {/* Query Plan Visualization - Always show, collapsed when execution stats exist */}
-      {vizConfigs.planConfig && (
+      {analysis.planConfig && (
         <FlowVisualization
-          {...vizConfigs.planConfig}
-          defaultExpanded={!vizConfigs.execConfig}
+          {...analysis.planConfig}
+          defaultExpanded={!analysis.execConfig}
         />
       )}
 
       {/* Execution Stats Visualization - Show when executionStats exists */}
-      {vizConfigs.execConfig && (
-        <FlowVisualization {...vizConfigs.execConfig} />
-      )}
+      {analysis.execConfig && <FlowVisualization {...analysis.execConfig} />}
 
       {/* ESR Index Analysis */}
-      {lastAnalyzedPlan &&
-        (() => {
-          const esrAnalyses = analyzeExplainPlan(lastAnalyzedPlan.raw);
-          return (
-            <ESRAnalysisComponent
-              analyses={esrAnalyses}
-              rawExplainPlan={lastAnalyzedPlan.raw}
-              className=""
-            />
-          );
-        })()}
+      {analysis.esrAnalyses && lastAnalyzedPlan && (
+        <ESRAnalysisComponent
+          analyses={analysis.esrAnalyses}
+          rawExplainPlan={lastAnalyzedPlan.raw}
+          className=""
+        />
+      )}
 
       {/* Server Environment */}
       {lastAnalyzedPlan && (
