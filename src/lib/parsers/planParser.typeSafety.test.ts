@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { PlanParser } from "./planParser";
+import { validatePlan, normalizeExecution, normalizePlan } from "#lib/parsers";
 import { hasNumericProperty, hasStringProperty } from "#lib/utils/jsxUtils";
 import { extractStageMetrics, loadTestPlan } from "#test-utils/test-helpers";
 
@@ -88,10 +88,10 @@ describe("TypeScript Type Safety Patterns", () => {
       // Behavioral expectation: Should attempt parsing without crashing
       expect(() => {
         try {
-          const parsed = PlanParser.parse(format);
+          const parsed = validatePlan(format);
           // If parsing succeeds, normalization should also not throw
           if (parsed) {
-            PlanParser.normalizePlan(parsed);
+            normalizePlan(parsed);
           }
         } catch (error) {
           // PlanParseError is expected for invalid formats, but should be controlled
@@ -166,11 +166,11 @@ describe("TypeScript Type Safety Patterns", () => {
 
       // Behavioral expectation: Real plans should parse successfully
       expect(() => {
-        const parsed = PlanParser.parse(planData);
+        const parsed = validatePlan(planData);
         expect(parsed).toBeDefined();
 
         // Normalization should also succeed
-        const normalized = PlanParser.normalizeExecution(parsed);
+        const normalized = normalizeExecution(parsed);
         expect(normalized.stage).toBeDefined();
         expect(typeof normalized.id).toBe("string");
       }).not.toThrow();

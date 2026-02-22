@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { PlanParser } from "#lib/parsers/planParser";
+import { validatePlan, normalizeExecution } from "#lib/parsers";
 import { FlowLayoutEngine } from "./flowLayoutEngine";
 import { runAllAnalyzers } from "#lib/analyzers";
 import {
@@ -17,8 +17,8 @@ describe("Multi-Input Merge Layout Handling", () => {
 
     complexPlans.forEach((planPath) => {
       const plan = loadTestPlan(planPath);
-      const parsed = PlanParser.parse(plan);
-      const normalized = PlanParser.normalizeExecution(parsed);
+      const parsed = validatePlan(plan);
+      const normalized = normalizeExecution(parsed);
       const flowLayout = FlowLayoutEngine.calculateLayout(normalized);
       const analysisResults = runAllAnalyzers({
         explainPlan: plan,
@@ -48,8 +48,8 @@ describe("Multi-Input Merge Layout Handling", () => {
 
   it("should provide adequate vertical spacing for multi-input merges", () => {
     const orQuery = loadTestPlan("complex/or-operation.executionStats.json");
-    const parsed = PlanParser.parse(orQuery);
-    const normalized = PlanParser.normalizeExecution(parsed);
+    const parsed = validatePlan(orQuery);
+    const normalized = normalizeExecution(parsed);
     const flowLayout = FlowLayoutEngine.calculateLayout(normalized);
     const analysisResults = runAllAnalyzers({
       explainPlan: orQuery,
@@ -88,8 +88,8 @@ describe("Multi-Input Merge Layout Handling", () => {
 
     complexPlans.forEach((planPath) => {
       const plan = loadTestPlan(planPath);
-      const parsed = PlanParser.parse(plan);
-      const normalized = PlanParser.normalizeExecution(parsed);
+      const parsed = validatePlan(plan);
+      const normalized = normalizeExecution(parsed);
       const flowLayout = FlowLayoutEngine.calculateLayout(normalized);
       const analysisResults = runAllAnalyzers({
         explainPlan: plan,
@@ -116,8 +116,8 @@ describe("Multi-Input Merge Layout Handling", () => {
 
   it("should handle deep nesting without layout degradation", () => {
     const deepPlan = loadTestPlan("complex/deep-nesting.executionStats.json");
-    const parsed = PlanParser.parse(deepPlan);
-    const normalized = PlanParser.normalizeExecution(parsed);
+    const parsed = validatePlan(deepPlan);
+    const normalized = normalizeExecution(parsed);
     const flowLayout = FlowLayoutEngine.calculateLayout(normalized);
     const analysisResults = runAllAnalyzers({
       explainPlan: deepPlan,

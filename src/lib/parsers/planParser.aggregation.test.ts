@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { PlanParser } from "./planParser";
+import { validatePlan } from "#lib/parsers";
 import { loadTestPlan } from "#test-utils/test-helpers";
 
 describe("Aggregation Pipeline Parsing", () => {
@@ -14,7 +14,7 @@ describe("Aggregation Pipeline Parsing", () => {
       const plan = loadTestPlan(planPath);
 
       // Should parse without throwing
-      expect(() => PlanParser.parse(plan)).not.toThrow();
+      expect(() => validatePlan(plan)).not.toThrow();
 
       // Should be recognized as explainVersion "2" (SBE)
       expect(plan.explainVersion).toBe("2");
@@ -81,7 +81,7 @@ describe("Aggregation Pipeline Parsing", () => {
       serverInfo: { version: "8.0.0" },
     };
 
-    expect(() => PlanParser.parse(emptyStagesPlan)).not.toThrow();
+    expect(() => validatePlan(emptyStagesPlan)).not.toThrow();
 
     // Test with single stage
     const singleStagePlan = {
@@ -96,7 +96,7 @@ describe("Aggregation Pipeline Parsing", () => {
       serverInfo: { version: "8.0.0" },
     };
 
-    expect(() => PlanParser.parse(singleStagePlan)).not.toThrow();
+    expect(() => validatePlan(singleStagePlan)).not.toThrow();
   });
 
   it("should preserve all aggregation stage metrics during parsing", () => {
@@ -105,7 +105,7 @@ describe("Aggregation Pipeline Parsing", () => {
     );
 
     // Parse the plan
-    const parsedPlan = PlanParser.parse(plan);
+    const parsedPlan = validatePlan(plan);
 
     // Verify original data is preserved in explainPlan
     expect(parsedPlan).toBeTruthy();

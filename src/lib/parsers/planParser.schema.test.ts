@@ -2,7 +2,7 @@
  * Test plan parser with real test plans to ensure schema compatibility
  */
 import { describe, it, expect } from "vitest";
-import { PlanParser } from "./planParser";
+import { validatePlan } from "#lib/parsers";
 import {
   loadTestPlan,
   getStandardQueryPlanPaths,
@@ -16,7 +16,7 @@ describe("Plan Parser Schema Compatibility", () => {
 
     // This should not throw
     expect(() => {
-      PlanParser.parse(planData);
+      validatePlan(planData);
     }).not.toThrow();
   });
 
@@ -27,7 +27,7 @@ describe("Plan Parser Schema Compatibility", () => {
     for (const planPath of testPlanPaths) {
       try {
         const planData = loadTestPlan(planPath);
-        PlanParser.parse(planData);
+        validatePlan(planData);
       } catch (error) {
         failures.push({
           path: planPath,
@@ -51,18 +51,18 @@ describe("Plan Parser Schema Compatibility", () => {
   it("should handle invalid plan gracefully", () => {
     const invalidPlan = { invalid: "data" };
 
-    // With passthrough, this might not fail, but should still work
-    const result = PlanParser.parse(invalidPlan);
-    expect(result).toBeDefined();
+    expect(() => validatePlan(invalidPlan)).toThrow(
+      "Not a recognized MongoDB explain plan",
+    );
   });
 
   it("should handle null/undefined gracefully", () => {
     expect(() => {
-      PlanParser.parse(null);
+      validatePlan(null);
     }).toThrow("Invalid MongoDB explain plan format");
 
     expect(() => {
-      PlanParser.parse(undefined);
+      validatePlan(undefined);
     }).toThrow("Invalid MongoDB explain plan format");
   });
 });

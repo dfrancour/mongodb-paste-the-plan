@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { PlanParser } from "./planParser";
+import { validatePlan, normalizeExecution, normalizePlan } from "#lib/parsers";
 import { loadTestPlan, getAllTestPlanPaths } from "#test-utils/test-helpers";
 
 describe("Schema Coverage Validation", () => {
@@ -8,7 +8,7 @@ describe("Schema Coverage Validation", () => {
       const planData = loadTestPlan(
         "complex/aggregation-pipeline.executionStats.json",
       );
-      const parsed = PlanParser.parse(planData);
+      const parsed = validatePlan(planData);
 
       expect(parsed.explainVersion).toBe("2");
       expect(parsed.stages).toBeDefined();
@@ -197,12 +197,12 @@ describe("Schema Coverage Validation", () => {
 
       // Parsing should succeed without type errors
       expect(() => {
-        const parsed = PlanParser.parse(planData);
+        const parsed = validatePlan(planData);
         expect(parsed).toBeDefined();
         expect(parsed.explainVersion).toBe("1");
 
         // Normalization should also succeed
-        const normalized = PlanParser.normalizeExecution(parsed);
+        const normalized = normalizeExecution(parsed);
         expect(normalized).toBeDefined();
         expect(normalized.stage).toBeDefined();
         expect(typeof normalized.id).toBe("string");
@@ -214,8 +214,8 @@ describe("Schema Coverage Validation", () => {
     /*
     it('should preserve all SBE metrics in normalized stages', () => {
       const planData = loadTestPlan('basic/compound-index.executionStats.json')
-      const parsed = PlanParser.parse(planData)
-      const normalized = PlanParser.normalizeExecution(parsed)
+      const parsed = validatePlan(planData)
+      const normalized = normalizeExecution(parsed)
 
       // Collect all metrics from normalized stages
       const allMetrics: string[] = []
@@ -250,13 +250,13 @@ describe("Schema Coverage Validation", () => {
       allTestFiles.forEach((testFile) => {
         try {
           const planData = loadTestPlan(testFile);
-          const parsed = PlanParser.parse(planData);
+          const parsed = validatePlan(planData);
           const hasExecution =
             testFile.includes("executionStats") ||
             testFile.includes("allPlansExecution");
           const normalized = hasExecution
-            ? PlanParser.normalizeExecution(parsed)
-            : PlanParser.normalizePlan(parsed);
+            ? normalizeExecution(parsed)
+            : normalizePlan(parsed);
 
           expect(parsed).toBeDefined();
           expect(normalized).toBeDefined();

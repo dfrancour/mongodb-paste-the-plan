@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { PlanParser } from "./planParser";
+import { validatePlan, normalizeExecution, normalizePlan } from "#lib/parsers";
 import type { ExplainPlan } from "#types/explain-plan";
 
 describe("Sharded Aggregation Detection", () => {
@@ -44,8 +44,8 @@ describe("Sharded Aggregation Detection", () => {
     };
 
     expect(() => {
-      const parsed = PlanParser.parse(shardedPipelinePlan);
-      const normalized = PlanParser.normalizePlan(parsed);
+      const parsed = validatePlan(shardedPipelinePlan);
+      const normalized = normalizePlan(parsed);
 
       // Should successfully parse and normalize
       expect(normalized).toBeDefined();
@@ -73,8 +73,8 @@ describe("Sharded Aggregation Detection", () => {
     };
 
     expect(() => {
-      const parsed = PlanParser.parse(regularPlan);
-      PlanParser.normalizeExecution(parsed);
+      const parsed = validatePlan(regularPlan);
+      normalizeExecution(parsed);
     }).not.toThrow();
   });
 
@@ -103,8 +103,8 @@ describe("Sharded Aggregation Detection", () => {
     };
 
     expect(() => {
-      const parsed = PlanParser.parse(sbeAggregationPlan);
-      PlanParser.normalizeExecution(parsed);
+      const parsed = validatePlan(sbeAggregationPlan);
+      normalizeExecution(parsed);
     }).not.toThrow();
   });
 
@@ -159,8 +159,8 @@ describe("Sharded Aggregation Detection", () => {
     };
 
     expect(() => {
-      const parsed = PlanParser.parse(modernShardedAggregationPlan);
-      const normalized = PlanParser.normalizeExecution(parsed);
+      const parsed = validatePlan(modernShardedAggregationPlan);
+      const normalized = normalizeExecution(parsed);
 
       // Should successfully parse and normalize
       expect(normalized).toBeDefined();
@@ -210,8 +210,8 @@ describe("Sharded Aggregation Detection", () => {
     };
 
     expect(() => {
-      const parsed = PlanParser.parse(shardedFindPlan);
-      const normalized = PlanParser.normalizeExecution(parsed);
+      const parsed = validatePlan(shardedFindPlan);
+      const normalized = normalizeExecution(parsed);
 
       // Should successfully parse and normalize
       expect(normalized).toBeDefined();
@@ -245,8 +245,8 @@ describe("Sharded Aggregation Detection", () => {
       },
     };
 
-    const parsed = PlanParser.parse(modernShardedAggregationPlan);
-    const normalized = PlanParser.normalizePlan(parsed);
+    const parsed = validatePlan(modernShardedAggregationPlan);
+    const normalized = normalizePlan(parsed);
 
     // Should extract plan from shard
     expect(normalized).toBeDefined();
@@ -290,8 +290,8 @@ describe("Sharded Aggregation Detection", () => {
       },
     };
 
-    const parsed = PlanParser.parse(modernShardedAggregationPlan);
-    const normalized = PlanParser.normalizeExecution(parsed);
+    const parsed = validatePlan(modernShardedAggregationPlan);
+    const normalized = normalizeExecution(parsed);
 
     // Should extract execution stages from shard
     expect(normalized).toBeDefined();
@@ -425,8 +425,8 @@ describe("Sharded Aggregation Detection", () => {
     };
 
     expect(() => {
-      const parsed = PlanParser.parse(atlasSearchShardedPlan);
-      const normalized = PlanParser.normalizePlan(parsed);
+      const parsed = validatePlan(atlasSearchShardedPlan);
+      const normalized = normalizePlan(parsed);
 
       // Should successfully parse and normalize
       expect(normalized).toBeDefined();

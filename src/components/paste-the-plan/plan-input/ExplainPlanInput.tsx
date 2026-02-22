@@ -16,12 +16,8 @@ import {
   Download,
 } from "lucide-react";
 import { Icon } from "#components/common/Icon";
-import { PlanParser, PlanParseError } from "#lib/parsers/planParser";
-import type {
-  ExplainPlan,
-  ParsedSBEPlan,
-  HybridSBEPlan,
-} from "#types/explain-plan";
+import { parsePlan, PlanParseError } from "#lib/parsers";
+import type { ParsedPlan } from "#lib/parsers";
 import { HowToUse } from "./HowToUse";
 import { ContributeLink } from "#components/common/ContributeLink";
 import { ExpandableCard } from "#components/common/ExpandableCard";
@@ -35,12 +31,7 @@ const explainPlanSchema = z.object({
 type ExplainPlanForm = z.infer<typeof explainPlanSchema>;
 
 interface ExplainPlanInputProps {
-  onPlanAnalyzed: (planData: {
-    raw: ExplainPlan;
-    sbe?: ParsedSBEPlan;
-    hybridSBE?: HybridSBEPlan;
-    isSBE: boolean;
-  }) => void;
+  onPlanAnalyzed: (result: ParsedPlan) => void;
   onClearPlan: () => void;
   hasAnalyzedPlan: boolean;
   /** Plan data loaded from URL hash (if any) */
@@ -66,13 +57,10 @@ export function ExplainPlanInput({
   const [isProcessing, setIsProcessing] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [lastAnalyzedPlan, setLastAnalyzedPlan] = useState<{
-    raw: ExplainPlan;
-    rawInput: unknown;
-    sbe?: ParsedSBEPlan;
-    hybridSBE?: HybridSBEPlan;
-    isSBE: boolean;
-  } | null>(null);
+  const [lastAnalyzedPlan, setLastAnalyzedPlan] = useState<ParsedPlan | null>(
+    null,
+  );
+  const [rawInput, setRawInput] = useState<unknown>(null);
 
   // Track if we've already processed the initial plan from URL
   const hasProcessedInitialPlan = useRef(false);
@@ -111,53 +99,10 @@ export function ExplainPlanInput({
       const processInitialPlan = async () => {
         setIsProcessing(true);
         try {
-          const validatedPlan = PlanParser.parse(initialPlan);
-          const isSBE = PlanParser.isSBEPlan(validatedPlan);
-          let sbePlan: ParsedSBEPlan | undefined;
-
-          let planData: {
-            raw: ExplainPlan;
-            rawInput: unknown;
-            sbe?: ParsedSBEPlan;
-            hybridSBE?: HybridSBEPlan;
-            isSBE: boolean;
-          };
-
-          if (isSBE) {
-            const extractedSBEPlan = PlanParser.extractSBEPlan(validatedPlan);
-            if (extractedSBEPlan) {
-              sbePlan = extractedSBEPlan;
-              planData = {
-                raw: validatedPlan,
-                rawInput: initialPlan,
-                sbe: sbePlan,
-                isSBE,
-              };
-            } else {
-              const hybridSBEPlan =
-                PlanParser.extractHybridSBEPlan(validatedPlan);
-              if (hybridSBEPlan) {
-                planData = {
-                  raw: validatedPlan,
-                  rawInput: initialPlan,
-                  hybridSBE: hybridSBEPlan,
-                  isSBE,
-                };
-              } else {
-                throw new Error("Failed to extract SBE plan data");
-              }
-            }
-          } else {
-            planData = {
-              raw: validatedPlan,
-              rawInput: initialPlan,
-              sbe: sbePlan,
-              isSBE,
-            };
-          }
-
-          setLastAnalyzedPlan(planData);
-          onPlanAnalyzed(planData);
+          const result = parsePlan(initialPlan);
+          setRawInput(initialPlan);
+          setLastAnalyzedPlan(result);
+          onPlanAnalyzed(result);
         } catch (error) {
           setValidationError(
             error instanceof Error
@@ -202,57 +147,11 @@ export function ExplainPlanInput({
   const onSubmit = async (data: ExplainPlanForm) => {
     setIsProcessing(true);
     try {
-      const rawPlan: unknown = JSON.parse(data.planJson);
-      const validatedPlan = PlanParser.parse(rawPlan);
-
-      // Check if this is an SBE plan
-      const isSBE = PlanParser.isSBEPlan(validatedPlan);
-      let sbePlan: ParsedSBEPlan | undefined;
-
-      let planData: {
-        raw: ExplainPlan;
-        rawInput: unknown; // Original input before Extended JSON transform
-        sbe?: ParsedSBEPlan;
-        hybridSBE?: HybridSBEPlan;
-        isSBE: boolean;
-      };
-
-      if (isSBE) {
-        // Try to parse regular SBE plan first for multi-stage visualization
-        const extractedSBEPlan = PlanParser.extractSBEPlan(validatedPlan);
-        if (extractedSBEPlan) {
-          sbePlan = extractedSBEPlan;
-          planData = {
-            raw: validatedPlan,
-            rawInput: rawPlan,
-            sbe: sbePlan,
-            isSBE,
-          };
-        } else {
-          // Fallback to hybrid SBE parsing if regular SBE fails
-          const hybridSBEPlan = PlanParser.extractHybridSBEPlan(validatedPlan);
-          if (hybridSBEPlan) {
-            planData = {
-              raw: validatedPlan,
-              rawInput: rawPlan,
-              hybridSBE: hybridSBEPlan,
-              isSBE,
-            };
-          } else {
-            throw new Error("Failed to extract SBE plan data");
-          }
-        }
-      } else {
-        planData = {
-          raw: validatedPlan,
-          rawInput: rawPlan,
-          sbe: sbePlan,
-          isSBE,
-        };
-      }
-
-      setLastAnalyzedPlan(planData);
-      onPlanAnalyzed(planData);
+      const raw: unknown = JSON.parse(data.planJson);
+      const result = parsePlan(raw);
+      setRawInput(raw);
+      setLastAnalyzedPlan(result);
+      onPlanAnalyzed(result);
     } catch (error) {
       const detail =
         error instanceof PlanParseError
@@ -398,6 +297,7 @@ export function ExplainPlanInput({
               onPlanSelect={(planContent: string) => {
                 // Clear existing plan first
                 setLastAnalyzedPlan(null);
+                setRawInput(null);
                 setValidationStatus("idle");
                 setValidationError(null);
                 onClearPlan();
@@ -533,6 +433,7 @@ export function ExplainPlanInput({
                     type="button"
                     onClick={() => {
                       setLastAnalyzedPlan(null);
+                      setRawInput(null);
                       setValue("planJson", "");
                       setValidationStatus("idle");
                       onClearPlan();
@@ -551,9 +452,7 @@ export function ExplainPlanInput({
                   </button>
                 )}
                 {/* Share button - shown after plan is analyzed */}
-                {lastAnalyzedPlan && (
-                  <SharePlanButton plan={lastAnalyzedPlan.rawInput} />
-                )}
+                {lastAnalyzedPlan && <SharePlanButton plan={rawInput} />}
               </div>
             </form>
           </div>

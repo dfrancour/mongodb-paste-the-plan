@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { PlanParser } from "./planParser";
+import { validatePlan, normalizeExecution } from "#lib/parsers";
 
 describe("Extended JSON Parsing", () => {
   it("should transform MongoDB Extended JSON format correctly", () => {
@@ -39,7 +39,7 @@ describe("Extended JSON Parsing", () => {
     };
 
     // This should not throw an error
-    const parsedPlan = PlanParser.parse(extendedJsonPlan);
+    const parsedPlan = validatePlan(extendedJsonPlan);
 
     // Verify that Extended JSON values were converted to regular numbers
     expect(parsedPlan.executionStats?.nReturned).toBe(1000);
@@ -79,7 +79,7 @@ describe("Extended JSON Parsing", () => {
       },
     };
 
-    const parsedPlan = PlanParser.parse(nestedExtendedJson);
+    const parsedPlan = validatePlan(nestedExtendedJson);
 
     // Check nested transformations
     expect(parsedPlan.executionStats?.nReturned).toBe(100);
@@ -126,7 +126,7 @@ describe("Extended JSON Parsing", () => {
       },
     };
 
-    const parsedPlan = PlanParser.parse(mixedExtendedJson);
+    const parsedPlan = validatePlan(mixedExtendedJson);
 
     // Numbers should be converted
     expect(parsedPlan.executionStats?.nReturned).toBe(42);
@@ -167,7 +167,7 @@ describe("Extended JSON Parsing", () => {
       },
     };
 
-    const parsedPlan = PlanParser.parse(arrayExtendedJson);
+    const parsedPlan = validatePlan(arrayExtendedJson);
 
     // Check array elements were transformed
     const allPlans = parsedPlan.executionStats?.allPlansExecution;
@@ -223,11 +223,11 @@ describe("Extended JSON Parsing", () => {
     };
 
     // Should parse without throwing
-    const parsedPlan = PlanParser.parse(extendedJsonPlan);
+    const parsedPlan = validatePlan(extendedJsonPlan);
     expect(parsedPlan).toBeDefined();
 
     // Should normalize without throwing
-    const normalizedPlan = PlanParser.normalizeExecution(parsedPlan);
+    const normalizedPlan = normalizeExecution(parsedPlan);
     expect(normalizedPlan).toBeDefined();
     expect(normalizedPlan.stage).toBe("FETCH");
     expect(normalizedPlan.children).toHaveLength(1);

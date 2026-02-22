@@ -1,7 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { PlanParser } from "./planParser";
+import { validatePlan, normalizeExecution, normalizePlan } from "#lib/parsers";
 import { createStageVisualization } from "#lib/visualization/stageDisplayFormatter";
-import { runAllAnalyzers } from "#lib/analyzers";
+import {
+  runAllAnalyzers,
+  summarizePlan,
+  analyzePlanSelection,
+} from "#lib/analyzers";
 import {
   loadTestPlan,
   getStandardQueryPlanPaths,
@@ -13,14 +17,14 @@ describe("Expert-Focused Metrics Extraction", () => {
 
     allTestPlanPaths.forEach((planPath) => {
       const plan = loadTestPlan(planPath);
-      const parsed = PlanParser.parse(plan);
+      const parsed = validatePlan(plan);
       const hasExecution =
         planPath.includes("executionStats") ||
         planPath.includes("allPlansExecution");
       const normalized = hasExecution
-        ? PlanParser.normalizeExecution(parsed)
-        : PlanParser.normalizePlan(parsed);
-      const summary = PlanParser.summarize(normalized, parsed);
+        ? normalizeExecution(parsed)
+        : normalizePlan(parsed);
+      const summary = summarizePlan(normalized, parsed);
 
       // Behavioral expectation: Analysis should include meaningful database metrics
       const hasDatabaseMetrics =
@@ -55,9 +59,9 @@ describe("Expert-Focused Metrics Extraction", () => {
 
     testCases.forEach(({ plan: planPath, expectedAntiPattern }) => {
       const plan = loadTestPlan(planPath);
-      const parsed = PlanParser.parse(plan);
-      const normalized = PlanParser.normalizeExecution(parsed);
-      const summary = PlanParser.summarize(normalized, parsed);
+      const parsed = validatePlan(plan);
+      const normalized = normalizeExecution(parsed);
+      const summary = summarizePlan(normalized, parsed);
 
       // Behavioral expectation: Should detect specific performance issues
       switch (expectedAntiPattern) {
@@ -102,8 +106,8 @@ describe("Expert-Focused Metrics Extraction", () => {
 
     indexTestCases.forEach((planPath) => {
       const plan = loadTestPlan(planPath);
-      const parsed = PlanParser.parse(plan);
-      const normalized = PlanParser.normalizeExecution(parsed);
+      const parsed = validatePlan(plan);
+      const normalized = normalizeExecution(parsed);
 
       // Behavioral expectation: Should extract index information
       function findIndexUsage(stage: typeof normalized): string[] {
@@ -131,8 +135,8 @@ describe("Expert-Focused Metrics Extraction", () => {
 
   it("should provide stage-specific performance insights", () => {
     const plan = loadTestPlan("basic/index-with-fetch.executionStats.json"); // FETCH -> IXSCAN
-    const parsed = PlanParser.parse(plan);
-    const normalized = PlanParser.normalizeExecution(parsed);
+    const parsed = validatePlan(plan);
+    const normalized = normalizeExecution(parsed);
     const analysisResults = runAllAnalyzers({
       explainPlan: plan,
       rootStage: normalized,
@@ -183,8 +187,8 @@ describe("Expert-Focused Metrics Extraction", () => {
     const plan = loadTestPlan(
       "performance/inefficient-query.executionStats.json",
     );
-    const parsed = PlanParser.parse(plan);
-    const normalized = PlanParser.normalizeExecution(parsed);
+    const parsed = validatePlan(plan);
+    const normalized = normalizeExecution(parsed);
 
     // Behavioral expectation: Should calculate selectivity and efficiency ratios
     function findEfficiencyMetrics(stage: typeof normalized): Array<{
@@ -238,9 +242,9 @@ describe("Expert-Focused Metrics Extraction", () => {
 
     performancePlans.forEach((planPath) => {
       const plan = loadTestPlan(planPath);
-      const parsed = PlanParser.parse(plan);
-      const normalized = PlanParser.normalizeExecution(parsed);
-      const summary = PlanParser.summarize(normalized, parsed);
+      const parsed = validatePlan(plan);
+      const normalized = normalizeExecution(parsed);
+      const summary = summarizePlan(normalized, parsed);
 
       // Behavioral expectation: Summary should include key performance indicators
       expect(typeof summary.executionTimeMs).toBe("number");
@@ -264,8 +268,8 @@ describe("Expert-Focused Metrics Extraction", () => {
     const planWithRejections = loadTestPlan(
       "basic/compound-index.executionStats.json",
     );
-    const parsed = PlanParser.parse(planWithRejections);
-    const planSelection = PlanParser.analyzePlanSelection(parsed);
+    const parsed = validatePlan(planWithRejections);
+    const planSelection = analyzePlanSelection(parsed);
 
     if (planSelection) {
       // Behavioral expectation: Should provide expert-level plan comparison
@@ -296,8 +300,8 @@ describe("Expert-Focused Metrics Extraction", () => {
       const planWithRejections = loadTestPlan(
         "basic/compound-index.allPlansExecution.json",
       );
-      const parsed = PlanParser.parse(planWithRejections);
-      const planSelection = PlanParser.analyzePlanSelection(parsed);
+      const parsed = validatePlan(planWithRejections);
+      const planSelection = analyzePlanSelection(parsed);
 
       expect(planSelection).toBeDefined();
       if (planSelection) {
@@ -321,9 +325,9 @@ describe("Expert-Focused Metrics Extraction", () => {
       // Bug: Recursively summed metrics from all stages in tree
       // Correct: Use executionStats cumulative totals directly
       const plan = loadTestPlan("basic/compound-index.executionStats.json");
-      const parsed = PlanParser.parse(plan);
-      const normalized = PlanParser.normalizeExecution(parsed);
-      const summary = PlanParser.summarize(normalized, parsed);
+      const parsed = validatePlan(plan);
+      const normalized = normalizeExecution(parsed);
+      const summary = summarizePlan(normalized, parsed);
 
       // Expected values from MongoDB executionStats (pre-computed cumulative totals)
       expect(summary.totalDocsExamined).toBe(735);

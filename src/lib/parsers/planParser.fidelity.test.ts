@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { PlanParser } from "./planParser";
+import { validatePlan, transformExtendedJSON } from "#lib/parsers";
 import { semanticEqual, findDifference } from "#lib/utils/semanticEqual";
 import { loadTestPlan, getAllTestPlanPaths } from "#test-utils/test-helpers";
 
@@ -25,10 +25,10 @@ describe("Plan Parser Data Fidelity", () => {
       const rawPlan = loadTestPlan("basic/compound-index.executionStats.json");
 
       // Parse the plan
-      const parsed = PlanParser.parse(rawPlan);
+      const parsed = validatePlan(rawPlan);
 
       // Get expected output (what transformExtendedJSON produces)
-      const expected = PlanParser.transformExtendedJSON(rawPlan);
+      const expected = transformExtendedJSON(rawPlan);
 
       // Compare
       if (!semanticEqual(parsed, expected)) {
@@ -47,10 +47,10 @@ describe("Plan Parser Data Fidelity", () => {
         const rawPlan = loadTestPlan(planPath);
 
         // Parse the plan
-        const parsed = PlanParser.parse(rawPlan);
+        const parsed = validatePlan(rawPlan);
 
         // Get expected output (what transformExtendedJSON produces)
-        const expected = PlanParser.transformExtendedJSON(rawPlan);
+        const expected = transformExtendedJSON(rawPlan);
 
         // Compare
         if (!semanticEqual(parsed, expected)) {
@@ -75,8 +75,8 @@ describe("Plan Parser Data Fidelity", () => {
         },
       };
 
-      const parsed = PlanParser.parse(rawPlan);
-      const expected = PlanParser.transformExtendedJSON(rawPlan);
+      const parsed = validatePlan(rawPlan);
+      const expected = transformExtendedJSON(rawPlan);
 
       expect(semanticEqual(parsed, expected)).toBe(true);
 
@@ -104,8 +104,8 @@ describe("Plan Parser Data Fidelity", () => {
         },
       };
 
-      const parsed = PlanParser.parse(rawPlan);
-      const expected = PlanParser.transformExtendedJSON(rawPlan);
+      const parsed = validatePlan(rawPlan);
+      const expected = transformExtendedJSON(rawPlan);
 
       expect(semanticEqual(parsed, expected)).toBe(true);
 
@@ -133,8 +133,8 @@ describe("Plan Parser Data Fidelity", () => {
         },
       };
 
-      const parsed = PlanParser.parse(rawPlan);
-      const expected = PlanParser.transformExtendedJSON(rawPlan);
+      const parsed = validatePlan(rawPlan);
+      const expected = transformExtendedJSON(rawPlan);
 
       expect(semanticEqual(parsed, expected)).toBe(true);
     });
@@ -151,8 +151,8 @@ describe("Plan Parser Data Fidelity", () => {
         },
       };
 
-      const parsed = PlanParser.parse(rawPlan);
-      const expected = PlanParser.transformExtendedJSON(rawPlan);
+      const parsed = validatePlan(rawPlan);
+      const expected = transformExtendedJSON(rawPlan);
 
       expect(semanticEqual(parsed, expected)).toBe(true);
     });
@@ -169,8 +169,8 @@ describe("Plan Parser Data Fidelity", () => {
       for (const planPath of allPlanPaths) {
         try {
           const rawPlan = loadTestPlan(planPath);
-          const parsed = PlanParser.parse(rawPlan);
-          const expected = PlanParser.transformExtendedJSON(rawPlan);
+          const parsed = validatePlan(rawPlan);
+          const expected = transformExtendedJSON(rawPlan);
 
           if (semanticEqual(parsed, expected)) {
             successCount++;

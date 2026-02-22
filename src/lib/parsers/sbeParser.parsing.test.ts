@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { PlanParser } from "./planParser";
+import { isSBEPlan, extractSBEPlan } from "#lib/parsers";
 import { loadTestPlan } from "#test-utils/test-helpers";
 
 describe("SBE Plan Parsing", () => {
@@ -9,10 +9,10 @@ describe("SBE Plan Parsing", () => {
     );
 
     // Verify it's an SBE plan
-    expect(PlanParser.isSBEPlan(explainPlan)).toBe(true);
+    expect(isSBEPlan(explainPlan)).toBe(true);
 
     // Parse the SBE plan
-    const sbePlan = PlanParser.extractSBEPlan(explainPlan);
+    const sbePlan = extractSBEPlan(explainPlan);
     expect(sbePlan).toBeTruthy();
 
     if (!sbePlan) return;
@@ -50,7 +50,7 @@ describe("SBE Plan Parsing", () => {
     const explainPlan = loadTestPlan(
       "complex/aggregation-pipeline.executionStats.json",
     );
-    const sbePlan = PlanParser.extractSBEPlan(explainPlan);
+    const sbePlan = extractSBEPlan(explainPlan);
 
     if (!sbePlan) throw new Error("Failed to parse SBE plan");
 
@@ -79,7 +79,7 @@ describe("SBE Plan Parsing", () => {
 
     testPlans.forEach((planPath) => {
       const explainPlan = loadTestPlan(planPath);
-      const sbePlan = PlanParser.extractSBEPlan(explainPlan);
+      const sbePlan = extractSBEPlan(explainPlan);
 
       expect(sbePlan).toBeTruthy();
       if (!sbePlan) return;

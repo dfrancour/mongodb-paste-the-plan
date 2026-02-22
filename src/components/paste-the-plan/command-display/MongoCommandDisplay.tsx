@@ -2,7 +2,7 @@
 
 import { Database } from "lucide-react";
 import { CommandExtractor } from "#lib/parsers/commandExtractor";
-import { PlanParser } from "#lib/parsers/planParser";
+import { detectExplainMode } from "#lib/parsers";
 import type { ExplainPlan } from "#types/explain-plan";
 import { ExpandableCard } from "#components/common/ExpandableCard";
 import { Icon } from "#components/common/Icon";
@@ -27,7 +27,7 @@ export function MongoCommandDisplay({
   className = "",
 }: MongoCommandDisplayProps) {
   const queryInfo = CommandExtractor.extractQuery(explainPlan);
-  const explainMode = PlanParser.detectExplainMode(explainPlan);
+  const explainMode = detectExplainMode(explainPlan);
   const commandString = CommandExtractor.formatAsCommand(
     queryInfo,
     explainMode,

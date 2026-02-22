@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { PlanParser } from "./planParser";
+import { validatePlan, normalizeExecution, normalizePlan } from "#lib/parsers";
 import {
   loadTestPlan,
   loadTestFixture,
@@ -10,8 +10,8 @@ import { StageCategory } from "#data/stages/types";
 describe("Sharded Query Parsing Completeness", () => {
   it("should extract execution stages from all shards, not just root SHARD_MERGE", () => {
     const shardedPlan = loadTestFixture("sharded-query.json");
-    const parsed = PlanParser.parse(shardedPlan);
-    const normalized = PlanParser.normalizeExecution(parsed);
+    const parsed = validatePlan(shardedPlan);
+    const normalized = normalizeExecution(parsed);
 
     // Behavioral expectation: Multi-shard queries should show more than just SHARD_MERGE
     expect(normalized.stage).toBe("SHARD_MERGE");
@@ -37,8 +37,8 @@ describe("Sharded Query Parsing Completeness", () => {
 
   it("should insert SHARD_EXECUTION nodes between SHARD_MERGE and per-shard stages", () => {
     const shardedPlan = loadTestFixture("sharded-query.json");
-    const parsed = PlanParser.parse(shardedPlan);
-    const normalized = PlanParser.normalizeExecution(parsed);
+    const parsed = validatePlan(shardedPlan);
+    const normalized = normalizeExecution(parsed);
 
     // Children of SHARD_MERGE should be SHARD_EXECUTION nodes
     expect(normalized.children.length).toBe(2);
@@ -54,8 +54,8 @@ describe("Sharded Query Parsing Completeness", () => {
 
   it("should populate shardName on SHARD_EXECUTION nodes", () => {
     const shardedPlan = loadTestFixture("sharded-query.json");
-    const parsed = PlanParser.parse(shardedPlan);
-    const normalized = PlanParser.normalizeExecution(parsed);
+    const parsed = validatePlan(shardedPlan);
+    const normalized = normalizeExecution(parsed);
 
     const shardNames = normalized.children.map((child) => child.shardName);
     expect(shardNames).toEqual(["shard01", "shard02"]);
@@ -63,8 +63,8 @@ describe("Sharded Query Parsing Completeness", () => {
 
   it("should populate executionSuccess on SHARD_EXECUTION nodes", () => {
     const shardedPlan = loadTestFixture("sharded-query.json");
-    const parsed = PlanParser.parse(shardedPlan);
-    const normalized = PlanParser.normalizeExecution(parsed);
+    const parsed = validatePlan(shardedPlan);
+    const normalized = normalizeExecution(parsed);
 
     for (const child of normalized.children) {
       expect(child.executionSuccess).toBe(true);
@@ -73,8 +73,8 @@ describe("Sharded Query Parsing Completeness", () => {
 
   it("should populate shard-level metrics on SHARD_EXECUTION nodes", () => {
     const shardedPlan = loadTestFixture("sharded-query.json");
-    const parsed = PlanParser.parse(shardedPlan);
-    const normalized = PlanParser.normalizeExecution(parsed);
+    const parsed = validatePlan(shardedPlan);
+    const normalized = normalizeExecution(parsed);
 
     // shard01: executionTimeMillis=85, nReturned=23456, totalKeysExamined=26000, totalDocsExamined=23500
     const shard01 = normalized.children[0]!;
@@ -103,8 +103,8 @@ describe("Sharded Query Parsing Completeness", () => {
     const shards = execStages.shards as Record<string, unknown>[];
     delete shards[0]!.shardName;
 
-    const parsed = PlanParser.parse(modified);
-    const normalized = PlanParser.normalizeExecution(parsed);
+    const parsed = validatePlan(modified);
+    const normalized = normalizeExecution(parsed);
 
     expect(normalized.children[0]!.shardName).toBe("shard0");
     expect(normalized.children[1]!.shardName).toBe("shard02");
@@ -112,8 +112,8 @@ describe("Sharded Query Parsing Completeness", () => {
 
   it("should preserve shard-specific metrics during parsing", () => {
     const shardedPlan = loadTestFixture("sharded-query.json");
-    const parsed = PlanParser.parse(shardedPlan);
-    const normalized = PlanParser.normalizeExecution(parsed);
+    const parsed = validatePlan(shardedPlan);
+    const normalized = normalizeExecution(parsed);
 
     // Behavioral expectation: Should preserve individual shard performance data
     let totalChildMetrics = 0;
@@ -144,16 +144,16 @@ describe("Sharded Query Parsing Completeness", () => {
 
     // Behavioral expectation: Should parse without throwing
     expect(() => {
-      const parsed = PlanParser.parse(plannerOnly);
-      const normalized = PlanParser.normalizePlan(parsed);
+      const parsed = validatePlan(plannerOnly);
+      const normalized = normalizePlan(parsed);
       expect(normalized.stage).toBeDefined();
     }).not.toThrow();
   });
 
   it("should resolve mongos stage icons and categories in execution view", () => {
     const shardedPlan = loadTestFixture("sharded-query.json");
-    const parsed = PlanParser.parse(shardedPlan);
-    const normalized = PlanParser.normalizeExecution(parsed);
+    const parsed = validatePlan(shardedPlan);
+    const normalized = normalizeExecution(parsed);
 
     // Root SHARD_MERGE should have its mongos-layer icon, not the fallback
     expect(normalized.stage).toBe("SHARD_MERGE");
@@ -170,8 +170,8 @@ describe("Sharded Query Parsing Completeness", () => {
 
   it("should resolve mongos stage icons and categories in planning view", () => {
     const shardedPlan = loadTestFixture("sharded-query.json");
-    const parsed = PlanParser.parse(shardedPlan);
-    const normalized = PlanParser.normalizePlan(parsed);
+    const parsed = validatePlan(shardedPlan);
+    const normalized = normalizePlan(parsed);
 
     // Root stage in planning view should also resolve mongos icons
     expect(normalized.iconName).not.toBe("CircleQuestionMark");
@@ -195,8 +195,8 @@ describe("Sharded Query Parsing Completeness", () => {
 
     testCases.forEach(({ path, isSharded, useFixture }) => {
       const plan = useFixture ? loadTestFixture(path) : loadTestPlan(path);
-      const parsed = PlanParser.parse(plan);
-      const normalized = PlanParser.normalizeExecution(parsed);
+      const parsed = validatePlan(plan);
+      const normalized = normalizeExecution(parsed);
 
       // Behavioral expectation: Sharded queries should have SHARD_MERGE at root
       const hasShardMerge = normalized.stage === "SHARD_MERGE";

@@ -1,5 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { PlanParser } from "#lib/parsers/planParser";
+import {
+  validatePlan,
+  detectPlanMode,
+  normalizeExecution,
+  normalizePlan,
+} from "#lib/parsers";
 import { FlowLayoutEngine } from "./flowLayoutEngine";
 import { runAllAnalyzers } from "#lib/analyzers";
 import {
@@ -13,12 +18,12 @@ describe("Flow Visualization Positioning Constraints", () => {
 
     allPlanPaths.forEach((planPath) => {
       const plan = loadTestPlan(planPath);
-      const parsed = PlanParser.parse(plan);
-      const mode = PlanParser.detectPlanMode(parsed);
+      const parsed = validatePlan(plan);
+      const mode = detectPlanMode(parsed);
       const normalized =
         mode === "execution"
-          ? PlanParser.normalizeExecution(parsed)
-          : PlanParser.normalizePlan(parsed);
+          ? normalizeExecution(parsed)
+          : normalizePlan(parsed);
       const flowLayout = FlowLayoutEngine.calculateLayout(normalized);
       const analysisResults = runAllAnalyzers({
         explainPlan: plan,
@@ -54,8 +59,8 @@ describe("Flow Visualization Positioning Constraints", () => {
 
     performanceTestPlans.forEach((planPath) => {
       const plan = loadTestPlan(planPath);
-      const parsed = PlanParser.parse(plan);
-      const normalized = PlanParser.normalizeExecution(parsed);
+      const parsed = validatePlan(plan);
+      const normalized = normalizeExecution(parsed);
       const flowLayout = FlowLayoutEngine.calculateLayout(normalized);
       const analysisResults = runAllAnalyzers({
         explainPlan: plan,
@@ -87,8 +92,8 @@ describe("Flow Visualization Positioning Constraints", () => {
 
     largePlans.forEach((planPath) => {
       const plan = loadTestPlan(planPath);
-      const parsed = PlanParser.parse(plan);
-      const normalized = PlanParser.normalizeExecution(parsed);
+      const parsed = validatePlan(plan);
+      const normalized = normalizeExecution(parsed);
       const flowLayout = FlowLayoutEngine.calculateLayout(normalized);
       const analysisResults = runAllAnalyzers({
         explainPlan: plan,
@@ -128,8 +133,8 @@ describe("Flow Visualization Positioning Constraints", () => {
 
   it("should maintain consistent spacing between connected stages", () => {
     const plan = loadTestPlan("basic/index-with-fetch.executionStats.json"); // FETCH -> IXSCAN
-    const parsed = PlanParser.parse(plan);
-    const normalized = PlanParser.normalizeExecution(parsed);
+    const parsed = validatePlan(plan);
+    const normalized = normalizeExecution(parsed);
     const flowLayout = FlowLayoutEngine.calculateLayout(normalized);
     const analysisResults = runAllAnalyzers({
       explainPlan: plan,
@@ -175,8 +180,8 @@ describe("Flow Visualization Positioning Constraints", () => {
 
     complexMergePlans.forEach((planPath) => {
       const plan = loadTestPlan(planPath);
-      const parsed = PlanParser.parse(plan);
-      const normalized = PlanParser.normalizeExecution(parsed);
+      const parsed = validatePlan(plan);
+      const normalized = normalizeExecution(parsed);
       const flowLayout = FlowLayoutEngine.calculateLayout(normalized);
       const analysisResults = runAllAnalyzers({
         explainPlan: plan,

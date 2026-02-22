@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { PlanParser, PlanParseError } from "./planParser";
+import { detectPlanMode, PlanParseError } from "#lib/parsers";
 import type { ExplainPlan } from "#types/explain-plan";
 
 describe("PlanParser.detectPlanMode", () => {
@@ -18,7 +18,7 @@ describe("PlanParser.detectPlanMode", () => {
         },
       };
 
-      expect(PlanParser.detectPlanMode(plan)).toBe("execution");
+      expect(detectPlanMode(plan)).toBe("execution");
     });
 
     it("detects execution mode from aggregation pipeline with executionStats", () => {
@@ -43,7 +43,7 @@ describe("PlanParser.detectPlanMode", () => {
         ],
       };
 
-      expect(PlanParser.detectPlanMode(plan)).toBe("execution");
+      expect(detectPlanMode(plan)).toBe("execution");
     });
 
     it("detects execution mode from sharded executionStats", () => {
@@ -64,7 +64,7 @@ describe("PlanParser.detectPlanMode", () => {
         },
       };
 
-      expect(PlanParser.detectPlanMode(plan)).toBe("execution");
+      expect(detectPlanMode(plan)).toBe("execution");
     });
 
     it("detects execution mode from direct stage format with execution metrics", () => {
@@ -75,7 +75,7 @@ describe("PlanParser.detectPlanMode", () => {
         executionTimeMillis: 15,
       };
 
-      expect(PlanParser.detectPlanMode(plan)).toBe("execution");
+      expect(detectPlanMode(plan)).toBe("execution");
     });
 
     it("detects execution mode from modern sharded aggregation", () => {
@@ -99,7 +99,7 @@ describe("PlanParser.detectPlanMode", () => {
         },
       };
 
-      expect(PlanParser.detectPlanMode(plan)).toBe("execution");
+      expect(detectPlanMode(plan)).toBe("execution");
     });
   });
 
@@ -117,7 +117,7 @@ describe("PlanParser.detectPlanMode", () => {
         },
       };
 
-      expect(PlanParser.detectPlanMode(plan)).toBe("plan");
+      expect(detectPlanMode(plan)).toBe("plan");
     });
 
     it("detects plan mode from aggregation pipeline without executionStats", () => {
@@ -136,7 +136,7 @@ describe("PlanParser.detectPlanMode", () => {
         ],
       };
 
-      expect(PlanParser.detectPlanMode(plan)).toBe("plan");
+      expect(detectPlanMode(plan)).toBe("plan");
     });
 
     it("detects plan mode from SBE plan with queryPlanner only", () => {
@@ -156,7 +156,7 @@ describe("PlanParser.detectPlanMode", () => {
         },
       };
 
-      expect(PlanParser.detectPlanMode(plan)).toBe("plan");
+      expect(detectPlanMode(plan)).toBe("plan");
     });
 
     it("detects plan mode from modern sharded aggregation without execution stats", () => {
@@ -173,7 +173,7 @@ describe("PlanParser.detectPlanMode", () => {
         },
       };
 
-      expect(PlanParser.detectPlanMode(plan)).toBe("plan");
+      expect(detectPlanMode(plan)).toBe("plan");
     });
   });
 
@@ -181,10 +181,8 @@ describe("PlanParser.detectPlanMode", () => {
     it("throws error for empty plan object", () => {
       const plan: ExplainPlan = {};
 
-      expect(() => PlanParser.detectPlanMode(plan)).toThrow(PlanParseError);
-      expect(() => PlanParser.detectPlanMode(plan)).toThrow(
-        "Cannot determine plan mode",
-      );
+      expect(() => detectPlanMode(plan)).toThrow(PlanParseError);
+      expect(() => detectPlanMode(plan)).toThrow("Cannot determine plan mode");
     });
 
     it("throws error for plan with neither queryPlanner nor executionStats", () => {
@@ -195,7 +193,7 @@ describe("PlanParser.detectPlanMode", () => {
         },
       };
 
-      expect(() => PlanParser.detectPlanMode(plan)).toThrow(PlanParseError);
+      expect(() => detectPlanMode(plan)).toThrow(PlanParseError);
     });
 
     it("throws error for malformed plan with only command info", () => {
@@ -206,8 +204,8 @@ describe("PlanParser.detectPlanMode", () => {
         },
       };
 
-      expect(() => PlanParser.detectPlanMode(plan)).toThrow(PlanParseError);
-      expect(() => PlanParser.detectPlanMode(plan)).toThrow(
+      expect(() => detectPlanMode(plan)).toThrow(PlanParseError);
+      expect(() => detectPlanMode(plan)).toThrow(
         "missing both executionStats.executionStages and queryPlanner.winningPlan",
       );
     });
@@ -227,7 +225,7 @@ describe("PlanParser.detectPlanMode", () => {
         },
       };
 
-      expect(PlanParser.detectPlanMode(plan)).toBe("execution");
+      expect(detectPlanMode(plan)).toBe("execution");
     });
 
     it("handles plan with empty executionStats object", () => {
@@ -239,7 +237,7 @@ describe("PlanParser.detectPlanMode", () => {
       };
 
       // Should fall back to plan mode since executionStats.executionStages is missing
-      expect(PlanParser.detectPlanMode(plan)).toBe("plan");
+      expect(detectPlanMode(plan)).toBe("plan");
     });
 
     it("handles aggregation pipeline with empty $cursor", () => {
@@ -255,7 +253,7 @@ describe("PlanParser.detectPlanMode", () => {
         ],
       };
 
-      expect(PlanParser.detectPlanMode(plan)).toBe("plan");
+      expect(detectPlanMode(plan)).toBe("plan");
     });
   });
 });

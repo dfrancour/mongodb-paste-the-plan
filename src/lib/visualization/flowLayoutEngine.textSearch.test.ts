@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { PlanParser } from "#lib/parsers/planParser";
+import { isSBEPlan, extractSBEPlan } from "#lib/parsers";
 import { FlowLayoutEngine } from "./flowLayoutEngine";
 import { StageCategory, getStage } from "#data/stages";
 import { loadTestPlan } from "#test-utils/test-helpers";
@@ -9,10 +9,10 @@ describe("Text Search Multi-Input Layout", () => {
     const explainPlan = loadTestPlan("complex/text-search.executionStats.json");
 
     // Verify it's an SBE plan
-    expect(PlanParser.isSBEPlan(explainPlan)).toBe(true);
+    expect(isSBEPlan(explainPlan)).toBe(true);
 
     // Parse the SBE plan
-    const sbePlan = PlanParser.extractSBEPlan(explainPlan);
+    const sbePlan = extractSBEPlan(explainPlan);
     expect(sbePlan).toBeTruthy();
 
     if (!sbePlan) return;
@@ -32,7 +32,7 @@ describe("Text Search Multi-Input Layout", () => {
   it("should create proper multi-level layout for text search with horizontal IXSCAN positioning", () => {
     const explainPlan = loadTestPlan("complex/text-search.executionStats.json");
 
-    const sbePlan = PlanParser.extractSBEPlan(explainPlan);
+    const sbePlan = extractSBEPlan(explainPlan);
     if (!sbePlan) throw new Error("Failed to parse SBE plan");
 
     // Create FlowStages (this should now create individual stages for each planNodeId)
@@ -114,7 +114,7 @@ describe("Text Search Multi-Input Layout", () => {
   it("should create proper dependencies for text search multi-input merge", () => {
     const explainPlan = loadTestPlan("complex/text-search.executionStats.json");
 
-    const sbePlan = PlanParser.extractSBEPlan(explainPlan);
+    const sbePlan = extractSBEPlan(explainPlan);
     if (!sbePlan) throw new Error("Failed to parse SBE plan");
 
     // Create FlowStages

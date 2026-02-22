@@ -1,14 +1,13 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import type {
-  ExplainPlan,
-  ParsedSBEPlan,
-  HybridSBEPlan,
-} from "#types/explain-plan";
 import type { FlowVisualizationProps } from "#types/flow-visualization";
-import { PlanParser } from "#lib/parsers/planParser";
-import { runAllAnalyzers, analyzeExplainPlan } from "#lib/analyzers";
+import type { ParsedPlan } from "#lib/parsers";
+import {
+  runAllAnalyzers,
+  analyzeExplainPlan,
+  analyzePlanSelection,
+} from "#lib/analyzers";
 import { useUrlPlan } from "#hooks/useUrlPlan";
 import { ExplainPlanInput } from "./plan-input/ExplainPlanInput";
 import { FlowVisualization } from "./flow-diagram/FlowVisualization";
@@ -18,12 +17,9 @@ import { MongoCommandDisplay } from "./command-display/MongoCommandDisplay";
 import { ServerInfo as ServerEnvironmentComponent } from "./server-info/ServerInfo";
 
 export function PasteThePlanContainer() {
-  const [lastAnalyzedPlan, setLastAnalyzedPlan] = useState<{
-    raw: ExplainPlan;
-    sbe?: ParsedSBEPlan;
-    hybridSBE?: HybridSBEPlan;
-    isSBE: boolean;
-  } | null>(null);
+  const [lastAnalyzedPlan, setLastAnalyzedPlan] = useState<ParsedPlan | null>(
+    null,
+  );
 
   // Check for plan data in URL hash on mount
   const {
@@ -32,86 +28,70 @@ export function PasteThePlanContainer() {
     error: urlPlanError,
   } = useUrlPlan();
 
-  const handlePlanAnalyzed = (planData: {
-    raw: ExplainPlan;
-    sbe?: ParsedSBEPlan;
-    hybridSBE?: HybridSBEPlan;
-    isSBE: boolean;
-  }) => {
-    setLastAnalyzedPlan(planData);
+  const handlePlanAnalyzed = (result: ParsedPlan) => {
+    setLastAnalyzedPlan(result);
   };
 
   const handleClearPlan = () => {
     setLastAnalyzedPlan(null);
   };
 
-  // Memoize visualization configs to prevent re-parsing on every render
-  // When executionStats exists, we show BOTH plan and execution for comparison
+  // Memoize visualization configs — ParsedPlan already has normalized trees
   const vizConfigs = useMemo(() => {
     if (!lastAnalyzedPlan) return { planConfig: null, execConfig: null };
 
     try {
-      const mode = PlanParser.detectPlanMode(lastAnalyzedPlan.raw);
-      const engine = lastAnalyzedPlan.isSBE ? "sbe" : "classic";
-
-      // Always create plan config
-      const plan = PlanParser.normalizePlan(lastAnalyzedPlan.raw);
-
-      // Create execution stage only when executionStats exists
-      let execConfig: FlowVisualizationProps | null = null;
-      let execution = null;
-      if (mode === "execution") {
-        execution = PlanParser.normalizeExecution(lastAnalyzedPlan.raw);
-      }
+      const { plan, execution, raw, sbe, isSBE } = lastAnalyzedPlan;
+      const engine = isSBE ? "sbe" : "classic";
 
       // Prefer execution data (has metrics) when available, fall back to plan.
       const rootStage = execution ?? plan;
       const analysisResults = runAllAnalyzers({
-        explainPlan: lastAnalyzedPlan.raw,
+        explainPlan: raw,
         rootStage,
       });
 
       const planConfig: FlowVisualizationProps =
-        engine === "sbe" && lastAnalyzedPlan.sbe
+        engine === "sbe" && sbe
           ? {
               mode: "plan",
               engine: "sbe",
               plan,
-              rawPlan: lastAnalyzedPlan.raw,
-              sbePlan: lastAnalyzedPlan.sbe,
+              rawPlan: raw,
+              sbePlan: sbe,
               analysisResults,
             }
           : {
               mode: "plan",
               engine: "classic",
               plan,
-              rawPlan: lastAnalyzedPlan.raw,
+              rawPlan: raw,
               analysisResults,
             };
 
+      let execConfig: FlowVisualizationProps | null = null;
       if (execution) {
         execConfig =
-          engine === "sbe" && lastAnalyzedPlan.sbe
+          engine === "sbe" && sbe
             ? {
                 mode: "execution",
                 engine: "sbe",
                 execution,
-                rawPlan: lastAnalyzedPlan.raw,
-                sbePlan: lastAnalyzedPlan.sbe,
+                rawPlan: raw,
+                sbePlan: sbe,
                 analysisResults,
               }
             : {
                 mode: "execution",
                 engine: "classic",
                 execution,
-                rawPlan: lastAnalyzedPlan.raw,
+                rawPlan: raw,
                 analysisResults,
               };
       }
 
       return { planConfig, execConfig };
     } catch {
-      // Return null configs to gracefully degrade
       return { planConfig: null, execConfig: null };
     }
   }, [lastAnalyzedPlan]);
@@ -148,7 +128,7 @@ export function PasteThePlanContainer() {
       {/* Plan Analysis (Selection or Single Plan) */}
       {lastAnalyzedPlan &&
         (() => {
-          const planSelectionAnalysis = PlanParser.analyzePlanSelection(
+          const planSelectionAnalysis = analyzePlanSelection(
             lastAnalyzedPlan.raw,
           );
           return planSelectionAnalysis ? (

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { PlanParser } from "./planParser";
+import { validatePlan } from "#lib/parsers";
 import { loadTestPlan } from "#test-utils/test-helpers";
 
 describe("Aggregation Pipeline Stats Extraction", () => {
@@ -9,7 +9,7 @@ describe("Aggregation Pipeline Stats Extraction", () => {
     );
 
     // Parse the plan
-    const parsedPlan = PlanParser.parse(plan);
+    const parsedPlan = validatePlan(plan);
     expect(parsedPlan).toBeTruthy();
 
     expect(plan.stages).toBeDefined();
@@ -38,7 +38,7 @@ describe("Aggregation Pipeline Stats Extraction", () => {
     );
 
     // Verify the schema can parse this plan without type errors
-    expect(() => PlanParser.parse(plan)).not.toThrow();
+    expect(() => validatePlan(plan)).not.toThrow();
 
     const stages = plan.stages!;
 
@@ -91,6 +91,6 @@ describe("Aggregation Pipeline Stats Extraction", () => {
     };
 
     // Should parse without throwing
-    expect(() => PlanParser.parse(mockPlan)).not.toThrow();
+    expect(() => validatePlan(mockPlan)).not.toThrow();
   });
 });

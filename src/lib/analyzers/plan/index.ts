@@ -29,6 +29,10 @@ export {
   type IndexInfo,
 } from "./esr";
 
+// Plan selection and summary analysis
+export { analyzePlanSelection } from "./plan_selection";
+export { summarizePlan } from "./plan_summary";
+
 // SBE slot analysis utilities
 export { buildSlotLineages, generateSlotTrace } from "./sbe";
 

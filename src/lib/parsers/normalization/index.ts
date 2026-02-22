@@ -1,0 +1,268 @@
+/**
+ * Unified stage normalization.
+ *
+ * Converts raw MongoDB plan/execution stages into normalized trees.
+ * A single recursive traversal handles both plan and execution modes,
+ * extracting structure (always) and metrics (execution only).
+ *
+ * Child collection is generic — one implementation handles all
+ * relationship types (inputStage, inputStages, SBE joins, shards).
+ */
+import type {
+  ExplainPlan,
+  PlanStage,
+  ExecutionStage,
+  NormalizedPlanStage,
+  NormalizedExecutionStage,
+} from "#types/explain-plan";
+import { getStringProperty } from "#lib/utils/jsxUtils";
+import { getStage, StageCategory } from "#data/stages";
+import { extractStructure } from "./structureExtractor";
+import { extractMetrics, calculateEfficiency } from "./metricsExtractor";
+import { expandShards } from "./shardExpander";
+import { PlanParseError } from "../errors";
+import { resolveFormat } from "../formatResolvers";
+import type { FormatResolution } from "../formatResolvers";
+import { selectPrimaryShardFromRecord } from "../formatResolvers/shardSelection";
+
+export { extractStructure } from "./structureExtractor";
+export { extractMetrics, calculateEfficiency } from "./metricsExtractor";
+
+// ============================================================================
+// Public API
+// ============================================================================
+
+/** Normalize a query plan (structural data only, no metrics) */
+export function normalizePlan(plan: ExplainPlan): NormalizedPlanStage {
+  const { planRoot } = resolveFormat(plan);
+
+  if (!planRoot) {
+    throw new PlanParseError("No query plan found in explain plan");
+  }
+
+  return normalizePlanStage(planRoot, 0, "root");
+}
+
+/** Normalize execution stats (full metrics) */
+export function normalizeExecution(
+  plan: ExplainPlan,
+): NormalizedExecutionStage {
+  const { executionRoot } = resolveFormat(plan);
+
+  if (!executionRoot) {
+    throw new PlanParseError("No execution stages found in explain plan");
+  }
+
+  const normalized = normalizeExecutionStage(executionRoot, 0, "root");
+
+  injectCumulativeTotals(normalized, plan);
+
+  return normalized;
+}
+
+/**
+ * Normalize from pre-resolved roots. Used by the pipeline to avoid
+ * calling resolveFormat twice.
+ */
+export function normalizeFromResolution(
+  resolution: FormatResolution,
+  plan: ExplainPlan,
+): {
+  plan: NormalizedPlanStage;
+  execution: NormalizedExecutionStage | null;
+} {
+  if (!resolution.planRoot) {
+    throw new PlanParseError("No query plan found in explain plan");
+  }
+
+  const normalizedPlan = normalizePlanStage(resolution.planRoot, 0, "root");
+
+  let normalizedExecution: NormalizedExecutionStage | null = null;
+  if (resolution.executionRoot) {
+    normalizedExecution = normalizeExecutionStage(
+      resolution.executionRoot,
+      0,
+      "root",
+    );
+    injectCumulativeTotals(normalizedExecution, plan);
+  }
+
+  return { plan: normalizedPlan, execution: normalizedExecution };
+}
+
+// ============================================================================
+// Generic child collection
+// ============================================================================
+
+/**
+ * Collect children from a stage using all known relationship types.
+ * A single implementation for both plan and execution modes — the only
+ * difference is the normalize callback and whether shards are expanded.
+ */
+function collectChildren<TStage, TResult>(
+  stage: TStage,
+  depth: number,
+  path: string,
+  normalize: (s: TStage, d: number, p: string) => TResult,
+  options?: { expandShardsFn?: typeof expandShards },
+): TResult[] {
+  const children: TResult[] = [];
+  const s = stage as Record<string, unknown>;
+
+  // Classic: inputStage
+  if (s.inputStage && typeof s.inputStage === "object") {
+    children.push(normalize(s.inputStage as TStage, depth + 1, `${path}.0`));
+  }
+
+  // Classic: inputStages
+  if (Array.isArray(s.inputStages)) {
+    s.inputStages.forEach((child: unknown, index: number) => {
+      children.push(normalize(child as TStage, depth + 1, `${path}.${index}`));
+    });
+  }
+
+  // SBE join: outerStage, innerStage
+  if (s.outerStage && typeof s.outerStage === "object") {
+    children.push(
+      normalize(s.outerStage as TStage, depth + 1, `${path}.outer`),
+    );
+  }
+  if (s.innerStage && typeof s.innerStage === "object") {
+    children.push(
+      normalize(s.innerStage as TStage, depth + 1, `${path}.inner`),
+    );
+  }
+
+  // SBE conditional: thenStage, elseStage
+  if (s.thenStage && typeof s.thenStage === "object") {
+    children.push(normalize(s.thenStage as TStage, depth + 1, `${path}.then`));
+  }
+  if (s.elseStage && typeof s.elseStage === "object") {
+    children.push(normalize(s.elseStage as TStage, depth + 1, `${path}.else`));
+  }
+
+  // Sharded: SHARD_MERGE has shards array (execution only)
+  if (options?.expandShardsFn && Array.isArray(s.shards)) {
+    children.push(
+      ...(options.expandShardsFn(
+        s.shards as unknown[],
+        depth,
+        path,
+        normalize as unknown as (
+          s: ExecutionStage,
+          d: number,
+          p: string,
+        ) => NormalizedExecutionStage,
+      ) as unknown as TResult[]),
+    );
+  }
+
+  return children;
+}
+
+// ============================================================================
+// Plan stage normalization (structure only)
+// ============================================================================
+
+function normalizePlanStage(
+  stage: PlanStage,
+  depth: number,
+  path: string,
+): NormalizedPlanStage {
+  const structure = extractStructure(stage);
+  const children = collectChildren(stage, depth, path, normalizePlanStage);
+
+  const stageName = getStringProperty(stage, "stage") ?? "UNKNOWN";
+  const definition =
+    getStage("planning", stageName) ?? getStage("mongos", stageName);
+
+  return {
+    id: path,
+    stage: stageName,
+    category: definition?.category ?? StageCategory.Unknown,
+    iconName: definition?.iconName ?? "CircleQuestionMark",
+    definition,
+    structure,
+    children,
+    depth,
+  };
+}
+
+// ============================================================================
+// Execution stage normalization (structure + metrics)
+// ============================================================================
+
+function normalizeExecutionStage(
+  stage: ExecutionStage,
+  depth: number,
+  path: string,
+): NormalizedExecutionStage {
+  const structure = extractStructure(stage);
+  const metrics = extractMetrics(stage);
+  const children = collectChildren(
+    stage,
+    depth,
+    path,
+    normalizeExecutionStage,
+    { expandShardsFn: expandShards },
+  );
+  const efficiency = calculateEfficiency(metrics);
+
+  const stageName = getStringProperty(stage, "stage") ?? "UNKNOWN";
+  const definition =
+    getStage("execution", stageName) ?? getStage("mongos", stageName);
+
+  return {
+    id: path,
+    stage: stageName,
+    category: definition?.category ?? StageCategory.Unknown,
+    iconName: definition?.iconName ?? "CircleQuestionMark",
+    definition,
+    structure,
+    metrics,
+    children,
+    depth,
+    efficiency,
+  };
+}
+
+// ============================================================================
+// Post-processing
+// ============================================================================
+
+/**
+ * Inject cumulative totals from executionStats into root stage metrics.
+ * MongoDB provides pre-computed totals at the plan level.
+ */
+function injectCumulativeTotals(
+  normalized: NormalizedExecutionStage,
+  plan: ExplainPlan,
+): void {
+  // Try top-level executionStats first (standard format)
+  if (plan.executionStats) {
+    if (plan.executionStats.totalDocsExamined !== undefined) {
+      normalized.metrics.docsExamined = plan.executionStats.totalDocsExamined;
+    }
+    if (plan.executionStats.totalKeysExamined !== undefined) {
+      normalized.metrics.keysExamined = plan.executionStats.totalKeysExamined;
+    }
+    return;
+  }
+
+  // For modern sharded aggregation, get totals from primary shard
+  if (plan.shards && !plan.stages && !plan.splitPipeline) {
+    const primaryShard = selectPrimaryShardFromRecord(plan.shards);
+    if (primaryShard?.executionStats) {
+      const executionStats = primaryShard.executionStats as Record<
+        string,
+        unknown
+      >;
+      if (typeof executionStats.totalDocsExamined === "number") {
+        normalized.metrics.docsExamined = executionStats.totalDocsExamined;
+      }
+      if (typeof executionStats.totalKeysExamined === "number") {
+        normalized.metrics.keysExamined = executionStats.totalKeysExamined;
+      }
+    }
+  }
+}
