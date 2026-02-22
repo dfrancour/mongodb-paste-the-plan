@@ -142,12 +142,12 @@ describe("Sharded Query Parsing Completeness", () => {
       executionStats: undefined,
     };
 
-    // Behavioral expectation: Should parse without throwing
-    expect(() => {
-      const parsed = validatePlan(plannerOnly);
-      const normalized = normalizePlan(parsed);
-      expect(normalized.stage).toBeDefined();
-    }).not.toThrow();
+    // Behavioral expectation: Should parse without throwing and produce SHARD_MERGE plan
+    const parsed = validatePlan(plannerOnly);
+    const normalized = normalizePlan(parsed);
+    expect(normalized.stage).toBe("SHARD_MERGE");
+    expect(normalized.children.length).toBe(2);
+    expect(normalized.children[0]!.stage).toBe("SHARD_EXECUTION");
   });
 
   it("should resolve mongos stage icons and categories in execution view", () => {
@@ -173,9 +173,27 @@ describe("Sharded Query Parsing Completeness", () => {
     const parsed = validatePlan(shardedPlan);
     const normalized = normalizePlan(parsed);
 
-    // Root stage in planning view should also resolve mongos icons
-    expect(normalized.iconName).not.toBe("CircleQuestionMark");
-    expect(normalized.category).not.toBe(StageCategory.Unknown);
+    // Plan root should be SHARD_MERGE with proper mongos icons
+    expect(normalized.stage).toBe("SHARD_MERGE");
+    expect(normalized.iconName).toBe("Merge");
+    expect(normalized.category).toBe(StageCategory.Internal);
+
+    // Children should be SHARD_EXECUTION nodes with shard names
+    expect(normalized.children.length).toBe(2);
+    for (const child of normalized.children) {
+      expect(child.stage).toBe("SHARD_EXECUTION");
+      expect(child.shardName).toBeDefined();
+      expect(child.iconName).toBe("Server");
+      expect(child.category).toBe(StageCategory.Internal);
+
+      // Each SHARD_EXECUTION wraps that shard's plan tree
+      expect(child.children.length).toBe(1);
+      expect(child.children[0]!.stage).toBe("SHARDING_FILTER");
+    }
+
+    // Verify shard names
+    const shardNames = normalized.children.map((child) => child.shardName);
+    expect(shardNames).toEqual(["shard01", "shard02"]);
   });
 
   it("should identify sharded queries correctly from plan structure", () => {

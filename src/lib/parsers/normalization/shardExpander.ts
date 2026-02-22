@@ -1,18 +1,80 @@
 /**
  * Create synthetic SHARD_EXECUTION nodes from the shards array
- * in a SHARD_MERGE execution stage. Preserves shard identity and timing.
+ * in a SHARD_MERGE stage. Supports both plan and execution modes.
  */
 import type {
+  PlanStage,
   ExecutionStage,
+  NormalizedPlanStage,
   NormalizedExecutionStage,
 } from "#types/explain-plan";
 import { isExecutionStage } from "#lib/utils/jsxUtils";
 import { getStage, StageCategory } from "#data/stages";
+
 /**
- * Expand shards array into SHARD_EXECUTION children.
- * Called during execution normalization when a stage has a `shards` array.
+ * Expand shards array into SHARD_EXECUTION children for plan normalization.
+ * Each shard entry at plan level has `shardName` and `winningPlan`.
  */
-export function expandShards(
+export function expandShardsForPlan(
+  shards: unknown[],
+  depth: number,
+  path: string,
+  normalizePlan: (
+    stage: PlanStage,
+    depth: number,
+    path: string,
+  ) => NormalizedPlanStage,
+): NormalizedPlanStage[] {
+  const children: NormalizedPlanStage[] = [];
+
+  shards.forEach((shard, index) => {
+    if (
+      !shard ||
+      typeof shard !== "object" ||
+      !("winningPlan" in shard) ||
+      !shard.winningPlan ||
+      typeof shard.winningPlan !== "object"
+    ) {
+      return;
+    }
+
+    const shardRecord = shard as Record<string, unknown>;
+    const shardName =
+      typeof shardRecord.shardName === "string"
+        ? shardRecord.shardName
+        : `shard${index}`;
+
+    const shardDefinition = getStage("mongos", "SHARD_EXECUTION");
+
+    const shardChild = normalizePlan(
+      shardRecord.winningPlan as PlanStage,
+      depth + 2,
+      `${path}.shard.${index}.plan`,
+    );
+
+    const shardNode: NormalizedPlanStage = {
+      id: `${path}.shard.${index}`,
+      stage: "SHARD_EXECUTION",
+      category: shardDefinition?.category ?? StageCategory.Internal,
+      iconName: shardDefinition?.iconName ?? "Server",
+      definition: shardDefinition,
+      structure: {},
+      shardName,
+      children: [shardChild],
+      depth: depth + 1,
+    };
+
+    children.push(shardNode);
+  });
+
+  return children;
+}
+
+/**
+ * Expand shards array into SHARD_EXECUTION children for execution normalization.
+ * Each shard entry at execution level has `shardName`, metrics, and `executionStages`.
+ */
+export function expandShardsForExecution(
   shards: unknown[],
   depth: number,
   path: string,
@@ -24,7 +86,7 @@ export function expandShards(
 ): NormalizedExecutionStage[] {
   const children: NormalizedExecutionStage[] = [];
 
-  (shards as unknown[]).forEach((shard, index) => {
+  shards.forEach((shard, index) => {
     if (
       !shard ||
       typeof shard !== "object" ||

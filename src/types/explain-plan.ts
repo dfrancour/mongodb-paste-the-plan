@@ -655,6 +655,7 @@ export type NormalizedPlanStage = {
   iconName: string;
   definition?: StageDefinition;
   structure: StageStructure;
+  shardName?: string;
   children: NormalizedPlanStage[];
   depth: number;
   // Discriminant fields: plan stages never have metrics or efficiency

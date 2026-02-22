@@ -6,7 +6,8 @@
  * extracting structure (always) and metrics (execution only).
  *
  * Child collection is generic — one implementation handles all
- * relationship types (inputStage, inputStages, SBE joins, shards).
+ * structural relationship types (inputStage, inputStages, SBE joins).
+ * Shard expansion is handled separately since it produces execution nodes.
  */
 import type {
   ExplainPlan,
@@ -19,7 +20,7 @@ import { getStringProperty } from "#lib/utils/jsxUtils";
 import { getStage, StageCategory } from "#data/stages";
 import { extractStructure } from "./structureExtractor";
 import { extractMetrics, calculateEfficiency } from "./metricsExtractor";
-import { expandShards } from "./shardExpander";
+import { expandShardsForPlan, expandShardsForExecution } from "./shardExpander";
 import { PlanParseError } from "../errors";
 import { resolveFormat } from "../formatResolvers";
 import type { FormatResolution } from "../formatResolvers";
@@ -96,15 +97,15 @@ export function normalizeFromResolution(
 
 /**
  * Collect children from a stage using all known relationship types.
- * A single implementation for both plan and execution modes — the only
- * difference is the normalize callback and whether shards are expanded.
+ * Handles classic (inputStage/inputStages), SBE joins (outer/inner),
+ * and SBE conditionals (then/else). Shard expansion is handled
+ * separately in normalizeExecutionStage since it's execution-only.
  */
 function collectChildren<TStage, TResult>(
   stage: TStage,
   depth: number,
   path: string,
   normalize: (s: TStage, d: number, p: string) => TResult,
-  options?: { expandShardsFn?: typeof expandShards },
 ): TResult[] {
   const children: TResult[] = [];
   const s = stage as Record<string, unknown>;
@@ -141,22 +142,6 @@ function collectChildren<TStage, TResult>(
     children.push(normalize(s.elseStage as TStage, depth + 1, `${path}.else`));
   }
 
-  // Sharded: SHARD_MERGE has shards array (execution only)
-  if (options?.expandShardsFn && Array.isArray(s.shards)) {
-    children.push(
-      ...(options.expandShardsFn(
-        s.shards as unknown[],
-        depth,
-        path,
-        normalize as unknown as (
-          s: ExecutionStage,
-          d: number,
-          p: string,
-        ) => NormalizedExecutionStage,
-      ) as unknown as TResult[]),
-    );
-  }
-
   return children;
 }
 
@@ -171,6 +156,18 @@ function normalizePlanStage(
 ): NormalizedPlanStage {
   const structure = extractStructure(stage);
   const children = collectChildren(stage, depth, path, normalizePlanStage);
+
+  // Plan-level shard expansion: SHARD_MERGE/SINGLE_SHARD with shards[]
+  if ("shards" in stage && Array.isArray(stage.shards)) {
+    children.push(
+      ...expandShardsForPlan(
+        stage.shards as unknown[],
+        depth,
+        path,
+        normalizePlanStage,
+      ),
+    );
+  }
 
   const stageName = getStringProperty(stage, "stage") ?? "UNKNOWN";
   const definition =
@@ -199,13 +196,24 @@ function normalizeExecutionStage(
 ): NormalizedExecutionStage {
   const structure = extractStructure(stage);
   const metrics = extractMetrics(stage);
-  const children = collectChildren(
-    stage,
-    depth,
-    path,
-    normalizeExecutionStage,
-    { expandShardsFn: expandShards },
-  );
+  const children = collectChildren(stage, depth, path, normalizeExecutionStage);
+
+  // Shard expansion produces NormalizedExecutionStage[] (with metrics),
+  // so it's handled here rather than in the generic collectChildren.
+  // Note: plan stages CAN have shards (e.g., SHARD_MERGE in winningPlan),
+  // but format resolvers currently extract from within the primary shard,
+  // so normalizePlanStage never sees them.
+  if ("shards" in stage && Array.isArray(stage.shards)) {
+    children.push(
+      ...expandShardsForExecution(
+        stage.shards as unknown[],
+        depth,
+        path,
+        normalizeExecutionStage,
+      ),
+    );
+  }
+
   const efficiency = calculateEfficiency(metrics);
 
   const stageName = getStringProperty(stage, "stage") ?? "UNKNOWN";
