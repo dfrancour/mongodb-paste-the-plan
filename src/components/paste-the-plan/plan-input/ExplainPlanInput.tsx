@@ -190,20 +190,12 @@ export function ExplainPlanInput({
     }
 
     try {
-      const parsed: unknown = JSON.parse(jsonString);
-
-      // Use our parser to validate explain plan structure
-      PlanParser.parse(parsed);
-
+      JSON.parse(jsonString);
       setValidationStatus("valid");
       setValidationError(null);
-    } catch (error) {
+    } catch {
       setValidationStatus("invalid");
-      if (error instanceof PlanParseError) {
-        setValidationError(error.message);
-      } else {
-        setValidationError("Invalid JSON format");
-      }
+      setValidationError("Invalid JSON format");
     }
   };
 
@@ -262,8 +254,14 @@ export function ExplainPlanInput({
       setLastAnalyzedPlan(planData);
       onPlanAnalyzed(planData);
     } catch (error) {
+      const detail =
+        error instanceof PlanParseError
+          ? error.message
+          : error instanceof Error
+            ? error.message
+            : undefined;
       setValidationError(
-        error instanceof Error ? error.message : "Failed to process plan",
+        detail ? `Unable to parse plan: ${detail}` : "Unable to parse plan",
       );
       setValidationStatus("invalid");
     } finally {
@@ -496,7 +494,7 @@ export function ExplainPlanInput({
                   )}
                   <span>
                     {validationStatus === "valid"
-                      ? "Valid MongoDB explain plan detected"
+                      ? "Valid JSON"
                       : (validationError ?? "Invalid JSON format")}
                   </span>
                 </div>

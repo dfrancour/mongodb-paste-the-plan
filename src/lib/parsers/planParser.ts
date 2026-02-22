@@ -362,7 +362,24 @@ export class PlanParser {
     try {
       // Transform Extended JSON format to plain JSON before validation
       const transformedPlan = this.transformExtendedJSON(rawPlan);
-      return explainPlanSchema.parse(transformedPlan);
+      const parsed = explainPlanSchema.parse(transformedPlan);
+
+      // Zod schema is permissive (all fields optional) so verify
+      // the result contains at least one recognizable explain plan field
+      const hasExplainStructure =
+        parsed.queryPlanner !== undefined ||
+        parsed.executionStats !== undefined ||
+        parsed.stages !== undefined ||
+        parsed.stage !== undefined ||
+        parsed.shards !== undefined;
+
+      if (!hasExplainStructure) {
+        throw new PlanParseError(
+          "Not a recognized MongoDB explain plan: missing queryPlanner, executionStats, stages, stage, or shards",
+        );
+      }
+
+      return parsed;
     } catch (error) {
       // Enhanced error reporting for development
       let errorMessage = "Invalid MongoDB explain plan format";
@@ -404,6 +421,18 @@ export class PlanParser {
       // Try fallback parsing for basic plan structure
       if (rawPlan && typeof rawPlan === "object") {
         const plan = rawPlan as Record<string, unknown>;
+
+        // Require at least one recognizable explain plan field
+        const hasExplainStructure =
+          "queryPlanner" in plan ||
+          "executionStats" in plan ||
+          "stages" in plan ||
+          "stage" in plan ||
+          "shards" in plan;
+
+        if (!hasExplainStructure) {
+          throw new PlanParseError(errorMessage, error);
+        }
 
         // Create a minimal valid plan structure with proper type assertions
         const fallbackPlan = {
