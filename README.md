@@ -37,7 +37,7 @@ pnpm run pre-push     # Full validation (format + lint + typecheck + test + buil
 - **TypeScript** strict mode
 - **Tailwind CSS 4** for styling
 - **Zod** for runtime validation
-- **Vitest** for testing (513 tests)
+- **Vitest** for testing
 
 ## Using as a Library
 
@@ -54,7 +54,7 @@ import { GlossaryContainer } from "mongodb-paste-the-plan/stage-glossary";
 
 The consuming app must:
 1. Add `transpilePackages: ["mongodb-paste-the-plan"]` to `next.config.js`
-2. Add `@source "../node_modules/mongodb-paste-the-plan/src/**/*.{ts,tsx}";` to your CSS for Tailwind scanning
+2. Add `@source "../node_modules/mongodb-paste-the-plan/src/**/*.{ts,tsx}";` to your CSS for Tailwind scanning (requires Tailwind CSS v4)
 
 ## License
 
