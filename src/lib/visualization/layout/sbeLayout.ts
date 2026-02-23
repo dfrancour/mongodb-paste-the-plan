@@ -42,6 +42,16 @@ export function calculateSBELayoutForStages(
 
   const slotDependencies = buildSlotDependencies(flowStages, sbePlan);
   const levels = calculateSBELevels(flowStages, slotDependencies);
+
+  // Guard: empty levels → return safe empty result
+  if (levels.size === 0) {
+    return {
+      nodes: positions,
+      connections,
+      dimensions: { width: 0, height: 0 },
+    };
+  }
+
   const levelGroups = groupSBEStagesByLevel(flowStages, levels);
   const horizontalPositions = calculateSBEHorizontalPositions(
     levelGroups,
@@ -112,13 +122,20 @@ function buildTreeBasedDependencies(
   const nodeIdToStageId = new Map<number, string>();
   flowStages.forEach((stage) => {
     const nodeId = extractNodeIdFromStageId(stage.id);
-    nodeIdToStageId.set(nodeId, stage.id);
+    if (nodeId !== -1) {
+      nodeIdToStageId.set(nodeId, stage.id);
+    }
   });
 
   const queryPlanDependencies = extractQueryPlanDependencies(sbePlan);
 
   flowStages.forEach((stage) => {
     const nodeId = extractNodeIdFromStageId(stage.id);
+    if (nodeId === -1) {
+      dependencies.set(stage.id, []);
+      return;
+    }
+
     const dependentNodeIds = queryPlanDependencies.get(nodeId) ?? [];
 
     const stageDependencies = dependentNodeIds
@@ -131,6 +148,84 @@ function buildTreeBasedDependencies(
   return dependencies;
 }
 
+/**
+ * SBE stage dependency strategies.
+ * Maps stage names to functions that determine their dependencies given the
+ * sorted list of node IDs and access to the plan's stage map.
+ *
+ * Assumed SBE plan shape: queryPlanStages is a Map<number, string> where
+ * the key is a numeric node ID and the value is the stage name.
+ * Node IDs are generally sequential but may have gaps.
+ *
+ * Handled stages: IXSCAN (leaf), OR/AND_HASH/UNION (multi-input merge),
+ * FETCH (single-input from scan/merge), TEXT_MATCH/SORT/LIMIT/PROJECTION_DEFAULT
+ * (single-input processing stages).
+ *
+ * Unknown stages fall back to the nearest earlier node ID.
+ */
+const SBE_DEPENDENCY_STRATEGIES: Record<
+  string,
+  (
+    nodeId: number,
+    nodeIds: number[],
+    getStage: (id: number) => string | undefined,
+  ) => number[]
+> = {
+  // Leaf stage — no dependencies
+  IXSCAN: () => [],
+
+  // Multi-input merge — depends on all earlier IXSCAN stages
+  OR: (_nodeId, nodeIds, getStage) =>
+    nodeIds.filter((id) => id < _nodeId && getStage(id) === "IXSCAN"),
+  AND_HASH: (_nodeId, nodeIds, getStage) =>
+    nodeIds.filter((id) => id < _nodeId && getStage(id) === "IXSCAN"),
+  UNION: (_nodeId, nodeIds, getStage) =>
+    nodeIds.filter((id) => id < _nodeId && getStage(id) === "IXSCAN"),
+
+  // Fetch — depends on the nearest earlier scan/merge stage
+  FETCH: (nodeId, nodeIds, getStage) => {
+    const candidates = nodeIds.filter((id) => {
+      const stage = getStage(id);
+      return (
+        id < nodeId &&
+        (stage === "IXSCAN" ||
+          stage === "OR" ||
+          stage === "AND_HASH" ||
+          stage === "UNION")
+      );
+    });
+    return candidates.length > 0 ? [candidates[candidates.length - 1]!] : [];
+  },
+
+  // Processing stages — depend on nearest earlier fetch/scan/merge
+  TEXT_MATCH: (nodeId, nodeIds, getStage) =>
+    findNearestProcessingDep(nodeId, nodeIds, getStage),
+  SORT: (nodeId, nodeIds, getStage) =>
+    findNearestProcessingDep(nodeId, nodeIds, getStage),
+  LIMIT: (nodeId, nodeIds, getStage) =>
+    findNearestProcessingDep(nodeId, nodeIds, getStage),
+  PROJECTION_DEFAULT: (nodeId, nodeIds, getStage) =>
+    findNearestProcessingDep(nodeId, nodeIds, getStage),
+};
+
+function findNearestProcessingDep(
+  nodeId: number,
+  nodeIds: number[],
+  getStage: (id: number) => string | undefined,
+): number[] {
+  const candidates = nodeIds.filter((id) => {
+    const stage = getStage(id);
+    return (
+      id < nodeId &&
+      (stage === "FETCH" ||
+        stage === "OR" ||
+        stage === "AND_HASH" ||
+        stage === "IXSCAN")
+    );
+  });
+  return candidates.length > 0 ? [candidates[candidates.length - 1]!] : [];
+}
+
 function extractQueryPlanDependencies(
   sbePlan: ParsedSBEPlan,
 ): Map<number, number[]> {
@@ -140,6 +235,8 @@ function extractQueryPlanDependencies(
     (a, b) => a - b,
   );
 
+  const getStage = (id: number) => sbePlan.queryPlanStages.get(id);
+
   nodeIds.forEach((nodeId) => {
     const stageName = sbePlan.queryPlanStages.get(nodeId);
 
@@ -148,76 +245,44 @@ function extractQueryPlanDependencies(
       return;
     }
 
-    switch (stageName) {
-      case "IXSCAN":
-        dependencies.set(nodeId, []);
-        break;
-
-      case "OR":
-      case "AND_HASH":
-      case "UNION": {
-        const ixscanNodeIds = nodeIds.filter(
-          (id) => id < nodeId && sbePlan.queryPlanStages.get(id) === "IXSCAN",
-        );
-        dependencies.set(nodeId, ixscanNodeIds);
-        break;
-      }
-
-      case "FETCH": {
-        const candidateDeps = nodeIds.filter((id) => {
-          const candidateStage = sbePlan.queryPlanStages.get(id);
-          return (
-            id < nodeId &&
-            (candidateStage === "IXSCAN" ||
-              candidateStage === "OR" ||
-              candidateStage === "AND_HASH" ||
-              candidateStage === "UNION")
-          );
-        });
-        const fetchDep =
-          candidateDeps.length > 0
-            ? [candidateDeps[candidateDeps.length - 1]!]
-            : [];
-        dependencies.set(nodeId, fetchDep);
-        break;
-      }
-
-      case "TEXT_MATCH":
-      case "SORT":
-      case "LIMIT":
-      case "PROJECTION_DEFAULT": {
-        const processingDeps = nodeIds.filter((id) => {
-          const candidateStage = sbePlan.queryPlanStages.get(id);
-          return (
-            id < nodeId &&
-            (candidateStage === "FETCH" ||
-              candidateStage === "OR" ||
-              candidateStage === "AND_HASH" ||
-              candidateStage === "IXSCAN")
-          );
-        });
-        const processingDep =
-          processingDeps.length > 0
-            ? [processingDeps[processingDeps.length - 1]!]
-            : [];
-        dependencies.set(nodeId, processingDep);
-        break;
-      }
-
-      default: {
-        const prevNodeId = nodeIds.find((id) => id === nodeId - 1);
-        dependencies.set(nodeId, prevNodeId !== undefined ? [prevNodeId] : []);
-        break;
-      }
+    const strategy = SBE_DEPENDENCY_STRATEGIES[stageName];
+    if (strategy) {
+      dependencies.set(nodeId, strategy(nodeId, nodeIds, getStage));
+    } else {
+      // Unknown stage: fall back to nearest earlier node ID
+      const nearestEarlier = findNearestEarlierNodeId(nodeId, nodeIds);
+      dependencies.set(
+        nodeId,
+        nearestEarlier !== undefined ? [nearestEarlier] : [],
+      );
     }
   });
 
   return dependencies;
 }
 
+/**
+ * Find the largest node ID that is strictly less than the given nodeId.
+ */
+function findNearestEarlierNodeId(
+  nodeId: number,
+  sortedNodeIds: number[],
+): number | undefined {
+  for (let i = sortedNodeIds.length - 1; i >= 0; i--) {
+    if (sortedNodeIds[i]! < nodeId) {
+      return sortedNodeIds[i];
+    }
+  }
+  return undefined;
+}
+
+/**
+ * Extract numeric node ID from an SBE stage ID string (e.g. "sbe_node_3" → 3).
+ * Returns -1 if the stageId does not match the expected pattern.
+ */
 function extractNodeIdFromStageId(stageId: string): number {
   const match = /sbe_node_(\d+)/.exec(stageId);
-  return match?.[1] ? parseInt(match[1], 10) : 0;
+  return match?.[1] ? parseInt(match[1], 10) : -1;
 }
 
 function calculateSBELevels(
@@ -320,12 +385,16 @@ function calculateSBEDimensions(
   positions: Map<string, FlowPosition>,
   config: LayoutConfig,
 ): { width: number; height: number } {
+  if (positions.size === 0) {
+    return { width: 0, height: 0 };
+  }
+
   let minX = Infinity,
     maxX = -Infinity;
   let minY = Infinity,
     maxY = -Infinity;
 
-  positions.forEach((pos, _stageId) => {
+  positions.forEach((pos) => {
     minX = Math.min(minX, pos.x);
     maxX = Math.max(maxX, pos.x + config.nodeWidth);
     minY = Math.min(minY, pos.y);
@@ -338,6 +407,13 @@ function calculateSBEDimensions(
   };
 }
 
+/**
+ * TODO: Adjust node positions/edges based on ParsedSBEPlan/HybridSBEPlan
+ * to reflect SBE-specific layout optimizations (e.g., slot-based grouping,
+ * pipeline segment alignment). Currently returns the base layout unchanged.
+ * Implement when SBE-specific visual distinctions are needed beyond the
+ * standard tree layout.
+ */
 function enhanceLayoutForSBE(
   layout: FlowLayout,
   _sbePlan?: ParsedSBEPlan,

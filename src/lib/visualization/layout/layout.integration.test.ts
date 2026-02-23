@@ -207,12 +207,29 @@ describe("Layout Integration: Behavioral Invariants", () => {
       const { rootStage, planMode } = parseAndNormalize(planPath);
       const layout = calculateLayout(rootStage, planMode);
 
+      // Build per-node heights for vertical bounds check
+      const stageHeights = new Map<string, number>();
+      const collectHeights = (stage: NormalizedStage) => {
+        stageHeights.set(
+          stage.id,
+          FlowNodeLogic.calculateNodeHeight(stage, planMode),
+        );
+        stage.children.forEach(collectHeights);
+      };
+      collectHeights(rootStage);
+
       // Find bounding box of all nodes
       let minX = Infinity;
       let maxX = -Infinity;
-      layout.nodes.forEach((pos) => {
+      let minY = Infinity;
+      let maxY = -Infinity;
+      layout.nodes.forEach((pos, stageId) => {
+        const nodeHeight =
+          stageHeights.get(stageId) ?? DEFAULT_LAYOUT_CONFIG.nodeHeight;
         minX = Math.min(minX, pos.x);
         maxX = Math.max(maxX, pos.x + DEFAULT_LAYOUT_CONFIG.nodeWidth);
+        minY = Math.min(minY, pos.y);
+        maxY = Math.max(maxY, pos.y + nodeHeight);
       });
 
       const spanWidth =
@@ -221,6 +238,13 @@ describe("Layout Integration: Behavioral Invariants", () => {
         layout.dimensions.width,
         `${planPath}: dimensions.width >= span`,
       ).toBeGreaterThanOrEqual(spanWidth);
+
+      const spanHeight =
+        maxY - minY + DEFAULT_LAYOUT_CONFIG.containerPadding * 2;
+      expect(
+        layout.dimensions.height,
+        `${planPath}: dimensions.height >= span`,
+      ).toBeGreaterThanOrEqual(spanHeight);
     });
   });
 

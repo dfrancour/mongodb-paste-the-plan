@@ -25,26 +25,14 @@ export function calculateHorizontalPositions(
           currentX += config.nodeWidth + config.horizontalSpacing;
         }
       } else {
-        let maxGroupWidth = config.nodeWidth;
-        const groupPositions: Array<{
-          stage: NormalizedStage;
-          width: number;
-        }> = [];
-
-        group.forEach((stage) => {
-          const nodeWidth = config.nodeWidth;
-          maxGroupWidth = Math.max(maxGroupWidth, nodeWidth);
-          groupPositions.push({ stage, width: nodeWidth });
-        });
-
-        groupPositions.forEach(({ stage }, index) => {
+        group.forEach((stage, index) => {
           const x =
-            currentX + index * (maxGroupWidth + config.horizontalSpacing);
+            currentX + index * (config.nodeWidth + config.horizontalSpacing);
           positions.set(stage.id, x);
         });
 
         currentX +=
-          group.length * maxGroupWidth +
+          group.length * config.nodeWidth +
           (group.length - 1) * config.horizontalSpacing +
           config.horizontalSpacing * 2;
       }
@@ -71,7 +59,9 @@ function groupStagesByMergeRelationship(
       });
 
       groups.push(sortedMerge);
-      sortedMerge.forEach((s) => processed.add(s.id));
+      sortedMerge.forEach((s) => {
+        processed.add(s.id);
+      });
     } else {
       groups.push([stage]);
       processed.add(stage.id);

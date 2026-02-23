@@ -34,26 +34,20 @@ export function createConnectionsWithAnchors(
   connections: FlowConnection[],
   config: LayoutConfig,
 ): void {
-  const childCounts = new Map<string, number>();
-  const parentCounts = new Map<string, number>();
   const childrenByParent = new Map<string, NormalizedStage[]>();
 
-  const countRelationships = (currentStage: NormalizedStage) => {
-    childCounts.set(currentStage.id, currentStage.children.length);
-
+  const buildChildrenByParent = (currentStage: NormalizedStage) => {
     currentStage.children.forEach((child) => {
-      parentCounts.set(child.id, (parentCounts.get(child.id) ?? 0) + 1);
-
       if (!childrenByParent.has(currentStage.id)) {
         childrenByParent.set(currentStage.id, []);
       }
       childrenByParent.get(currentStage.id)!.push(child);
 
-      countRelationships(child);
+      buildChildrenByParent(child);
     });
   };
 
-  countRelationships(stage);
+  buildChildrenByParent(stage);
 
   const createConnection = (parentStage: NormalizedStage) => {
     const children = childrenByParent.get(parentStage.id) ?? [];

@@ -1,31 +1,27 @@
-import type { NormalizedStage } from "#types/explain-plan";
 import type { FlowPosition } from "#types/flow-visualization";
 import type { LayoutConfig } from "./config";
-import { FlowNodeLogic } from "../flowNodeLogic";
 
 /**
- * Calculate overall dimensions of the layout with dynamic heights
+ * Calculate overall dimensions of the layout with dynamic heights.
+ * Accepts pre-computed stageHeights so the bounding box uses the exact
+ * heights used during positioning (avoids divergence from estimates).
  */
 export function calculateDimensions(
   positions: Map<string, FlowPosition>,
-  rootStage: NormalizedStage,
+  stageHeights: Map<string, number>,
   config: LayoutConfig,
-  mode: "plan" | "execution" = "execution",
 ): { width: number; height: number } {
+  if (positions.size === 0) {
+    return {
+      width: config.containerPadding * 2,
+      height: config.containerPadding * 2,
+    };
+  }
+
   let minX = Infinity,
     maxX = -Infinity;
   let minY = Infinity,
     maxY = -Infinity;
-
-  const stageHeights = new Map<string, number>();
-
-  const calculateStageHeights = (stage: NormalizedStage) => {
-    const height = FlowNodeLogic.calculateNodeHeight(stage, mode);
-    stageHeights.set(stage.id, height);
-    stage.children.forEach((child) => calculateStageHeights(child));
-  };
-
-  calculateStageHeights(rootStage);
 
   positions.forEach((pos, stageId) => {
     const nodeHeight = stageHeights.get(stageId) ?? config.nodeHeight;

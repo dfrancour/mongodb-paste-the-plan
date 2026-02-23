@@ -35,7 +35,10 @@ describe("Multi-Input Merge Layout Handling", () => {
       // Behavioral expectation: No overlapping positions (using dynamic node heights)
       const stageHeights = new Map<string, number>();
       const collectHeights = (stage: NormalizedStage) => {
-        stageHeights.set(stage.id, FlowNodeLogic.calculateNodeHeight(stage));
+        stageHeights.set(
+          stage.id,
+          FlowNodeLogic.calculateNodeHeight(stage, "execution"),
+        );
         stage.children.forEach(collectHeights);
       };
       collectHeights(normalized);

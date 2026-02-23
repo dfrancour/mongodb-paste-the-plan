@@ -53,23 +53,29 @@ export function FlowVisualization(props: FlowVisualizationProps) {
     return stage;
   }, [props]);
 
-  // Calculate layout and create flow stages
-  // When measuredHeights is available (after first render), re-layout with
-  // actual DOM heights so vertical spacing reflects real node sizes.
+  // Expensive layout calculation — only depends on stage tree, mode, and
+  // measured heights. Does NOT depend on highlightedStageId so hover
+  // interactions won't retrigger the layout engine.
+  const layout = useMemo(
+    () =>
+      FlowLayoutEngine.calculateLayout(
+        rootStage,
+        props.mode,
+        undefined,
+        measuredHeights.size > 0 ? measuredHeights : undefined,
+      ),
+    [rootStage, props.mode, measuredHeights],
+  );
+
+  // Lightweight flow stage building — uses the cached layout and adds
+  // visualization state (highlighting, connections). Safe to rerun on hover.
   const flowData = useMemo(() => {
-    const layout = FlowLayoutEngine.calculateLayout(
-      rootStage,
-      props.mode,
-      undefined,
-      measuredHeights.size > 0 ? measuredHeights : undefined,
-    );
     const flowStages: FlowStage[] = [];
 
     const createFlowStage = (stage: typeof rootStage): void => {
       const position = layout.nodes.get(stage.id) ?? { x: 0, y: 0, level: 0 };
       const connections = layout.connections.filter((c) => c.to === stage.id);
 
-      // Create visualization using modular analyzers when available
       const stageVisualization = createStageVisualization(
         stage,
         props.analysisResults,
@@ -92,13 +98,7 @@ export function FlowVisualization(props: FlowVisualizationProps) {
 
     createFlowStage(rootStage);
     return { flowStages, layout };
-  }, [
-    rootStage,
-    highlightedStageId,
-    props.mode,
-    props.analysisResults,
-    measuredHeights,
-  ]);
+  }, [rootStage, layout, highlightedStageId, props.analysisResults]);
 
   // Measure actual node heights from DOM after render
   // This intentionally sets state from useLayoutEffect to sync with DOM measurements

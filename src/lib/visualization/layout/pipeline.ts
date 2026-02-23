@@ -73,7 +73,7 @@ export function calculateLayout(
   createConnectionsWithAnchors(rootStage, positions, connections, config);
 
   // Step 9: Calculate overall dimensions
-  const dimensions = calculateDimensions(positions, rootStage, config, mode);
+  const dimensions = calculateDimensions(positions, stageHeights, config);
 
   return {
     nodes: positions,
