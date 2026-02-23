@@ -75,11 +75,8 @@ export function calculateSBELayoutForStages(
       const nextLevelMaxHeight = Math.max(
         ...Array.from(levels.entries())
           .filter(([_, stageLevel]) => stageLevel === level + 1)
-          .map(([stageId, _]) =>
-            Math.max(
-              stageHeights.get(stageId) ?? config.nodeHeight,
-              config.nodeHeight,
-            ),
+          .map(
+            ([stageId, _]) => stageHeights.get(stageId) ?? config.nodeHeight,
           ),
       );
       levelPositions.set(

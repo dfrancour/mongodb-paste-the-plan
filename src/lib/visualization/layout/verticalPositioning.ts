@@ -17,16 +17,11 @@ export function calculateLevelYPositions(
       levelPositions.set(level, config.containerPadding);
     } else {
       const prevLevelPosition = levelPositions.get(level - 1) ?? 0;
-      // Use at least config.nodeHeight so levels stay far enough apart
-      // even when dynamic height estimates are smaller than rendered size
       const prevLevelMaxHeight = Math.max(
         ...Array.from(levels.entries())
           .filter(([_, stageLevel]) => stageLevel === level - 1)
-          .map(([stageId, _]) =>
-            Math.max(
-              stageHeights.get(stageId) ?? config.nodeHeight,
-              config.nodeHeight,
-            ),
+          .map(
+            ([stageId, _]) => stageHeights.get(stageId) ?? config.nodeHeight,
           ),
       );
       levelPositions.set(
