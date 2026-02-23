@@ -110,7 +110,7 @@ describe("Flow Visualization Positioning Constraints", () => {
         expect(stage.position.x).toBeGreaterThanOrEqual(0);
         expect(stage.position.y).toBeGreaterThanOrEqual(0);
         expect(stage.position.x).toBeLessThan(5000); // Reasonable max width
-        expect(stage.position.y).toBeLessThan(3000); // Reasonable max height
+        expect(stage.position.y).toBeLessThan(5000); // Reasonable max height
       });
 
       // Container should be appropriately sized for content

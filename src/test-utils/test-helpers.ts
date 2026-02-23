@@ -72,21 +72,36 @@ export function findDeepestStages(stage: NormalizedStage): NormalizedStage[] {
 }
 
 /**
- * Check if any positions overlap (for layout testing)
+ * Check if any node bounding boxes overlap (for layout testing).
+ *
+ * Uses actual node dimensions and minimum spacing to detect overlap,
+ * matching the collision detection logic in the layout engine.
+ * Each node can have its own height (matching the engine's dynamic heights).
  */
 export function hasOverlappingPositions(
-  positions: Array<{ x: number; y: number }>,
-  tolerance = 5,
+  positions: Array<{ x: number; y: number; height?: number }>,
+  nodeSize: { width: number; height: number; minSpacing: number } = {
+    width: 300,
+    height: 280,
+    minSpacing: 40,
+  },
 ): boolean {
   for (let i = 0; i < positions.length; i++) {
     for (let j = i + 1; j < positions.length; j++) {
-      const pos1 = positions[i]!;
-      const pos2 = positions[j]!;
+      const a = positions[i]!;
+      const b = positions[j]!;
 
-      const xOverlap = Math.abs(pos1.x - pos2.x) < tolerance;
-      const yOverlap = Math.abs(pos1.y - pos2.y) < tolerance;
+      const aHeight = a.height ?? nodeSize.height;
+      const bHeight = b.height ?? nodeSize.height;
 
-      if (xOverlap && yOverlap) {
+      const horizontalOverlap =
+        a.x < b.x + nodeSize.width + nodeSize.minSpacing &&
+        a.x + nodeSize.width + nodeSize.minSpacing > b.x;
+      const verticalOverlap =
+        a.y < b.y + bHeight + nodeSize.minSpacing &&
+        a.y + aHeight + nodeSize.minSpacing > b.y;
+
+      if (horizontalOverlap && verticalOverlap) {
         return true;
       }
     }

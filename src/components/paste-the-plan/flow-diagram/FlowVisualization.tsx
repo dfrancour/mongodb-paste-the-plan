@@ -54,8 +54,15 @@ export function FlowVisualization(props: FlowVisualizationProps) {
   }, [props]);
 
   // Calculate layout and create flow stages
+  // When measuredHeights is available (after first render), re-layout with
+  // actual DOM heights so vertical spacing reflects real node sizes.
   const flowData = useMemo(() => {
-    const layout = FlowLayoutEngine.calculateLayout(rootStage, props.mode);
+    const layout = FlowLayoutEngine.calculateLayout(
+      rootStage,
+      props.mode,
+      undefined,
+      measuredHeights.size > 0 ? measuredHeights : undefined,
+    );
     const flowStages: FlowStage[] = [];
 
     const createFlowStage = (stage: typeof rootStage): void => {
@@ -85,7 +92,13 @@ export function FlowVisualization(props: FlowVisualizationProps) {
 
     createFlowStage(rootStage);
     return { flowStages, layout };
-  }, [rootStage, highlightedStageId, props.mode, props.analysisResults]);
+  }, [
+    rootStage,
+    highlightedStageId,
+    props.mode,
+    props.analysisResults,
+    measuredHeights,
+  ]);
 
   // Measure actual node heights from DOM after render
   // This intentionally sets state from useLayoutEffect to sync with DOM measurements

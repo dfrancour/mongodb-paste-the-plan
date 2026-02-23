@@ -1,11 +1,13 @@
 import { describe, it, expect } from "vitest";
 import { validatePlan, normalizeExecution } from "#lib/parsers";
 import { FlowLayoutEngine } from "./flowLayoutEngine";
+import { FlowNodeLogic } from "./flowNodeLogic";
 import { runAllAnalyzers } from "#lib/analyzers";
 import {
   loadTestPlan,
   hasOverlappingPositions,
 } from "#test-utils/test-helpers";
+import type { NormalizedStage } from "#types/explain-plan";
 
 describe("Multi-Input Merge Layout Handling", () => {
   it("should handle merge operations without positioning conflicts", () => {
@@ -30,10 +32,18 @@ describe("Multi-Input Merge Layout Handling", () => {
         analysisResults,
       );
 
-      // Behavioral expectation: No overlapping positions
+      // Behavioral expectation: No overlapping positions (using dynamic node heights)
+      const stageHeights = new Map<string, number>();
+      const collectHeights = (stage: NormalizedStage) => {
+        stageHeights.set(stage.id, FlowNodeLogic.calculateNodeHeight(stage));
+        stage.children.forEach(collectHeights);
+      };
+      collectHeights(normalized);
+
       const positions = flowStages.map((s) => ({
         x: s.position.x,
         y: s.position.y,
+        height: stageHeights.get(s.id),
       }));
       expect(hasOverlappingPositions(positions)).toBe(false);
 
