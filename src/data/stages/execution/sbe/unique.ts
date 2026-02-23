@@ -22,4 +22,28 @@ export const unique: ExecutionStage = {
     "Memory usage grows with the number of unique keys encountered.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/unique.h",
+
+  explainFields: [
+    {
+      bsonKey: "dupsTested",
+      description: "Number of keys tested for duplicates",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "dupsDropped",
+      description: "Number of duplicate keys dropped",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "peakTrackedMemBytes",
+      description: "Peak tracked memory usage",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "bytes",
+    },
+  ],
 } as const;

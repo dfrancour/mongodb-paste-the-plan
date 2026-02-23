@@ -23,4 +23,22 @@ export const unique_roaring: ExecutionStage = {
     "Preserves input order.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/unique.h",
+
+  // Shares UniqueStats with unique stage (sbe/stages/plan_stats.h:187)
+  explainFields: [
+    {
+      bsonKey: "dupsTested",
+      description: "Keys tested for duplicates",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "dupsDropped",
+      description: "Duplicate keys dropped",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

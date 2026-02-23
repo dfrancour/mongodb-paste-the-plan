@@ -26,4 +26,64 @@ export const TIMESERIES_MODIFY: ExecutionStage = {
     "Introduced in MongoDB 5.0 when time-series updates/deletes were added.",
 
   sourceFile: "src/mongo/db/exec/classic/timeseries_modify.h",
+
+  explainFields: [
+    {
+      bsonKey: "opType",
+      description: "Operation type (update or delete)",
+      valueType: "string",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "bucketFilter",
+      description: "Filter applied to time-series buckets",
+      valueType: "object",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "residualFilter",
+      description: "Filter applied to individual measurements",
+      valueType: "object",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "nBucketsUnpacked",
+      description: "Number of buckets unpacked",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    // Update-only fields (undefined for deletes — simply not extracted)
+    {
+      bsonKey: "nMeasurementsMatched",
+      description: "Measurements matching the update predicate",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "nMeasurementsUpdated",
+      description: "Measurements updated",
+      valueType: "number",
+      verbosity: "executionStats",
+      cppName: "nMeasurementsModified",
+      unit: "count",
+    },
+    {
+      bsonKey: "nMeasurementsUpserted",
+      description: "Measurements upserted",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    // Delete-only field (undefined for updates — simply not extracted)
+    {
+      bsonKey: "nMeasurementsDeleted",
+      description: "Measurements deleted",
+      valueType: "number",
+      verbosity: "executionStats",
+      cppName: "nMeasurementsModified",
+      unit: "count",
+    },
+  ],
 } as const;

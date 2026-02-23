@@ -23,4 +23,7 @@ export const SORT_KEY_GENERATOR: ExecutionStage = {
     "Applies collation rules when extracting string sort keys.",
 
   sourceFile: "src/mongo/db/exec/classic/sort_key_generator.h",
+
+  // Pure pass-through transform — extracts sort keys without additional metrics
+  explainFields: [],
 } as const;

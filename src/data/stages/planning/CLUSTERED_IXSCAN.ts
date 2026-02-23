@@ -24,4 +24,13 @@ export const CLUSTERED_IXSCAN: PlanningStage = {
 
   sourceFile:
     "src/mongo/db/query/compiler/physical_model/query_solution/query_solution.h",
+
+  explainFields: [
+    {
+      bsonKey: "direction",
+      description: "Scan direction (forward or backward)",
+      valueType: "string",
+      verbosity: "queryPlanner",
+    },
+  ],
 } as const;

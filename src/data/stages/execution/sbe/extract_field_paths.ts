@@ -23,4 +23,7 @@ export const extract_field_paths: ExecutionStage = {
     "over the input, avoiding repeated document traversal.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/extract_field_paths.h",
+
+  // Pure field extraction — no stage-specific metrics beyond SBE common fields
+  explainFields: [],
 } as const;

@@ -24,4 +24,14 @@ export const SHARDING_FILTER: ExecutionStage = {
     "Minimal overhead in stable clusters, critical for correctness during migrations.",
 
   sourceFile: "src/mongo/db/exec/classic/shard_filter.h",
+
+  explainFields: [
+    {
+      bsonKey: "chunkSkips",
+      description: "Documents filtered out as not owned by this shard",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

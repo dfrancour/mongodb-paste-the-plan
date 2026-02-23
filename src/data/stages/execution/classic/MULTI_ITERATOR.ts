@@ -23,4 +23,7 @@ export const MULTI_ITERATOR: ExecutionStage = {
     "Memory overhead proportional to number of active cursors.",
 
   sourceFile: "src/mongo/db/exec/classic/multi_iterator.h",
+
+  // Cursor coordinator — no stage-specific metrics beyond common fields
+  explainFields: [],
 } as const;

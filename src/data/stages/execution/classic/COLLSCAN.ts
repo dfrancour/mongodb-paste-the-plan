@@ -1,5 +1,6 @@
 import type { ExecutionStage } from "../../types";
 import { StageCategory, StageIds, QuerySolutionStageType } from "../../types";
+import { DOCS_EXAMINED_FIELD } from "../../fields/common";
 
 export const COLLSCAN: ExecutionStage = {
   layer: "execution",
@@ -24,4 +25,14 @@ export const COLLSCAN: ExecutionStage = {
   analysisNote: "Collection scan - consider adding an index on filtered fields",
 
   sourceFile: "src/mongo/db/exec/classic/collection_scan.h",
+
+  explainFields: [
+    {
+      bsonKey: "direction",
+      description: "Scan direction (forward or backward)",
+      valueType: "string",
+      verbosity: "queryPlanner",
+    },
+    { ...DOCS_EXAMINED_FIELD, cppName: "docsTested" },
+  ],
 } as const;

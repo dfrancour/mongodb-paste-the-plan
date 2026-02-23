@@ -1,5 +1,6 @@
 import type { ExecutionStage } from "../../types";
 import { StageCategory, StageIds, QuerySolutionStageType } from "../../types";
+import { SPOOL_SPILLING_FIELDS } from "../../fields";
 
 export const SPOOL: ExecutionStage = {
   layer: "execution",
@@ -25,4 +26,29 @@ export const SPOOL: ExecutionStage = {
     "or certain window functions.",
 
   sourceFile: "src/mongo/db/exec/classic/spool.h",
+
+  explainFields: [
+    {
+      bsonKey: "memLimit",
+      description: "Memory limit before spilling to disk",
+      valueType: "number",
+      verbosity: "queryPlanner",
+      unit: "bytes",
+    },
+    {
+      bsonKey: "diskLimit",
+      description: "Disk usage limit for spilled data",
+      valueType: "number",
+      verbosity: "queryPlanner",
+      unit: "bytes",
+    },
+    {
+      bsonKey: "totalDataSizeSpooled",
+      description: "Total bytes of data spooled",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "bytes",
+    },
+    ...SPOOL_SPILLING_FIELDS,
+  ],
 } as const;

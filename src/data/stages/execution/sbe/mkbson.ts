@@ -22,4 +22,7 @@ export const mkbson: ExecutionStage = {
     "Slightly more overhead than mkobj due to BSON serialization.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/makeobj.h",
+
+  // Pure slot-to-BSON transform — no stage-specific metrics beyond SBE common fields
+  explainFields: [],
 } as const;

@@ -1,5 +1,6 @@
 import type { ExecutionStage } from "../../types";
 import { StageCategory, StageIds, QuerySolutionStageType } from "../../types";
+import { SORT_STAGE_FIELDS } from "../../fields/sort";
 
 export const SORT_DEFAULT: ExecutionStage = {
   layer: "execution",
@@ -25,4 +26,7 @@ export const SORT_DEFAULT: ExecutionStage = {
     "the top N documents rather than sorting everything.",
 
   sourceFile: "src/mongo/db/exec/classic/sort.h",
+
+  // Shares SortStats struct and statsToBSON() path with SORT and SORT_SIMPLE
+  explainFields: [...SORT_STAGE_FIELDS],
 } as const;

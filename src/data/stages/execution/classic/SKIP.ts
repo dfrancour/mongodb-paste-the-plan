@@ -22,4 +22,15 @@ export const SKIP: ExecutionStage = {
     "Efficient but still requires reading the skipped documents from storage.",
 
   sourceFile: "src/mongo/db/exec/classic/skip.h",
+
+  explainFields: [
+    {
+      bsonKey: "skipAmount",
+      description: "Number of documents to skip before returning results",
+      valueType: "number",
+      verbosity: "queryPlanner",
+      cppName: "skip",
+      unit: "count",
+    },
+  ],
 } as const;

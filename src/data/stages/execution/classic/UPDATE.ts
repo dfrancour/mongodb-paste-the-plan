@@ -24,4 +24,30 @@ export const UPDATE: ExecutionStage = {
     "May yield during execution to allow other operations.",
 
   sourceFile: "src/mongo/db/exec/classic/update_stage.h",
+
+  explainFields: [
+    {
+      bsonKey: "nMatched",
+      description: "Number of documents matching the query",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "nWouldModify",
+      description: "Number of documents that would be modified",
+      valueType: "number",
+      verbosity: "executionStats",
+      cppName: "nModified",
+      unit: "count",
+    },
+    {
+      bsonKey: "nWouldUpsert",
+      description: "Number of documents that would be upserted",
+      valueType: "number",
+      verbosity: "executionStats",
+      cppName: "nUpserted",
+      unit: "count",
+    },
+  ],
 } as const;

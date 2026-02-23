@@ -1,5 +1,6 @@
 import type { ExecutionStage } from "../../types";
 import { StageCategory, StageIds, QuerySolutionStageType } from "../../types";
+import { perChildFields } from "../../fields/field_utilities";
 
 export const AND_SORTED: ExecutionStage = {
   layer: "execution",
@@ -24,4 +25,13 @@ export const AND_SORTED: ExecutionStage = {
     "Performance depends on selectivity and number of children.",
 
   sourceFile: "src/mongo/db/exec/classic/and_sorted.h",
+
+  explainFields: [
+    // One failedAnd_N per child — undefined indices are simply not extracted.
+    ...perChildFields(
+      "failedAnd_",
+      "Failed intersection attempts for child",
+      4,
+    ),
+  ],
 } as const;

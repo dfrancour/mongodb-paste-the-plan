@@ -23,4 +23,7 @@ export const merge_join: ExecutionStage = {
     "Works well when an index provides the required sort order for both sides.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/merge_join.h",
+
+  // No stage-specific explain serialization — only SBE common fields emitted
+  explainFields: [],
 } as const;

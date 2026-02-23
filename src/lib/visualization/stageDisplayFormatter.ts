@@ -9,9 +9,11 @@
  */
 
 import type { NormalizedStage } from "#types/explain-plan";
+import { hasExecutionMetrics } from "#types/explain-plan";
 import type { FlowStage } from "#types/flow-visualization";
 import type { StageVisualization } from "#types/visualization";
 import type { AnalysisResults } from "#lib/analyzers";
+import { safeRenderJson, isNonEmptyObject } from "#lib/utils/jsxUtils";
 import {
   getPerformanceLevelFromFindings,
   getAllWarningsFromFindings,
@@ -19,6 +21,14 @@ import {
   getFindingsForStage,
 } from "#lib/analyzers";
 import { StageCategory } from "#data/stages";
+import type {
+  ExplainFieldDeclaration,
+  ExplainFieldSection,
+} from "#data/stages";
+import {
+  hasExplainFields,
+  getFieldsForStage,
+} from "#data/stages/fields/field_utilities";
 
 /**
  * Create a StageVisualization by combining modular analyzer results with display formatting.
@@ -50,6 +60,35 @@ export function createStageVisualization(
 }
 
 /**
+ * A stage field with value formatted for display.
+ * Uses bsonKey as the label — the tool should teach users
+ * to read raw explain JSON, not abstract it away.
+ */
+export interface StageFieldDisplay {
+  readonly bsonKey: string;
+  readonly value: string;
+  readonly description: string;
+  readonly cppName?: string;
+  /** Warning-based color class (e.g., red for critical, orange for warning) */
+  readonly color?: string;
+  /** When true, value is pre-formatted JSON — render in a &lt;pre&gt; block */
+  readonly multiline?: boolean;
+}
+
+/**
+ * Fields grouped by FlowNode section.
+ * Each field appears in exactly one section — no duplication.
+ */
+export interface FieldSections {
+  /** Structural config from query planner (indexName, direction, indexBounds, filter) */
+  readonly configuration: readonly StageFieldDisplay[];
+  /** Runtime execution stats (nReturned, docsExamined, seeks, spills, etc.) */
+  readonly execution: readonly StageFieldDisplay[];
+  /** Engine scheduling internals (works, advanced, needTime, opens, closes, etc.) */
+  readonly engine: readonly StageFieldDisplay[];
+}
+
+/**
  * Grid metrics for consistent stage display
  */
 export interface StageGridMetrics {
@@ -58,11 +97,8 @@ export interface StageGridMetrics {
     output: string;
     direction: string;
   };
-  coreMetrics: {
-    keys: { value: string; color: string };
-    docs: { value: string; color: string };
-    time: { value: string; color: string };
-  };
+  /** Execution time display for the header (from parser's executionTimeMillis, not explainFields) */
+  timeMetric: { value: string; color: string };
   contextInfo: {
     primary: string;
     secondary: string;
@@ -70,8 +106,9 @@ export interface StageGridMetrics {
   performanceIndicators: {
     selectivity: { value: string; color: string };
     efficiency: { value: string; color: string };
-    workRatio: { value: string; color: string };
   };
+  /** Fields grouped by section — replaces both coreMetrics and stageFields */
+  fieldSections: FieldSections;
 }
 
 /**
@@ -102,6 +139,9 @@ function getColorFromWarnings(
   return "text-orange-600 dark:text-orange-400";
 }
 
+/** Neutral color constant */
+const NEUTRAL_COLOR = "text-gray-900 dark:text-gray-100";
+
 /**
  * Extract consistent grid metrics for all stages.
  * Colors are determined by warnings from the analyzer system.
@@ -124,23 +164,13 @@ export function extractGridMetrics(
     direction: "→",
   };
 
-  // Core Metrics - fundamental performance data with semantic coloring from warnings
-  const coreMetrics = {
-    keys: {
-      value: metrics.keysExamined?.toLocaleString() ?? "—",
-      color: getColorFromWarnings("keysExamined", warnings),
-    },
-    docs: {
-      value: metrics.docsExamined?.toLocaleString() ?? "—",
-      color: getColorFromWarnings("docsExamined", warnings),
-    },
-    time: {
-      value:
-        metrics.executionTimeMillis !== undefined
-          ? `${metrics.executionTimeMillis}ms`
-          : "—",
-      color: getColorFromWarnings("executionTime", warnings),
-    },
+  // Time metric for the header (executionTimeMillis from the parser, not the estimate)
+  const timeMetric = {
+    value:
+      metrics.executionTimeMillis !== undefined
+        ? `${metrics.executionTimeMillis}ms`
+        : "—",
+    color: getColorFromWarnings("executionTime", warnings),
   };
 
   // Context Info - stage-specific but consistently positioned
@@ -159,17 +189,16 @@ export function extractGridMetrics(
       value: getEfficiencyRatio(stage),
       color: getColorFromWarnings("efficiency", warnings),
     },
-    workRatio: {
-      value: getWorkRatio(stage),
-      color: getColorFromWarnings("workRatio", warnings),
-    },
   };
+
+  const fieldSections = extractFieldsBySection(stage, warnings);
 
   return {
     flowMetrics,
-    coreMetrics,
+    timeMetric,
     contextInfo,
     performanceIndicators,
+    fieldSections,
   };
 }
 
@@ -450,22 +479,202 @@ function getEfficiencyRatio(stage: NormalizedStage): string {
   return "—";
 }
 
-/**
- * Calculate work efficiency ratio
- */
-function getWorkRatio(stage: NormalizedStage): string {
-  const metrics = stage.metrics ?? {};
-  const advanced = metrics.advanced;
-  const needTime = metrics.needTime;
+// ============================================================================
+// Section-grouped field extraction
+// ============================================================================
 
-  if (
-    advanced !== undefined &&
-    needTime !== undefined &&
-    advanced + needTime > 0
-  ) {
-    const efficiency = advanced / (advanced + needTime);
-    return `${(efficiency * 100).toFixed(0)}%`;
+/** Warning-aware metric keys that get colored when warnings are present */
+const WARNING_METRIC_KEYS = new Set([
+  "docsExamined",
+  "keysExamined",
+  "executionTime",
+  "selectivity",
+  "efficiency",
+]);
+
+/**
+ * Resolve the section for a field declaration.
+ * Explicit `section` takes precedence.
+ * queryPlanner-verbosity fields default to "configuration".
+ * All other fields default to "execution".
+ */
+function resolveSection(field: ExplainFieldDeclaration): ExplainFieldSection {
+  if (field.section) return field.section;
+  if (field.verbosity === "queryPlanner") return "configuration";
+  return "execution";
+}
+
+// ── Unified field extraction ────────────────────────────────────────────────
+
+/**
+ * Universal filter field — not stage-specific.
+ * The normalizer always extracts filter from raw explain output.
+ * Appended to declarations if not already declared by the stage.
+ */
+const FILTER_FIELD: ExplainFieldDeclaration = {
+  bsonKey: "filter",
+  description: "Query predicate applied by this stage",
+  valueType: "object",
+  verbosity: "queryPlanner",
+};
+
+/**
+ * Look up a configuration field value from stage.structure.
+ */
+function lookupStructureValue(
+  structure: Record<string, unknown> | undefined,
+  bsonKey: string,
+): unknown {
+  if (!structure) return undefined;
+  return structure[bsonKey];
+}
+
+/**
+ * Format a configuration field (from stage.structure) into a StageFieldDisplay.
+ */
+function formatConfigurationField(
+  field: ExplainFieldDeclaration,
+  rawValue: unknown,
+): StageFieldDisplay | undefined {
+  if (field.valueType === "object") {
+    if (!isNonEmptyObject(rawValue)) return undefined;
+    return {
+      bsonKey: field.bsonKey,
+      value: safeRenderJson(rawValue),
+      description: field.description,
+      cppName: field.cppName,
+      multiline: true,
+    };
+  }
+  if (typeof rawValue === "boolean") {
+    return {
+      bsonKey: field.bsonKey,
+      value: rawValue ? "Yes" : "No",
+      description: field.description,
+      cppName: field.cppName,
+    };
+  }
+  if (typeof rawValue === "number") {
+    return {
+      bsonKey: field.bsonKey,
+      value: field.unit ? formatFieldValue(rawValue, field) : String(rawValue),
+      description: field.description,
+      cppName: field.cppName,
+    };
+  }
+  const stringValue = String(rawValue);
+  if (!stringValue) return undefined;
+  return {
+    bsonKey: field.bsonKey,
+    value: stringValue,
+    description: field.description,
+    cppName: field.cppName,
+  };
+}
+
+/**
+ * Extract all stage fields grouped by section in a single pass.
+ *
+ * Configuration fields are read from stage.structure (queryPlanner data).
+ * Execution and engine fields are read from stage.metrics (executionStats data).
+ * Field routing is determined by declarations via resolveSection().
+ */
+function extractFieldsBySection(
+  stage: NormalizedStage | FlowStage,
+  warnings: readonly WarningForColoring[],
+): FieldSections {
+  const def = stage.definition;
+
+  // Collect declared fields from the definition
+  const declaredFields: readonly ExplainFieldDeclaration[] =
+    def && hasExplainFields(def) ? getFieldsForStage(def) : [];
+
+  // Append universal filter field if not already declared
+  const hasFilterDeclaration = declaredFields.some(
+    (f) => f.bsonKey === "filter",
+  );
+  const allFields = hasFilterDeclaration
+    ? declaredFields
+    : [...declaredFields, FILTER_FIELD];
+
+  const structure = stage.structure as Record<string, unknown> | undefined;
+  const hasMetrics = hasExecutionMetrics(stage);
+
+  const configuration: StageFieldDisplay[] = [];
+  const execution: StageFieldDisplay[] = [];
+  const engine: StageFieldDisplay[] = [];
+
+  for (const field of allFields) {
+    const section = resolveSection(field);
+
+    if (section === "configuration") {
+      // Configuration fields live in stage.structure
+      const rawValue = lookupStructureValue(structure, field.bsonKey);
+      if (rawValue === undefined || rawValue === null) continue;
+
+      const display = formatConfigurationField(field, rawValue);
+      if (display) configuration.push(display);
+    } else {
+      // Execution/engine fields live in stage.metrics
+      if (!hasMetrics) continue;
+      if (field.valueType === "object") continue;
+
+      const value = stage.metrics[field.bsonKey];
+      if (value === undefined) continue;
+
+      const color = WARNING_METRIC_KEYS.has(field.bsonKey)
+        ? getColorFromWarnings(field.bsonKey, warnings)
+        : NEUTRAL_COLOR;
+
+      const display: StageFieldDisplay = {
+        bsonKey: field.bsonKey,
+        value: formatFieldValue(value, field),
+        description: field.description,
+        cppName: field.cppName,
+        color,
+      };
+
+      if (section === "engine") {
+        engine.push(display);
+      } else {
+        execution.push(display);
+      }
+    }
   }
 
-  return "—";
+  // Ensure nReturned is always first in execution section
+  const nReturnedIndex = execution.findIndex((f) => f.bsonKey === "nReturned");
+  if (nReturnedIndex > 0) {
+    const nReturned = execution.splice(nReturnedIndex, 1)[0]!;
+    execution.unshift(nReturned);
+  }
+
+  return { configuration, execution, engine };
+}
+
+/**
+ * Format a field value for display, applying unit formatting.
+ */
+export function formatFieldValue(
+  value: number | boolean | string,
+  field: ExplainFieldDeclaration,
+): string {
+  if (typeof value === "boolean") return value ? "Yes" : "No";
+  if (typeof value === "string") return value;
+  if (field.unit === "bytes") return formatBytes(value);
+  if (field.unit === "ms") return `${value.toLocaleString()}ms`;
+  return value.toLocaleString();
+}
+
+function formatBytes(bytes: number): string {
+  if (bytes <= 0) return "0 B";
+  const units = ["B", "KB", "MB", "GB", "TB"];
+  const i = Math.min(
+    Math.floor(Math.log(bytes) / Math.log(1024)),
+    units.length - 1,
+  );
+  const scaled = bytes / Math.pow(1024, i);
+  if (scaled < 10) return `${scaled.toFixed(1)} ${units[i]}`;
+  if (scaled < 100) return `${scaled.toFixed(0)} ${units[i]}`;
+  return `${Math.round(scaled)} ${units[i]}`;
 }

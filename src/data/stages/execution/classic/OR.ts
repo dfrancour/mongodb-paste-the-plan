@@ -23,4 +23,21 @@ export const OR: ExecutionStage = {
     "Evaluates children and merges results, removing duplicates.",
 
   sourceFile: "src/mongo/db/exec/classic/or.h",
+
+  explainFields: [
+    {
+      bsonKey: "dupsTested",
+      description: "Number of RecordIds tested for duplicates",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "dupsDropped",
+      description: "Number of duplicate RecordIds dropped",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

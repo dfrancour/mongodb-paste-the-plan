@@ -1,5 +1,6 @@
 import type { ExecutionStage } from "../../types";
 import { StageCategory, StageIds, QuerySolutionStageType } from "../../types";
+import { INDEX_METADATA_FIELDS } from "../../fields/index_metadata";
 
 export const IXSCAN: ExecutionStage = {
   layer: "execution",
@@ -24,4 +25,48 @@ export const IXSCAN: ExecutionStage = {
     "Efficient when index selectivity is high.",
 
   sourceFile: "src/mongo/db/exec/classic/index_scan.h",
+
+  explainFields: [
+    ...INDEX_METADATA_FIELDS,
+    {
+      bsonKey: "indexBounds",
+      description: "Key ranges scanned in each index field",
+      valueType: "object",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "direction",
+      description: "Scan direction (forward or backward)",
+      valueType: "string",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "keysExamined",
+      description: "Number of index keys examined",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "seeks",
+      description: "Number of index cursor seeks",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "dupsTested",
+      description: "Number of keys tested for duplicates (multikey)",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "dupsDropped",
+      description: "Number of duplicate keys dropped (multikey)",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

@@ -1,5 +1,9 @@
 import type { MongosStage } from "../types";
 import { StageCategory, StageIds } from "../types";
+import {
+  MONGOS_COMMON_FIELDS,
+  MONGOS_LIMIT_SKIP_FIELDS,
+} from "../fields/mongos";
 
 export const SHARD_MERGE_SORT: MongosStage = {
   layer: "mongos",
@@ -22,4 +26,6 @@ export const SHARD_MERGE_SORT: MongosStage = {
     "than SHARD_MERGE due to the coordination required to maintain ordering.",
 
   sourceFile: "src/mongo/s/commands/query_cmd/cluster_explain.cpp",
+
+  explainFields: [...MONGOS_COMMON_FIELDS, ...MONGOS_LIMIT_SKIP_FIELDS],
 } as const;

@@ -43,6 +43,10 @@ export const examplePlanningStage: PlanningStage = {
 
   sourceFile:
     "src/mongo/db/query/compiler/physical_model/query_solution/query_solution.h",
+
+  // Planning stages carry queryPlanner-level fields (index metadata, sort patterns, etc.)
+  // Empty array means "no stage-specific fields".
+  explainFields: [],
 } as const;
 
 // ============================================================================
@@ -74,6 +78,10 @@ export const exampleSbeStage: ExecutionStage = {
 
   sourceFile: "src/mongo/db/exec/sbe/stages/hash_agg.h",
 
+  // Declare stage-specific fields (beyond engine common fields).
+  // Empty array means "investigated, no stage-specific fields".
+  explainFields: [],
+
   // Optional fields
   introducedIn: "7.0",
   // deprecatedIn: "8.0",
@@ -104,6 +112,8 @@ export const exampleClassicStage: ExecutionStage = {
   performanceNotes: "Classic engine implementation details.",
 
   sourceFile: "src/mongo/db/exec/classic/collection_scan.h",
+
+  explainFields: [],
 } as const;
 
 // ============================================================================
@@ -132,6 +142,28 @@ export const examplePipelineStage: PipelineStage = {
   docsUrl:
     "https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/",
 } as const;
+
+// ============================================================================
+// explainFields: Planning vs Execution
+// ============================================================================
+//
+// Both planning and execution stages declare explainFields, but they serve
+// different purposes:
+//
+// Planning stages (verbosity: "queryPlanner"):
+//   Structural fields describing the planner's decision — indexBounds,
+//   keyPattern, sortPattern, etc. These appear in queryPlanner output and
+//   are currently declared for documentation and future "explain the explain"
+//   features, but are NOT yet surfaced in the FlowNode UI.
+//
+// Execution stages (verbosity: "executionStats"):
+//   Runtime metrics — keysExamined, seeks, spills, spilledBytes, etc.
+//   These drive metrics extraction, display formatting, and analyzer warnings.
+//   Engine common fields (works, advanced, opens, closes) are added
+//   automatically by getFieldsForStage() — only declare stage-specific fields.
+//
+// Empty array `explainFields: []` means "investigated, no stage-specific fields
+// beyond engine common fields". Add a comment explaining why.
 
 // ============================================================================
 // Best Practices

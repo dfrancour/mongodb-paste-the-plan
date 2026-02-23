@@ -23,4 +23,13 @@ export const EOF: ExecutionStage = {
     "Minimal overhead.",
 
   sourceFile: "src/mongo/db/exec/classic/eof.h",
+
+  explainFields: [
+    {
+      bsonKey: "type",
+      description: "EOF reason (e.g., NonExistentNamespace)",
+      valueType: "string",
+      verbosity: "queryPlanner",
+    },
+  ],
 } as const;

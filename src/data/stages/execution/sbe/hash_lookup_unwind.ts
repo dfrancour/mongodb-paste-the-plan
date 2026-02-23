@@ -25,4 +25,7 @@ export const hash_lookup_unwind: ExecutionStage = {
   analysisNote: "Join operation - can be expensive for large collections",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/hash_lookup_unwind.h",
+
+  // No stage-specific explain serialization — only SBE common fields emitted
+  explainFields: [],
 } as const;

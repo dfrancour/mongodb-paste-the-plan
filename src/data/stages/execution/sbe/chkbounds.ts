@@ -22,4 +22,15 @@ export const chkbounds: ExecutionStage = {
     "Non-blocking streaming stage. Ensured index scan stayed within specified bounds.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/check_bounds.h",
+
+  // Source: sbe::CheckBoundsStats (sbe/stages/plan_stats.h:234)
+  explainFields: [
+    {
+      bsonKey: "seeks",
+      description: "Index seeks for bounds checking",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

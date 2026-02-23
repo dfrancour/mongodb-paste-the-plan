@@ -1,5 +1,6 @@
 import type { ExecutionStage } from "../../types";
 import { StageCategory, StageIds, QuerySolutionStageType } from "../../types";
+import { SORT_STAGE_FIELDS } from "../../fields/sort";
 
 export const SORT_SIMPLE: ExecutionStage = {
   layer: "execution",
@@ -24,4 +25,7 @@ export const SORT_SIMPLE: ExecutionStage = {
     "Query planner selects this variant when the sort pattern qualifies.",
 
   sourceFile: "src/mongo/db/exec/classic/sort.h",
+
+  // Shares SortStats struct and statsToBSON() path with SORT and SORT_DEFAULT
+  explainFields: [...SORT_STAGE_FIELDS],
 } as const;

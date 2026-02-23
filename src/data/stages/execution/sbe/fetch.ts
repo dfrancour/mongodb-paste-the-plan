@@ -22,4 +22,14 @@ export const fetch: ExecutionStage = {
     "Can be a performance bottleneck when fetching many documents.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/fetch.h",
+
+  explainFields: [
+    {
+      bsonKey: "numReads",
+      description: "Number of documents fetched from storage",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

@@ -21,4 +21,7 @@ export const hj: ExecutionStage = {
     "Alias for hash_join in explain output. See hash_join for performance details.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/hash_join.h",
+
+  // Abbreviated alias for hash_join — see hash_join for field declarations
+  explainFields: [],
 } as const;

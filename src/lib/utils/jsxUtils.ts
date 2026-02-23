@@ -166,6 +166,17 @@ export function getStringProperty<T extends object>(
 }
 
 /**
+ * Safely get a boolean property from an object
+ */
+export function getBooleanProperty<T extends object>(
+  obj: T,
+  key: string,
+): boolean | undefined {
+  if (!hasProperty(obj, key)) return undefined;
+  return typeof obj[key] === "boolean" ? obj[key] : undefined;
+}
+
+/**
  * Type guard to check if an unknown value is a MongoDB stage object
  */
 export function isMongoDBStage(

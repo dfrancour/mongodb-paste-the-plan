@@ -22,4 +22,42 @@ export const branch: ExecutionStage = {
     "Useful for conditional query execution that avoids evaluating unnecessary paths.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/branch.h",
+
+  explainFields: [
+    {
+      bsonKey: "numTested",
+      description: "Times the filter was evaluated",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "thenBranchOpens",
+      description: "Times the then-branch was opened",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "thenBranchCloses",
+      description: "Times the then-branch was closed",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "elseBranchOpens",
+      description: "Times the else-branch was opened",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "elseBranchCloses",
+      description: "Times the else-branch was closed",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

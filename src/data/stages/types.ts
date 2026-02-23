@@ -213,7 +213,56 @@ export type PlanningStage = BaseStageMetadata &
     readonly querySolutionStageType: QuerySolutionStageType;
     /** Pipeline stage(s) this planning stage is an optimized form of */
     readonly builtFromUserSyntax?: readonly PipelineStageId[];
+    /** QueryPlanner-level fields emitted by this stage.
+     *  Empty array means "investigated, no stage-specific fields". */
+    readonly explainFields: readonly ExplainFieldDeclaration[];
   };
+
+// ============================================================================
+// Explain Field Declarations
+// ============================================================================
+
+/**
+ * Verbosity at which a field appears in explain output.
+ * Maps to ExplainOptions::Verbosity in explain.h.
+ */
+export type ExplainVerbosity =
+  | "queryPlanner"
+  | "executionStats"
+  | "allPlansExecution";
+
+/**
+ * Which FlowNode section a field belongs to.
+ * - "configuration": Structural config from query planner (indexName, direction, indexBounds, filter)
+ * - "execution": Runtime stats (nReturned, docsExamined, seeks, spills, etc.)
+ * - "engine": Engine scheduling internals (works, advanced, needTime, opens, closes, etc.)
+ *
+ * Defaults to "execution" when not specified.
+ */
+export type ExplainFieldSection = "configuration" | "execution" | "engine";
+
+/**
+ * A field emitted by a stage in explain output.
+ *
+ * Source of truth: plan_explainer_impl.cpp (Classic), plan_explainer_sbe.cpp (SBE)
+ */
+export type ExplainFieldDeclaration = {
+  /** BSON key as it appears in explain output (e.g., "keysExamined") */
+  readonly bsonKey: string;
+  /** Human-readable description of what this field measures */
+  readonly description: string;
+  /** Runtime data type of the value. "object" is for queryPlanner structural
+   *  fields (keyPattern, indexBounds) — not extracted into metrics. */
+  readonly valueType: "number" | "boolean" | "string" | "object";
+  /** Minimum verbosity required */
+  readonly verbosity: ExplainVerbosity;
+  /** C++ member name when it differs from bsonKey (rename tracking) */
+  readonly cppName?: string;
+  /** Display unit for formatting */
+  readonly unit?: "ms" | "bytes" | "count";
+  /** Which FlowNode section this field belongs to. Defaults to "execution". */
+  readonly section?: ExplainFieldSection;
+};
 
 /**
  * Execution stages are internal implementation stages.
@@ -229,6 +278,10 @@ export type ExecutionStage = BaseStageMetadata &
     readonly id: ExecutionStageId;
     readonly engine: ExecutionEngine;
     readonly querySolutionStageType?: QuerySolutionStageType;
+    /** Stage-specific fields beyond engine common fields.
+     *  Empty array means "investigated, no stage-specific fields".
+     *  Required so new stages must explicitly declare their fields. */
+    readonly explainFields: readonly ExplainFieldDeclaration[];
   };
 
 /**
@@ -242,6 +295,8 @@ export type MongosStage = BaseStageMetadata &
   ExecutionCharacteristics & {
     readonly layer: "mongos";
     readonly id: MongosStageId;
+    /** Stage-specific fields. Empty array means "no stage-specific fields". */
+    readonly explainFields: readonly ExplainFieldDeclaration[];
   };
 
 /** Union of all stage types */

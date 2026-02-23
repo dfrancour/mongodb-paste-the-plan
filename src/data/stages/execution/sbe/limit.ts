@@ -22,4 +22,7 @@ export const limit: ExecutionStage = {
     "Very efficient - no buffering required. Can stop pipeline execution early.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/limit_skip.h",
+
+  // Alias for limit_skip — see limit_skip for field declarations
+  explainFields: [],
 } as const;

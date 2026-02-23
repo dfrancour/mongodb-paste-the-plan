@@ -21,4 +21,7 @@ export const mj: ExecutionStage = {
     "Alias for merge_join in explain output. See merge_join for performance details.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/merge_join.h",
+
+  // Abbreviated alias for merge_join — see merge_join for field declarations
+  explainFields: [],
 } as const;

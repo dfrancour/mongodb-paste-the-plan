@@ -22,4 +22,7 @@ export const project: ExecutionStage = {
     "Performance depends on the complexity of projection expressions.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/project.h",
+
+  // Pure expression evaluation — no stage-specific metrics beyond SBE common fields
+  explainFields: [],
 } as const;

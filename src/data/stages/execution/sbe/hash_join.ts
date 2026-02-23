@@ -23,4 +23,7 @@ export const hash_join: ExecutionStage = {
     "Memory usage proportional to outer side size. Efficient for equality joins.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/hash_join.h",
+
+  // No stage-specific explain serialization — only SBE common fields emitted
+  explainFields: [],
 } as const;

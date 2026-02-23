@@ -23,4 +23,7 @@ export const ixscan_generic: ExecutionStage = {
     "Can extract index key values into separate slots for covered queries.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/generic_scan.h",
+
+  // Generic variant of ixscan — see ixscan for field declarations
+  explainFields: [],
 } as const;

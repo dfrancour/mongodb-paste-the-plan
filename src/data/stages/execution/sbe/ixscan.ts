@@ -23,4 +23,35 @@ export const ixscan: ExecutionStage = {
     "Often followed by a fetch stage if non-indexed fields are needed.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/ix_scan.h",
+
+  explainFields: [
+    {
+      bsonKey: "seeks",
+      description: "Number of index cursor seeks",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "keysExamined",
+      description: "Number of index keys examined",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "keyCheckSkipped",
+      description: "Key checks skipped (optimization)",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "numReads",
+      description: "Number of index entries read",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

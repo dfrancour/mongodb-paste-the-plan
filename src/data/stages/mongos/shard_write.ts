@@ -1,5 +1,6 @@
 import type { MongosStage } from "../types";
 import { StageCategory, StageIds } from "../types";
+import { MONGOS_COMMON_FIELDS } from "../fields/mongos";
 
 export const SHARD_WRITE: MongosStage = {
   layer: "mongos",
@@ -20,4 +21,6 @@ export const SHARD_WRITE: MongosStage = {
     "Updates and deletes without the shard key in the filter require a scatter-gather to all shards.",
 
   sourceFile: "src/mongo/s/commands/query_cmd/cluster_explain.cpp",
+
+  explainFields: [...MONGOS_COMMON_FIELDS],
 } as const;

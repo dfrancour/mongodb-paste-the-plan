@@ -23,4 +23,31 @@ export const TEXT_MATCH: PlanningStage = {
 
   sourceFile:
     "src/mongo/db/query/compiler/physical_model/query_solution/query_solution.h",
+
+  explainFields: [
+    {
+      bsonKey: "indexPrefix",
+      description: "Non-text index key prefix for compound text indexes",
+      valueType: "object",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "indexName",
+      description: "Name of the text index used",
+      valueType: "string",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "parsedTextQuery",
+      description: "Parsed text search query with terms and negations",
+      valueType: "object",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "textIndexVersion",
+      description: "Version of the text index",
+      valueType: "number",
+      verbosity: "queryPlanner",
+    },
+  ],
 } as const;

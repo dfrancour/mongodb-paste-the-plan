@@ -25,4 +25,25 @@ export const GEO_NEAR_2D: PlanningStage = {
 
   sourceFile:
     "src/mongo/db/query/compiler/physical_model/query_solution/query_solution.h",
+
+  explainFields: [
+    {
+      bsonKey: "keyPattern",
+      description: "2d index key specification",
+      valueType: "object",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "indexName",
+      description: "Name of the 2d index used",
+      valueType: "string",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "indexVersion",
+      description: "2d index version",
+      valueType: "number",
+      verbosity: "queryPlanner",
+    },
+  ],
 } as const;

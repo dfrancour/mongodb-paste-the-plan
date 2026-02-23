@@ -24,4 +24,13 @@ export const PROJECTION_DEFAULT: ExecutionStage = {
     "Performance depends on projection complexity and document size.",
 
   sourceFile: "src/mongo/db/exec/classic/projection.h",
+
+  explainFields: [
+    {
+      bsonKey: "transformBy",
+      description: "Projection specification document",
+      valueType: "object",
+      verbosity: "queryPlanner",
+    },
+  ],
 } as const;

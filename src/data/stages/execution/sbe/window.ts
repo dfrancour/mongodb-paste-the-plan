@@ -1,5 +1,6 @@
 import type { ExecutionStage } from "../../types";
 import { StageCategory, StageIds, QuerySolutionStageType } from "../../types";
+import { SPILLING_FIELDS } from "../../fields/spilling";
 
 export const window: ExecutionStage = {
   layer: "execution",
@@ -26,4 +27,6 @@ export const window: ExecutionStage = {
     "must be buffered at once.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/window.h",
+
+  explainFields: [...SPILLING_FIELDS],
 } as const;

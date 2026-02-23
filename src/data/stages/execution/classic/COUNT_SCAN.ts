@@ -1,5 +1,6 @@
 import type { ExecutionStage } from "../../types";
 import { StageCategory, StageIds, QuerySolutionStageType } from "../../types";
+import { INDEX_METADATA_FIELDS } from "../../fields/index_metadata";
 
 export const COUNT_SCAN: ExecutionStage = {
   layer: "execution",
@@ -24,4 +25,21 @@ export const COUNT_SCAN: ExecutionStage = {
     "Generally faster than scanning documents when an appropriate index exists.",
 
   sourceFile: "src/mongo/db/exec/classic/count_scan.h",
+
+  explainFields: [
+    ...INDEX_METADATA_FIELDS,
+    {
+      bsonKey: "indexBounds",
+      description: "Start/end key bounds for the count scan",
+      valueType: "object",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "keysExamined",
+      description: "Number of index keys examined",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

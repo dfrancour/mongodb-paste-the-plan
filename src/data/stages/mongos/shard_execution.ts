@@ -22,4 +22,6 @@ export const SHARD_EXECUTION: MongosStage = {
     "time and child execution time indicates optimization cost.",
 
   sourceFile: "src/mongo/s/commands/query_cmd/cluster_explain.cpp",
+
+  explainFields: [],
 } as const;

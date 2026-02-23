@@ -1,5 +1,6 @@
 import type { ExecutionStage } from "../../types";
 import { StageCategory, StageIds, QuerySolutionStageType } from "../../types";
+import { SORT_STAGE_FIELDS } from "../../fields/sort";
 
 export const SORT: ExecutionStage = {
   layer: "execution",
@@ -26,4 +27,6 @@ export const SORT: ExecutionStage = {
   analysisNote: "In-memory sort - consider an index that provides sort order",
 
   sourceFile: "src/mongo/db/exec/classic/sort.h",
+
+  explainFields: [...SORT_STAGE_FIELDS],
 } as const;

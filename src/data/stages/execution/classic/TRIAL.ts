@@ -24,4 +24,7 @@ export const TRIAL: ExecutionStage = {
     "Helps identify best plan before full query execution.",
 
   sourceFile: "src/mongo/db/exec/classic/trial_stage.h",
+
+  // Orchestration wrapper — collects trial metrics; no stage-specific fields
+  explainFields: [],
 } as const;

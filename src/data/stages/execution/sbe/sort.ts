@@ -1,5 +1,6 @@
 import type { ExecutionStage } from "../../types";
 import { StageCategory, StageIds, QuerySolutionStageType } from "../../types";
+import { SPILLING_FIELDS } from "../../fields/spilling";
 
 export const sort: ExecutionStage = {
   layer: "execution",
@@ -26,4 +27,8 @@ export const sort: ExecutionStage = {
   analysisNote: "In-memory sort - consider an index that provides sort order",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/sort.h",
+
+  // SBE sort has no dedicated stats struct — sort configuration (pattern, limit, memory)
+  // comes from the queryPlanner section. Only spilling fields are emitted at executionStats.
+  explainFields: [...SPILLING_FIELDS],
 } as const;

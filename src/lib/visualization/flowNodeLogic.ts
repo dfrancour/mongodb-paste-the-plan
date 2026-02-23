@@ -1,5 +1,9 @@
 import type { FlowStage } from "#types/flow-visualization";
 import type { NormalizedStage } from "#types/explain-plan";
+import {
+  hasExplainFields,
+  getFieldsForStage,
+} from "#data/stages/fields/field_utilities";
 
 /**
  * Minimal stage data needed for node height calculation.
@@ -60,34 +64,6 @@ export function getPerformanceContainerClasses(isHighlighted: boolean): string {
     : "";
 
   return `${baseClasses} border-2 border-neutral-300 dark:border-neutral-600 ${hoverClasses} ${highlightClasses} bg-neutral-50 dark:bg-neutral-800`;
-}
-
-/**
- * Determine if stage implementation section should be shown
- */
-export function shouldShowImplementationSection(
-  stage: NodeSizingStage,
-): boolean {
-  return Boolean(
-    stage.structure?.indexName ||
-    stage.structure?.direction ||
-    stage.structure?.indexBounds ||
-    stage.structure?.filter,
-  );
-}
-
-/**
- * Determine if engine internals section should be shown
- */
-export function shouldShowEngineInternalsSection(
-  stage: NodeSizingStage,
-): boolean {
-  const metrics = getMetrics(stage);
-  return (
-    typeof metrics.works === "number" ||
-    typeof metrics.advanced === "number" ||
-    typeof metrics.needTime === "number"
-  );
 }
 
 /**
@@ -165,6 +141,66 @@ export function smartWrap(text: string, maxLineLength = 25): string {
 }
 
 /**
+ * Resolve section for a field, matching stageDisplayFormatter.resolveSection().
+ */
+function resolveSection(field: {
+  section?: string;
+  verbosity: string;
+}): string {
+  if (field.section) return field.section;
+  if (field.verbosity === "queryPlanner") return "configuration";
+  return "execution";
+}
+
+/**
+ * Estimate the number of non-zero fields per section for a stage.
+ * Used by calculateNodeHeight to estimate section sizes without needing warnings.
+ */
+function estimateFieldCounts(
+  stage: NodeSizingStage,
+  metrics: Record<string, number | boolean | string | undefined>,
+): { configuration: number; execution: number; engine: number } {
+  const def = stage.definition;
+  if (!def || !hasExplainFields(def))
+    return { configuration: 0, execution: 0, engine: 0 };
+
+  const allFields = getFieldsForStage(def);
+  let configuration = 0;
+  let execution = 0;
+  let engine = 0;
+  const structure = stage.structure as Record<string, unknown> | undefined;
+
+  for (const field of allFields) {
+    const section = resolveSection(field);
+
+    if (section === "configuration") {
+      const rawValue = structure?.[field.bsonKey];
+      if (rawValue !== undefined && rawValue !== null) configuration++;
+    } else {
+      if (field.valueType === "object") continue;
+      const value = metrics[field.bsonKey];
+      if (value === undefined) continue;
+      if (section === "engine") {
+        engine++;
+      } else {
+        execution++;
+      }
+    }
+  }
+
+  // Universal filter field (not declared per-stage)
+  if (
+    structure?.filter !== undefined &&
+    structure.filter !== null &&
+    !allFields.some((f) => f.bsonKey === "filter")
+  ) {
+    configuration++;
+  }
+
+  return { configuration, execution, engine };
+}
+
+/**
  * Calculate the expected height of a node based on its content
  */
 export function calculateNodeHeight(
@@ -174,7 +210,7 @@ export function calculateNodeHeight(
   const MIN_HEIGHT = 100; // Minimum height for any node
   const HEADER_HEIGHT = 36; // Header with stage name and JSON toggle (compact)
   const TIME_BAR_HEIGHT = 30; // Self time label + bar (single line above bar)
-  const SECTION_HEADER_HEIGHT = 20; // Section headers like "Data Flow"
+  const SECTION_HEADER_HEIGHT = 20; // Section headers like "Execution Metrics"
   const FIELD_HEIGHT = 24; // Each data field row
   const SECTION_MARGIN = 12; // Margin between sections
   const PADDING = 16; // Top and bottom padding
@@ -194,43 +230,27 @@ export function calculateNodeHeight(
     totalHeight += TIME_BAR_HEIGHT;
   }
 
-  // Data Flow section (execution mode only - shows nReturned, docsExamined, keysExamined)
-  if (mode === "execution") {
+  // All sections are data-driven from explainFields declarations
+  const fieldCounts = estimateFieldCounts(stage, metrics);
+
+  // Stage Configuration section
+  if (fieldCounts.configuration > 0) {
     totalHeight += SECTION_HEADER_HEIGHT + SECTION_MARGIN;
-    totalHeight += 3 * FIELD_HEIGHT; // nReturned, docsExamined, keysExamined
+    totalHeight += fieldCounts.configuration * FIELD_HEIGHT;
   }
 
-  // Stage Implementation section
-  if (shouldShowImplementationSection(stage)) {
-    // In plan mode, no section header (we removed it)
-    if (mode === "execution") {
+  // Execution Metrics section
+  if (mode === "execution") {
+    if (fieldCounts.execution > 0) {
       totalHeight += SECTION_HEADER_HEIGHT + SECTION_MARGIN;
-    } else {
-      // In plan mode, just add margin before implementation fields
-      totalHeight += SECTION_MARGIN;
+      totalHeight += fieldCounts.execution * FIELD_HEIGHT;
     }
 
-    // Count all implementation fields (no collapsing)
-    let implementationFields = 0;
-    if (stage.structure?.indexName) implementationFields++;
-    if (stage.structure?.direction) implementationFields++;
-    if (stage.structure?.indexBounds) implementationFields++;
-    if (stage.structure?.filter) implementationFields++;
-
-    totalHeight += implementationFields * FIELD_HEIGHT;
-  }
-
-  // Engine Internals section (execution mode only)
-  if (mode === "execution" && shouldShowEngineInternalsSection(stage)) {
-    totalHeight += SECTION_HEADER_HEIGHT + SECTION_MARGIN;
-
-    // Count all engine fields (no collapsing)
-    let engineFields = 0;
-    if (typeof metrics.works === "number") engineFields++;
-    if (typeof metrics.advanced === "number") engineFields++;
-    if (typeof metrics.needTime === "number") engineFields++;
-
-    totalHeight += engineFields * FIELD_HEIGHT;
+    // Engine Internals
+    if (fieldCounts.engine > 0) {
+      totalHeight += SECTION_HEADER_HEIGHT + SECTION_MARGIN;
+      totalHeight += fieldCounts.engine * FIELD_HEIGHT;
+    }
   }
 
   // SBE Slot Flow sections
@@ -252,7 +272,6 @@ export function calculateNodeHeight(
     stage.sbeData.slotReferences.length > 0
   ) {
     totalHeight += SECTION_HEADER_HEIGHT + SECTION_MARGIN;
-    // Estimate height based on number of slots (6 slots per row, max 2 rows shown)
     const slotCount = stage.sbeData.slotReferences.length;
     const rowsNeeded = Math.min(Math.ceil(slotCount / 6), 2);
     totalHeight += rowsNeeded * SLOT_ROW_HEIGHT;

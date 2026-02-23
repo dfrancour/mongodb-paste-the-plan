@@ -24,4 +24,14 @@ export const UNPACK_TS_BUCKET: ExecutionStage = {
     "Present in every time-series query execution plan.",
 
   sourceFile: "src/mongo/db/exec/classic/unpack_timeseries_bucket.h",
+
+  explainFields: [
+    {
+      bsonKey: "nBucketsUnpacked",
+      description: "Number of buckets unpacked into measurements",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

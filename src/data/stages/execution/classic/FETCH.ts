@@ -1,5 +1,6 @@
 import type { ExecutionStage } from "../../types";
 import { StageCategory, StageIds, QuerySolutionStageType } from "../../types";
+import { DOCS_EXAMINED_FIELD } from "../../fields/common";
 
 export const FETCH: ExecutionStage = {
   layer: "execution",
@@ -22,4 +23,18 @@ export const FETCH: ExecutionStage = {
     "Performance depends on document locality on disk and filter selectivity.",
 
   sourceFile: "src/mongo/db/exec/classic/fetch.h",
+
+  explainFields: [
+    {
+      ...DOCS_EXAMINED_FIELD,
+      description: "Number of documents fetched from storage",
+    },
+    {
+      bsonKey: "alreadyHasObj",
+      description: "Documents already in memory (no fetch needed)",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

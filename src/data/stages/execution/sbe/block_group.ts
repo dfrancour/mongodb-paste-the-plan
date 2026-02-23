@@ -1,5 +1,6 @@
 import type { ExecutionStage } from "../../types";
 import { StageCategory, StageIds } from "../../types";
+import { SPILLING_FIELDS } from "../../fields/spilling";
 
 export const block_group: ExecutionStage = {
   layer: "execution",
@@ -25,4 +26,36 @@ export const block_group: ExecutionStage = {
     "Optimized for columnar and time-series workloads.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/block_hashagg.h",
+
+  explainFields: [
+    ...SPILLING_FIELDS,
+    {
+      bsonKey: "blockAccumulations",
+      description: "Block-mode accumulations performed",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "blockAccumulatorTotalCalls",
+      description: "Total block accumulator invocations",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "elementWiseAccumulations",
+      description: "Element-wise accumulations (fallback from block mode)",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "peakTrackedMemBytes",
+      description: "Peak tracked memory usage",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "bytes",
+    },
+  ],
 } as const;

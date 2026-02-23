@@ -17,6 +17,7 @@ describe("coveredQueryOptimal", () => {
         blockingStage: false,
         canSpillToDisk: false,
         isCoveredQueryIndicator: true,
+        explainFields: [],
       },
       stageId: "stage-1",
     };

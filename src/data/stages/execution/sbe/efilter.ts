@@ -23,4 +23,7 @@ export const efilter: ExecutionStage = {
     "Returns EOF immediately when predicate fails, rather than continuing to scan.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/filter.h",
+
+  // Early-exit filter — no stage-specific metrics beyond SBE common fields
+  explainFields: [],
 } as const;

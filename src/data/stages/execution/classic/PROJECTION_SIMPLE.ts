@@ -23,4 +23,13 @@ export const PROJECTION_SIMPLE: ExecutionStage = {
     "Faster field traversal and copying. Still requires full document fetch.",
 
   sourceFile: "src/mongo/db/exec/classic/projection.h",
+
+  explainFields: [
+    {
+      bsonKey: "transformBy",
+      description: "Projection specification document",
+      valueType: "object",
+      verbosity: "queryPlanner",
+    },
+  ],
 } as const;

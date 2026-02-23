@@ -23,4 +23,21 @@ export const IDHACK: ExecutionStage = {
     "Only used when query collation matches collection default collation.",
 
   sourceFile: "src/mongo/db/exec/classic/idhack.h",
+
+  explainFields: [
+    {
+      bsonKey: "keysExamined",
+      description: "Index keys examined (0 or 1)",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "docsExamined",
+      description: "Documents examined (0 or 1)",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

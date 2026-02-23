@@ -22,4 +22,7 @@ export const virtualscan: ExecutionStage = {
     "Unlikely to appear in production query plans.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/virtual_scan.h",
+
+  // Testing-only in-memory scan — no stage-specific metrics beyond SBE common fields
+  explainFields: [],
 } as const;

@@ -15,6 +15,7 @@ const PARALLEL_DEFINITION: MongosStage = {
   hasParallelChildren: true,
   blockingStage: false,
   canSpillToDisk: false,
+  explainFields: [],
 };
 
 describe("calculateSelfTime", () => {

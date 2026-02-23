@@ -19,6 +19,9 @@ export type {
   ExecutionEngine,
   StageIconName,
   EngineSupportMatrix,
+  ExplainVerbosity,
+  ExplainFieldDeclaration,
+  ExplainFieldSection,
 } from "./types";
 
 // Re-export enums and consts
@@ -49,3 +52,16 @@ export {
   getStagesByQuerySolutionType,
   getEngineSupport,
 } from "./stage_utilities";
+
+// Re-export field declarations and utilities
+export {
+  CLASSIC_COMMON_FIELDS,
+  SBE_COMMON_FIELDS,
+  DOCS_EXAMINED_FIELD,
+  SPILLING_FIELDS,
+  CBR_FIELDS,
+  hasExplainFields,
+  getFieldsForStage,
+  getFieldsAtVerbosity,
+  getRenamedFields,
+} from "./fields";

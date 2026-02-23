@@ -13,18 +13,19 @@ import type {
   FlowStage,
   FlowInteractionEvents,
 } from "#types/flow-visualization";
-import { extractGridMetrics } from "#lib/visualization/stageDisplayFormatter";
-import { safeRenderJson, isNonEmptyObject } from "#lib/utils/jsxUtils";
+import {
+  extractGridMetrics,
+  type StageFieldDisplay,
+} from "#lib/visualization/stageDisplayFormatter";
+import { safeRenderJson } from "#lib/utils/jsxUtils";
 import {
   getPerformanceIcon,
   getPerformanceContainerClasses,
-  shouldShowImplementationSection,
-  formatMetricValue,
-  shouldShowEngineInternalsSection,
 } from "#lib/visualization/flowNodeLogic";
 import { StageIcons } from "#lib/visualization/stageIcons";
 import { StageInfoTooltip } from "./StageInfoTooltip";
 import { Tooltip } from "#components/common/Tooltip";
+import { InfoButton } from "#components/shared/InfoButton";
 import { SelfTimeBar, type SelfTimeBarProps } from "./SelfTimeBar";
 
 /** Narrow self time values for the time bar, or null when not applicable */
@@ -156,12 +157,12 @@ export const FlowNode = forwardRef<HTMLDivElement, FlowNodeProps>(
               stage.metrics?.executionTimeMillis !== undefined &&
               stage.metrics.executionTimeMillis > 0 && (
                 <>
-                  {gridMetrics.coreMetrics.time.value !== "—" && (
+                  {gridMetrics.timeMetric.value !== "—" && (
                     <span className="flex items-center">
                       <span
-                        className={`text-sm font-semibold ${gridMetrics.coreMetrics.time.color}`}
+                        className={`text-sm font-semibold ${gridMetrics.timeMetric.color}`}
                       >
-                        {gridMetrics.coreMetrics.time.value}
+                        {gridMetrics.timeMetric.value}
                       </span>
                       <MetricWarningIndicator
                         metricKey="executionTime"
@@ -277,128 +278,36 @@ function FlowNodeFormattedView({
 }: FlowNodeFormattedViewProps) {
   return (
     <>
-      {/* Stage Implementation - How MongoDB executed this specific stage */}
-      {shouldShowImplementationSection(stage) && (
-        <>
-          {mode === "execution" && (
-            <div className="mt-3 mb-2 border-b border-neutral-200 pb-1 text-xs font-medium text-neutral-600 dark:border-neutral-600 dark:text-neutral-400">
-              <span>Stage Implementation</span>
-            </div>
-          )}
-
-          {stage.structure.indexName && (
-            <div className="mb-2 text-xs">
-              <div className="flex items-start justify-between text-neutral-700 dark:text-neutral-300">
-                <span className="shrink-0 font-mono text-neutral-600 dark:text-neutral-400">
-                  indexName:
-                </span>
-                <span className="font-mono text-xs leading-tight font-semibold break-all text-neutral-900 dark:text-neutral-100">
-                  {stage.structure.indexName}
-                </span>
-              </div>
-            </div>
-          )}
-
-          {stage.structure.direction && (
-            <div className="mb-2 text-xs">
-              <div className="flex items-center justify-between text-neutral-700 dark:text-neutral-300">
-                <span className="font-mono text-neutral-600 dark:text-neutral-400">
-                  direction:
-                </span>
-                <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
-                  {stage.structure.direction}
-                </span>
-              </div>
-            </div>
-          )}
-
-          {isNonEmptyObject(stage.structure.indexBounds) && (
-            <div className="mb-2 text-xs">
-              <div className="text-neutral-700 dark:text-neutral-300">
-                <span className="font-mono text-neutral-600 dark:text-neutral-400">
-                  indexBounds:
-                </span>
-                <pre className="m-0 mt-1 font-mono text-xs leading-tight break-all whitespace-pre-wrap text-neutral-900 dark:text-neutral-100">
-                  {safeRenderJson(stage.structure.indexBounds)}
-                </pre>
-              </div>
-            </div>
-          )}
-
-          {isNonEmptyObject(stage.structure.filter) && (
-            <div className="mb-2 text-xs">
-              <div className="text-neutral-700 dark:text-neutral-300">
-                <span className="font-mono text-neutral-600 dark:text-neutral-400">
-                  filter:
-                </span>
-                <pre className="m-0 mt-1 font-mono text-xs leading-tight break-all whitespace-pre-wrap text-neutral-900 dark:text-neutral-100">
-                  {safeRenderJson(stage.structure.filter)}
-                </pre>
-              </div>
-            </div>
-          )}
-        </>
-      )}
-
-      {/* Data Flow - Core execution metrics (only show in execution mode) */}
-      {mode === "execution" && (
+      {/* Stage Configuration - What the query planner decided */}
+      {gridMetrics.fieldSections.configuration.length > 0 && (
         <>
           <div className="mt-3 mb-2 border-b border-neutral-200 pb-1 text-xs font-medium text-neutral-600 dark:border-neutral-600 dark:text-neutral-400">
-            Data Flow
+            <span>Stage Configuration</span>
           </div>
-
-          <div className="mb-2 text-xs">
-            <div className="flex items-center justify-between text-neutral-700 dark:text-neutral-300">
-              <span className="font-mono text-neutral-600 dark:text-neutral-400">
-                nReturned:
-              </span>
-              <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
-                {formatMetricValue(stage.metrics?.nReturned)}
-              </span>
-            </div>
-          </div>
-
-          <div className="mb-2 text-xs">
-            <div className="flex items-center justify-between text-neutral-700 dark:text-neutral-300">
-              <span className="font-mono text-neutral-600 dark:text-neutral-400">
-                docsExamined:
-              </span>
-              <span className="flex items-center">
-                <span
-                  className={`font-mono font-semibold ${gridMetrics.coreMetrics.docs.color}`}
-                >
-                  {gridMetrics.coreMetrics.docs.value}
-                </span>
-                <MetricWarningIndicator
-                  metricKey="docsExamined"
-                  warnings={stage.visualization.warnings}
-                />
-              </span>
-            </div>
-          </div>
-
-          <div className="mb-2 text-xs">
-            <div className="flex items-center justify-between text-neutral-700 dark:text-neutral-300">
-              <span className="font-mono text-neutral-600 dark:text-neutral-400">
-                keysExamined:
-              </span>
-              <span className="flex items-center">
-                <span
-                  className={`font-mono font-semibold ${gridMetrics.coreMetrics.keys.color}`}
-                >
-                  {gridMetrics.coreMetrics.keys.value}
-                </span>
-                <MetricWarningIndicator
-                  metricKey="keysExamined"
-                  warnings={stage.visualization.warnings}
-                />
-              </span>
-            </div>
-          </div>
+          {gridMetrics.fieldSections.configuration.map((field) => (
+            <StageFieldRow key={field.bsonKey} field={field} />
+          ))}
         </>
       )}
 
-      {/* Calculated Metrics - Only show if there are metrics to display */}
+      {/* Execution Metrics - How much work this stage did (execution mode only) */}
+      {mode === "execution" &&
+        gridMetrics.fieldSections.execution.length > 0 && (
+          <>
+            <div className="mt-3 mb-2 border-b border-neutral-200 pb-1 text-xs font-medium text-neutral-600 dark:border-neutral-600 dark:text-neutral-400">
+              Execution Metrics
+            </div>
+            {gridMetrics.fieldSections.execution.map((field) => (
+              <StageFieldRow
+                key={field.bsonKey}
+                field={field}
+                warnings={stage.visualization.warnings}
+              />
+            ))}
+          </>
+        )}
+
+      {/* Calculated Metrics - Derived performance ratios */}
       {(gridMetrics.performanceIndicators.selectivity.value !== "—" ||
         gridMetrics.performanceIndicators.efficiency.value !== "—") && (
         <>
@@ -409,8 +318,16 @@ function FlowNodeFormattedView({
           {gridMetrics.performanceIndicators.selectivity.value !== "—" && (
             <div className="mb-2 text-xs">
               <div className="flex items-center justify-between text-neutral-700 dark:text-neutral-300">
-                <span className="font-mono text-neutral-600 dark:text-neutral-400">
-                  selectivity:
+                <span className="flex items-center gap-0.5">
+                  <span className="font-mono text-neutral-600 dark:text-neutral-400">
+                    selectivity:
+                  </span>
+                  <Tooltip
+                    content="Ratio of documents returned to documents examined (nReturned / docsExamined)"
+                    side="left"
+                  >
+                    <InfoButton aria-label="About selectivity" size="sm" />
+                  </Tooltip>
                 </span>
                 <span className="flex items-center">
                   <span
@@ -430,8 +347,16 @@ function FlowNodeFormattedView({
           {gridMetrics.performanceIndicators.efficiency.value !== "—" && (
             <div className="mb-2 text-xs">
               <div className="flex items-center justify-between text-neutral-700 dark:text-neutral-300">
-                <span className="font-mono text-neutral-600 dark:text-neutral-400">
-                  efficiency:
+                <span className="flex items-center gap-0.5">
+                  <span className="font-mono text-neutral-600 dark:text-neutral-400">
+                    efficiency:
+                  </span>
+                  <Tooltip
+                    content="Ratio of documents returned to index keys examined (nReturned / keysExamined)"
+                    side="left"
+                  >
+                    <InfoButton aria-label="About efficiency" size="sm" />
+                  </Tooltip>
                 </span>
                 <span className="flex items-center">
                   <span
@@ -450,51 +375,15 @@ function FlowNodeFormattedView({
         </>
       )}
 
-      {/* Engine Internals - MongoDB work cycle metrics */}
-      {shouldShowEngineInternalsSection(stage) && (
+      {/* Engine Internals */}
+      {mode === "execution" && gridMetrics.fieldSections.engine.length > 0 && (
         <>
           <div className="mt-3 mb-2 border-b border-neutral-200 pb-1 text-xs font-medium text-neutral-600 dark:border-neutral-600 dark:text-neutral-400">
-            <span>Engine Internals</span>
+            Engine Internals
           </div>
-
-          {typeof stage.metrics?.works === "number" && (
-            <div className="mb-2 text-xs">
-              <div className="flex items-center justify-between text-neutral-700 dark:text-neutral-300">
-                <span className="font-mono text-neutral-600 dark:text-neutral-400">
-                  works:
-                </span>
-                <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
-                  {formatMetricValue(stage.metrics?.works)}
-                </span>
-              </div>
-            </div>
-          )}
-
-          {typeof stage.metrics?.advanced === "number" && (
-            <div className="mb-2 text-xs">
-              <div className="flex items-center justify-between text-neutral-700 dark:text-neutral-300">
-                <span className="font-mono text-neutral-600 dark:text-neutral-400">
-                  advanced:
-                </span>
-                <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
-                  {formatMetricValue(stage.metrics?.advanced)}
-                </span>
-              </div>
-            </div>
-          )}
-
-          {typeof stage.metrics?.needTime === "number" && (
-            <div className="mb-2 text-xs">
-              <div className="flex items-center justify-between text-neutral-700 dark:text-neutral-300">
-                <span className="font-mono text-neutral-600 dark:text-neutral-400">
-                  needTime:
-                </span>
-                <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
-                  {formatMetricValue(stage.metrics?.needTime)}
-                </span>
-              </div>
-            </div>
-          )}
+          {gridMetrics.fieldSections.engine.map((field) => (
+            <StageFieldRow key={field.bsonKey} field={field} />
+          ))}
         </>
       )}
 
@@ -526,10 +415,14 @@ interface IndicatorTrayProps {
 function IndicatorTray({ stage }: IndicatorTrayProps) {
   const { warnings } = stage.visualization;
 
-  // Show structural issues (COLLSCAN) and subtree performance issues (high self time) as pills
-  // Stage-level findings (selectivity, efficiency) show as inline icons next to their metrics
+  // Show as pills: structural issues, subtree issues, and stage-level findings
+  // that don't have a metricKey (since those can't attach as inline icons).
+  // Stage-level findings WITH metricKey show as inline icons next to their metrics.
   const pillWarnings = warnings?.filter(
-    (w) => w.layer === "stageDefinition" || w.layer === "subtree",
+    (w) =>
+      w.layer === "stageDefinition" ||
+      w.layer === "subtree" ||
+      (w.layer === "stage" && !w.metricKey),
   );
 
   if (!pillWarnings || pillWarnings.length === 0) {
@@ -567,6 +460,65 @@ function IndicatorTray({ stage }: IndicatorTrayProps) {
 interface MetricWarningIndicatorProps {
   metricKey: string;
   warnings: FlowStage["visualization"]["warnings"];
+}
+
+// Stage field row with tooltip showing description and C++ rename context
+// Supports optional warning indicators for fields with matching warnings
+function StageFieldRow({
+  field,
+  warnings,
+}: {
+  field: StageFieldDisplay;
+  warnings?: FlowStage["visualization"]["warnings"];
+}) {
+  const tooltipContent = field.cppName
+    ? `${field.description} (C++ name: ${field.cppName})`
+    : field.description;
+
+  const colorClass = field.color ?? "text-neutral-900 dark:text-neutral-100";
+
+  const label = (
+    <span className="flex items-center gap-0.5">
+      <span className="font-mono text-neutral-600 dark:text-neutral-400">
+        {field.bsonKey}:
+      </span>
+      <Tooltip content={tooltipContent} side="left">
+        <InfoButton aria-label={`About ${field.bsonKey}`} size="sm" />
+      </Tooltip>
+    </span>
+  );
+
+  if (field.multiline) {
+    return (
+      <div className="mb-2 text-xs">
+        <div className="text-neutral-700 dark:text-neutral-300">
+          {label}
+          <pre className="m-0 mt-1 font-mono text-xs leading-tight break-all whitespace-pre-wrap text-neutral-900 dark:text-neutral-100">
+            {field.value}
+          </pre>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mb-2 text-xs">
+      <div className="flex items-center justify-between text-neutral-700 dark:text-neutral-300">
+        {label}
+        <span className="flex items-center">
+          <span className={`font-mono font-semibold ${colorClass}`}>
+            {field.value}
+          </span>
+          {warnings && (
+            <MetricWarningIndicator
+              metricKey={field.bsonKey}
+              warnings={warnings}
+            />
+          )}
+        </span>
+      </div>
+    </div>
+  );
 }
 
 function MetricWarningIndicator({

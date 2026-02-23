@@ -25,4 +25,19 @@ export const SEARCH: PlanningStage = {
 
   sourceFile:
     "src/mongo/db/query/compiler/physical_model/query_solution/query_solution.h",
+
+  explainFields: [
+    {
+      bsonKey: "searchQuery",
+      description: "Atlas Search query specification sent to mongot",
+      valueType: "object",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "isSearchMeta",
+      description: "Whether this is a $searchMeta (metadata-only) query",
+      valueType: "boolean",
+      verbosity: "queryPlanner",
+    },
+  ],
 } as const;

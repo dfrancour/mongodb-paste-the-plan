@@ -23,4 +23,21 @@ export const COUNT: ExecutionStage = {
     "Very lightweight. Note: different from COUNT_SCAN which is an index access optimization.",
 
   sourceFile: "src/mongo/db/exec/classic/count.h",
+
+  explainFields: [
+    {
+      bsonKey: "nCounted",
+      description: "Number of documents counted",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "nSkipped",
+      description: "Number of documents skipped before counting",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

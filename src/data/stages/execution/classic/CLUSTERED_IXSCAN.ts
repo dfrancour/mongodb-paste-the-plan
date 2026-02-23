@@ -1,5 +1,6 @@
 import type { ExecutionStage } from "../../types";
 import { StageCategory, StageIds, QuerySolutionStageType } from "../../types";
+import { DOCS_EXAMINED_FIELD } from "../../fields/common";
 
 export const CLUSTERED_IXSCAN: ExecutionStage = {
   layer: "execution",
@@ -25,4 +26,15 @@ export const CLUSTERED_IXSCAN: ExecutionStage = {
     "Supports bounded and unbounded scans over the clustered index.",
 
   sourceFile: "src/mongo/db/exec/classic/collection_scan.h",
+
+  // Uses CollectionScanStats (same as COLLSCAN)
+  explainFields: [
+    {
+      bsonKey: "direction",
+      description: "Scan direction (forward or backward)",
+      valueType: "string",
+      verbosity: "queryPlanner",
+    },
+    { ...DOCS_EXAMINED_FIELD, cppName: "docsTested" },
+  ],
 } as const;

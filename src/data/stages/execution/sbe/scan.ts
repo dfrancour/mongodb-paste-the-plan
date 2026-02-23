@@ -25,4 +25,14 @@ export const scan: ExecutionStage = {
   analysisNote: "Collection scan - consider adding an index on filtered fields",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/scan.h",
+
+  explainFields: [
+    {
+      bsonKey: "numReads",
+      description: "Number of documents read from storage",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

@@ -23,4 +23,7 @@ export const nested_loop_join_embedding: ExecutionStage = {
     "Used when a hash join is not suitable for the embedding lookup.",
 
   sourceFile: "src/mongo/db/query/stage_builder/sbe/gen_lookup.cpp",
+
+  // No stage-specific explain serialization — only SBE common fields emitted
+  explainFields: [],
 } as const;
