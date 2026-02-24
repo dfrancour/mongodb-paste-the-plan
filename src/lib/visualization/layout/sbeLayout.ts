@@ -8,7 +8,7 @@ import type {
 import type { LayoutConfig } from "./config";
 import { DEFAULT_LAYOUT_CONFIG } from "./config";
 import { StageCategory, getStage, QuerySolutionStageType } from "#data/stages";
-import { FlowNodeLogic } from "../flowNodeLogic";
+import { calculateNodeHeight } from "../flowNodeLogic";
 import { calculateLevelYPositions } from "./verticalPositioning";
 import { calculateDimensions } from "./dimensionCalculation";
 import { resolveCollisions } from "./collisionResolution";
@@ -91,7 +91,7 @@ export function calculateSBELayoutForStages(
 
   const stageHeights = new Map<string, number>();
   for (const stage of flowStages) {
-    stageHeights.set(stage.id, FlowNodeLogic.calculateNodeHeight(stage, mode));
+    stageHeights.set(stage.id, calculateNodeHeight(stage, mode));
   }
 
   const levelPositions = calculateLevelYPositions(levels, stageHeights, config);

@@ -15,7 +15,13 @@ import type {
 } from "#types/flow-visualization";
 import { extractGridMetrics } from "#lib/visualization/stageDisplayFormatter";
 import { safeRenderJson, isNonEmptyObject } from "#lib/utils/jsxUtils";
-import { FlowNodeLogic } from "#lib/visualization/flowNodeLogic";
+import {
+  getPerformanceIcon,
+  getPerformanceContainerClasses,
+  shouldShowImplementationSection,
+  formatMetricValue,
+  shouldShowEngineInternalsSection,
+} from "#lib/visualization/flowNodeLogic";
 import { StageIcons } from "#lib/visualization/stageIcons";
 import { StageInfoTooltip } from "./StageInfoTooltip";
 import { Tooltip } from "#components/common/Tooltip";
@@ -85,12 +91,12 @@ export const FlowNode = forwardRef<HTMLDivElement, FlowNodeProps>(
     };
 
     // Extract performance icon logic
-    const performanceIcon = FlowNodeLogic.getPerformanceIcon(
+    const performanceIcon = getPerformanceIcon(
       stage.metrics?.executionTimeMillis,
     );
     const stageIconName = stage.iconName;
     const stageIconColor = "text-neutral-600 dark:text-neutral-400";
-    const containerClasses = FlowNodeLogic.getPerformanceContainerClasses(
+    const containerClasses = getPerformanceContainerClasses(
       state.isHighlighted,
     );
     const stageNameClasses = "text-neutral-900 dark:text-neutral-100 font-bold";
@@ -272,7 +278,7 @@ function FlowNodeFormattedView({
   return (
     <>
       {/* Stage Implementation - How MongoDB executed this specific stage */}
-      {FlowNodeLogic.shouldShowImplementationSection(stage) && (
+      {shouldShowImplementationSection(stage) && (
         <>
           {mode === "execution" && (
             <div className="mt-3 mb-2 border-b border-neutral-200 pb-1 text-xs font-medium text-neutral-600 dark:border-neutral-600 dark:text-neutral-400">
@@ -347,7 +353,7 @@ function FlowNodeFormattedView({
                 nReturned:
               </span>
               <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
-                {FlowNodeLogic.formatMetricValue(stage.metrics?.nReturned)}
+                {formatMetricValue(stage.metrics?.nReturned)}
               </span>
             </div>
           </div>
@@ -445,7 +451,7 @@ function FlowNodeFormattedView({
       )}
 
       {/* Engine Internals - MongoDB work cycle metrics */}
-      {FlowNodeLogic.shouldShowEngineInternalsSection(stage) && (
+      {shouldShowEngineInternalsSection(stage) && (
         <>
           <div className="mt-3 mb-2 border-b border-neutral-200 pb-1 text-xs font-medium text-neutral-600 dark:border-neutral-600 dark:text-neutral-400">
             <span>Engine Internals</span>
@@ -458,7 +464,7 @@ function FlowNodeFormattedView({
                   works:
                 </span>
                 <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
-                  {FlowNodeLogic.formatMetricValue(stage.metrics?.works)}
+                  {formatMetricValue(stage.metrics?.works)}
                 </span>
               </div>
             </div>
@@ -471,7 +477,7 @@ function FlowNodeFormattedView({
                   advanced:
                 </span>
                 <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
-                  {FlowNodeLogic.formatMetricValue(stage.metrics?.advanced)}
+                  {formatMetricValue(stage.metrics?.advanced)}
                 </span>
               </div>
             </div>
@@ -484,7 +490,7 @@ function FlowNodeFormattedView({
                   needTime:
                 </span>
                 <span className="font-mono font-semibold text-neutral-900 dark:text-neutral-100">
-                  {FlowNodeLogic.formatMetricValue(stage.metrics?.needTime)}
+                  {formatMetricValue(stage.metrics?.needTime)}
                 </span>
               </div>
             </div>

@@ -14,7 +14,7 @@ import {
 } from "./index";
 import type { LayoutConfig } from "./config";
 import type { NormalizedStage } from "#types/explain-plan";
-import { FlowNodeLogic } from "../flowNodeLogic";
+import { calculateNodeHeight } from "../flowNodeLogic";
 
 /**
  * Helper: parse a test plan and return the root stage (execution if available, plan otherwise)
@@ -80,10 +80,7 @@ describe("Layout Integration: Universal Constraints", () => {
       // Build per-node heights matching what the engine uses
       const stageHeights = new Map<string, number>();
       const collectHeights = (stage: NormalizedStage) => {
-        stageHeights.set(
-          stage.id,
-          FlowNodeLogic.calculateNodeHeight(stage, planMode),
-        );
+        stageHeights.set(stage.id, calculateNodeHeight(stage, planMode));
         stage.children.forEach(collectHeights);
       };
       collectHeights(rootStage);
@@ -210,10 +207,7 @@ describe("Layout Integration: Behavioral Invariants", () => {
       // Build per-node heights for vertical bounds check
       const stageHeights = new Map<string, number>();
       const collectHeights = (stage: NormalizedStage) => {
-        stageHeights.set(
-          stage.id,
-          FlowNodeLogic.calculateNodeHeight(stage, planMode),
-        );
+        stageHeights.set(stage.id, calculateNodeHeight(stage, planMode));
         stage.children.forEach(collectHeights);
       };
       collectHeights(rootStage);
@@ -255,10 +249,7 @@ describe("Layout Integration: Behavioral Invariants", () => {
 
       const stageHeights = new Map<string, number>();
       const collectHeights = (stage: NormalizedStage) => {
-        stageHeights.set(
-          stage.id,
-          FlowNodeLogic.calculateNodeHeight(stage, planMode),
-        );
+        stageHeights.set(stage.id, calculateNodeHeight(stage, planMode));
         stage.children.forEach(collectHeights);
       };
       collectHeights(rootStage);
@@ -309,7 +300,7 @@ describe("Layout Integration: Measured Heights Override", () => {
 
   /**
    * Simulate DOM-measured heights that are taller than estimates.
-   * This reproduces the real-world scenario: FlowNodeLogic estimates are
+   * This reproduces the real-world scenario: calculateNodeHeight estimates are
    * heuristic and often undercount, so the browser renders taller nodes.
    * The layout must still have no overlaps when re-calculated with these
    * larger heights.
@@ -321,7 +312,7 @@ describe("Layout Integration: Measured Heights Override", () => {
   ): Map<string, number> {
     const measured = new Map<string, number>();
     const collect = (stage: NormalizedStage) => {
-      const estimated = FlowNodeLogic.calculateNodeHeight(stage, planMode);
+      const estimated = calculateNodeHeight(stage, planMode);
       measured.set(stage.id, Math.ceil(estimated * inflationFactor));
       stage.children.forEach(collect);
     };

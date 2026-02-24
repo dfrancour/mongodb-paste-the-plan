@@ -1,5 +1,9 @@
 import type { NormalizedStage } from "#types/explain-plan";
-import type { FlowLayout } from "#types/flow-visualization";
+import type {
+  FlowConnection,
+  FlowLayout,
+  FlowPosition,
+} from "#types/flow-visualization";
 import type { LayoutConfig } from "./config";
 import { DEFAULT_LAYOUT_CONFIG } from "./config";
 import { calculateLevels, groupByLevel } from "./levelCalculation";
@@ -8,7 +12,7 @@ import { calculateLevelYPositions } from "./verticalPositioning";
 import { resolveCollisions } from "./collisionResolution";
 import { createConnectionsWithAnchors } from "./connectionGeneration";
 import { calculateDimensions } from "./dimensionCalculation";
-import { FlowNodeLogic } from "../flowNodeLogic";
+import { calculateNodeHeight } from "../flowNodeLogic";
 
 /**
  * Calculate layout for normalized stage tree.
@@ -26,11 +30,8 @@ export function calculateLayout(
   config: LayoutConfig = DEFAULT_LAYOUT_CONFIG,
   measuredHeights?: ReadonlyMap<string, number>,
 ): FlowLayout {
-  const positions = new Map<
-    string,
-    import("#types/flow-visualization").FlowPosition
-  >();
-  const connections: import("#types/flow-visualization").FlowConnection[] = [];
+  const positions = new Map<string, FlowPosition>();
+  const connections: FlowConnection[] = [];
 
   // Step 1: Calculate levels (distance from root)
   const levels = calculateLevels(rootStage);
@@ -49,8 +50,7 @@ export function calculateLayout(
   const stageHeights = new Map<string, number>();
   const calculateStageHeights = (stage: NormalizedStage) => {
     const height =
-      measuredHeights?.get(stage.id) ??
-      FlowNodeLogic.calculateNodeHeight(stage, mode);
+      measuredHeights?.get(stage.id) ?? calculateNodeHeight(stage, mode);
     stageHeights.set(stage.id, height);
     stage.children.forEach((child) => calculateStageHeights(child));
   };

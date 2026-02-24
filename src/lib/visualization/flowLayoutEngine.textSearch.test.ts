@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { isSBEPlan, extractSBEPlan } from "#lib/parsers";
-import { FlowLayoutEngine } from "./flowLayoutEngine";
+import { calculateSBELayoutForStages } from "./flowLayoutEngine";
 import { StageCategory, getStage } from "#data/stages";
 import { loadTestPlan } from "#test-utils/test-helpers";
 
@@ -77,10 +77,7 @@ describe("Text Search Multi-Input Layout", () => {
     ]);
 
     // Calculate layout
-    const layout = FlowLayoutEngine.calculateSBELayoutForStages(
-      flowStages,
-      sbePlan,
-    );
+    const layout = calculateSBELayoutForStages(flowStages, sbePlan);
 
     // Verify layout creates proper positioning
     expect(layout.nodes.size).toBe(6);
@@ -150,10 +147,7 @@ describe("Text Search Multi-Input Layout", () => {
       }));
 
     // Calculate layout
-    const layout = FlowLayoutEngine.calculateSBELayoutForStages(
-      flowStages,
-      sbePlan,
-    );
+    const layout = calculateSBELayoutForStages(flowStages, sbePlan);
 
     // Verify connections - OR node should have connections FROM all 3 IXSCAN nodes
     const orConnections = layout.connections.filter(

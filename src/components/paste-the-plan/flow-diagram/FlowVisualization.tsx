@@ -10,7 +10,7 @@ import type {
   FlowInteractionEvents,
 } from "#types/flow-visualization";
 import { Icon } from "#components/common/Icon";
-import { FlowLayoutEngine } from "#lib/visualization/flowLayoutEngine";
+import { calculateLayout } from "#lib/visualization/flowLayoutEngine";
 import { FlowNode } from "./FlowNode";
 import { FlowConnector, FlowConnectorDefs } from "./FlowConnector";
 import { createStageVisualization } from "#lib/visualization/stageDisplayFormatter";
@@ -19,7 +19,7 @@ import {
   flattenStageTree,
   calculateSelfTime,
 } from "#lib/analyzers";
-import { FlowNodeLogic } from "#lib/visualization/flowNodeLogic";
+import { calculateNodeHeight } from "#lib/visualization/flowNodeLogic";
 import { ExpandableCard } from "#components/common/ExpandableCard";
 import { TabJSONViewer } from "#components/shared/TabJSONViewer";
 import { TabASCIIViewer } from "#components/shared/TabASCIIViewer";
@@ -58,7 +58,7 @@ export function FlowVisualization(props: FlowVisualizationProps) {
   // interactions won't retrigger the layout engine.
   const layout = useMemo(
     () =>
-      FlowLayoutEngine.calculateLayout(
+      calculateLayout(
         rootStage,
         props.mode,
         undefined,
@@ -475,10 +475,10 @@ export function FlowVisualization(props: FlowVisualizationProps) {
                   // Use measured heights from DOM, fallback to calculated
                   const fromHeight =
                     measuredHeights.get(fromStage.id) ??
-                    FlowNodeLogic.calculateNodeHeight(fromStage, props.mode);
+                    calculateNodeHeight(fromStage, props.mode);
                   const toHeight =
                     measuredHeights.get(toStage.id) ??
-                    FlowNodeLogic.calculateNodeHeight(toStage, props.mode);
+                    calculateNodeHeight(toStage, props.mode);
 
                   return (
                     <FlowConnector
