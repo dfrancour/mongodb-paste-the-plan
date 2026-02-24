@@ -1,6 +1,5 @@
 import {
   calculateLayout,
-  calculateSBELayout,
   calculateSBELayoutForStages,
   transformToFlowStages,
 } from "./layout";
@@ -12,6 +11,5 @@ import {
 export class FlowLayoutEngine {
   static calculateLayout = calculateLayout;
   static transformToFlowStages = transformToFlowStages;
-  static calculateSBELayout = calculateSBELayout;
   static calculateSBELayoutForStages = calculateSBELayoutForStages;
 }

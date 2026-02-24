@@ -1,4 +1,3 @@
-import type { NormalizedStage } from "#types/explain-plan";
 import type { FlowPosition } from "#types/flow-visualization";
 import type { LayoutConfig } from "./config";
 
@@ -17,31 +16,27 @@ interface NodeBox {
  * Same-level overlaps are resolved by shifting nodes horizontally.
  * Cross-level overlaps are resolved by pushing the deeper level (and all
  * levels below it) downward, preserving level alignment.
+ *
+ * Works from the positions map directly — no tree traversal needed.
  */
 export function resolveCollisions(
   positions: Map<string, FlowPosition>,
   stageHeights: Map<string, number>,
-  rootStage: NormalizedStage,
   config: LayoutConfig,
 ): void {
   const getNodeBoxes = (): NodeBox[] => {
     const boxes: NodeBox[] = [];
-    const collectBoxes = (stage: NormalizedStage) => {
-      const position = positions.get(stage.id);
-      const height = stageHeights.get(stage.id) ?? config.nodeHeight;
-      if (position) {
-        boxes.push({
-          id: stage.id,
-          x: position.x,
-          y: position.y,
-          width: config.nodeWidth,
-          height,
-          level: position.level,
-        });
-      }
-      stage.children.forEach((child) => collectBoxes(child));
-    };
-    collectBoxes(rootStage);
+    positions.forEach((position, stageId) => {
+      const height = stageHeights.get(stageId) ?? config.nodeHeight;
+      boxes.push({
+        id: stageId,
+        x: position.x,
+        y: position.y,
+        width: config.nodeWidth,
+        height,
+        level: position.level,
+      });
+    });
     return boxes;
   };
 

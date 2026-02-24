@@ -1,6 +1,6 @@
 // Main pipeline
 export { calculateLayout } from "./pipeline";
-export { calculateSBELayout, calculateSBELayoutForStages } from "./sbeLayout";
+export { calculateSBELayoutForStages } from "./sbeLayout";
 export { transformToFlowStages } from "./stageTransformation";
 
 // Config

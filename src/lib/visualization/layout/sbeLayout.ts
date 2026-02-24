@@ -1,8 +1,4 @@
-import type {
-  NormalizedStage,
-  ParsedSBEPlan,
-  HybridSBEPlan,
-} from "#types/explain-plan";
+import type { ParsedSBEPlan } from "#types/explain-plan";
 import type {
   FlowPosition,
   FlowConnection,
@@ -11,25 +7,53 @@ import type {
 } from "#types/flow-visualization";
 import type { LayoutConfig } from "./config";
 import { DEFAULT_LAYOUT_CONFIG } from "./config";
+import { StageCategory, getStage, QuerySolutionStageType } from "#data/stages";
 import { FlowNodeLogic } from "../flowNodeLogic";
-import { calculateLayout } from "./pipeline";
+import { calculateLevelYPositions } from "./verticalPositioning";
+import { calculateDimensions } from "./dimensionCalculation";
+import { resolveCollisions } from "./collisionResolution";
+import { calculateAnchorOffset } from "./connectionGeneration";
 
-/**
- * Calculate SBE-specific layout with slot-based positioning
- */
-export function calculateSBELayout(
-  rootStage: NormalizedStage,
-  sbePlan?: ParsedSBEPlan,
-  hybridPlan?: HybridSBEPlan,
-  mode: "plan" | "execution" = "execution",
-  config: LayoutConfig = DEFAULT_LAYOUT_CONFIG,
-): FlowLayout {
-  const baseLayout = calculateLayout(rootStage, mode, config);
-  return enhanceLayoutForSBE(baseLayout, sbePlan, hybridPlan);
+// ---------------------------------------------------------------------------
+// Stage classification — mediated through the stage glossary type system
+// ---------------------------------------------------------------------------
+
+const SCAN_CATEGORIES: ReadonlySet<StageCategory> = new Set([
+  StageCategory.IndexScan,
+  StageCategory.CollectionScan,
+]);
+
+const MULTI_INPUT_MERGE_TYPES: ReadonlySet<QuerySolutionStageType> = new Set([
+  QuerySolutionStageType.STAGE_OR,
+  QuerySolutionStageType.STAGE_AND_HASH,
+  QuerySolutionStageType.STAGE_AND_SORTED,
+  QuerySolutionStageType.STAGE_TEXT_OR,
+  QuerySolutionStageType.STAGE_SORT_MERGE,
+]);
+
+function isScanCategory(category: StageCategory): boolean {
+  return SCAN_CATEGORIES.has(category);
 }
 
+function isMultiInputMerge(stageName: string): boolean {
+  const definition = getStage("planning", stageName);
+  return (
+    definition !== undefined &&
+    MULTI_INPUT_MERGE_TYPES.has(definition.querySolutionStageType)
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Public API
+// ---------------------------------------------------------------------------
+
 /**
- * Calculate layout for multiple SBE stages based on slot dependencies
+ * Calculate layout for SBE stages based on slot dependencies.
+ *
+ * Unlike the tree-based classic layout, SBE layout works from a flat list of
+ * FlowStages and derives dependencies from the ParsedSBEPlan. The pipeline
+ * reuses the shared vertical positioning, collision resolution, dimension
+ * calculation, and anchor offset modules.
  */
 export function calculateSBELayoutForStages(
   flowStages: FlowStage[],
@@ -41,10 +65,9 @@ export function calculateSBELayoutForStages(
   const connections: FlowConnection[] = [];
 
   const slotDependencies = buildSlotDependencies(flowStages, sbePlan);
-  const levels = calculateSBELevels(flowStages, slotDependencies);
+  const rawLevels = calculateSBELevels(flowStages, slotDependencies);
 
-  // Guard: empty levels → return safe empty result
-  if (levels.size === 0) {
+  if (rawLevels.size === 0) {
     return {
       nodes: positions,
       connections,
@@ -52,39 +75,26 @@ export function calculateSBELayoutForStages(
     };
   }
 
-  const levelGroups = groupSBEStagesByLevel(flowStages, levels);
+  // Invert levels so leaves (level 0 in dependency order) end up at the
+  // bottom (highest Y) and the root ends up at the top (level 0 in layout).
+  // The shared calculateLevelYPositions places level 0 at the top.
+  const maxLevel = Math.max(...rawLevels.values());
+  const levels = new Map<string, number>();
+  rawLevels.forEach((level, stageId) => {
+    levels.set(stageId, maxLevel - level);
+  });
+
   const horizontalPositions = calculateSBEHorizontalPositions(
-    levelGroups,
+    groupSBEStagesByLevel(flowStages, levels),
     config,
   );
 
   const stageHeights = new Map<string, number>();
-  flowStages.forEach((stage) => {
-    const height = FlowNodeLogic.calculateNodeHeight(stage, mode);
-    stageHeights.set(stage.id, height);
-  });
-
-  const maxLevel = Math.max(...levels.values());
-  const levelPositions = new Map<number, number>();
-
-  for (let level = maxLevel; level >= 0; level--) {
-    if (level === maxLevel) {
-      levelPositions.set(level, config.containerPadding);
-    } else {
-      const nextLevelPosition = levelPositions.get(level + 1) ?? 0;
-      const nextLevelMaxHeight = Math.max(
-        ...Array.from(levels.entries())
-          .filter(([_, stageLevel]) => stageLevel === level + 1)
-          .map(
-            ([stageId, _]) => stageHeights.get(stageId) ?? config.nodeHeight,
-          ),
-      );
-      levelPositions.set(
-        level,
-        nextLevelPosition + nextLevelMaxHeight + config.verticalSpacing,
-      );
-    }
+  for (const stage of flowStages) {
+    stageHeights.set(stage.id, FlowNodeLogic.calculateNodeHeight(stage, mode));
   }
+
+  const levelPositions = calculateLevelYPositions(levels, stageHeights, config);
 
   levels.forEach((level, stageId) => {
     const x = horizontalPositions.get(stageId) ?? 0;
@@ -92,195 +102,120 @@ export function calculateSBELayoutForStages(
     positions.set(stageId, { x, y, level });
   });
 
-  createSBEConnections(flowStages, slotDependencies, positions, connections);
+  resolveCollisions(positions, stageHeights, config);
 
-  const dimensions = calculateSBEDimensions(positions, config);
-
-  return {
-    nodes: positions,
+  createSBEConnections(
+    flowStages,
+    slotDependencies,
+    positions,
     connections,
-    dimensions,
-  };
+    config,
+  );
+
+  const dimensions = calculateDimensions(positions, stageHeights, config);
+
+  return { nodes: positions, connections, dimensions };
 }
+
+// ---------------------------------------------------------------------------
+// Dependency resolution — category-based with glossary lookup for merges
+// ---------------------------------------------------------------------------
 
 function buildSlotDependencies(
-  flowStages: FlowStage[],
-  sbePlan: ParsedSBEPlan,
-): Map<string, string[]> {
-  return buildTreeBasedDependencies(flowStages, sbePlan);
-}
-
-function buildTreeBasedDependencies(
   flowStages: FlowStage[],
   sbePlan: ParsedSBEPlan,
 ): Map<string, string[]> {
   const dependencies = new Map<string, string[]>();
 
   const nodeIdToStageId = new Map<number, string>();
-  flowStages.forEach((stage) => {
+  for (const stage of flowStages) {
     const nodeId = extractNodeIdFromStageId(stage.id);
     if (nodeId !== -1) {
       nodeIdToStageId.set(nodeId, stage.id);
     }
-  });
+  }
 
-  const queryPlanDependencies = extractQueryPlanDependencies(sbePlan);
+  const queryPlanDeps = extractQueryPlanDependencies(sbePlan, flowStages);
 
-  flowStages.forEach((stage) => {
+  for (const stage of flowStages) {
     const nodeId = extractNodeIdFromStageId(stage.id);
     if (nodeId === -1) {
       dependencies.set(stage.id, []);
-      return;
+      continue;
     }
 
-    const dependentNodeIds = queryPlanDependencies.get(nodeId) ?? [];
-
-    const stageDependencies = dependentNodeIds
+    const dependentNodeIds = queryPlanDeps.get(nodeId) ?? [];
+    const stageDeps = dependentNodeIds
       .map((depNodeId) => nodeIdToStageId.get(depNodeId))
       .filter((stageId): stageId is string => Boolean(stageId));
 
-    dependencies.set(stage.id, stageDependencies);
-  });
+    dependencies.set(stage.id, stageDeps);
+  }
 
   return dependencies;
 }
 
 /**
- * SBE stage dependency strategies.
- * Maps stage names to functions that determine their dependencies given the
- * sorted list of node IDs and access to the plan's stage map.
+ * Resolve dependencies for each node in the SBE query plan.
  *
- * Assumed SBE plan shape: queryPlanStages is a Map<number, string> where
- * the key is a numeric node ID and the value is the stage name.
- * Node IDs are generally sequential but may have gaps.
- *
- * Handled stages: IXSCAN (leaf), OR/AND_HASH/UNION (multi-input merge),
- * FETCH (single-input from scan/merge), TEXT_MATCH/SORT/LIMIT/PROJECTION_DEFAULT
- * (single-input processing stages).
- *
- * Unknown stages fall back to the nearest earlier node ID.
+ * Classification uses the stage glossary type system:
+ * - Scan categories (IndexScan, CollectionScan) → leaf, no dependencies
+ * - Multi-input merge types (OR, AND_HASH, AND_SORTED, TEXT_OR, SORT_MERGE)
+ *   → depends on all earlier scan stages
+ * - All other stages → depends on nearest earlier node
  */
-const SBE_DEPENDENCY_STRATEGIES: Record<
-  string,
-  (
-    nodeId: number,
-    nodeIds: number[],
-    getStage: (id: number) => string | undefined,
-  ) => number[]
-> = {
-  // Leaf stage — no dependencies
-  IXSCAN: () => [],
-
-  // Multi-input merge — depends on all earlier IXSCAN stages
-  OR: (_nodeId, nodeIds, getStage) =>
-    nodeIds.filter((id) => id < _nodeId && getStage(id) === "IXSCAN"),
-  AND_HASH: (_nodeId, nodeIds, getStage) =>
-    nodeIds.filter((id) => id < _nodeId && getStage(id) === "IXSCAN"),
-  UNION: (_nodeId, nodeIds, getStage) =>
-    nodeIds.filter((id) => id < _nodeId && getStage(id) === "IXSCAN"),
-
-  // Fetch — depends on the nearest earlier scan/merge stage
-  FETCH: (nodeId, nodeIds, getStage) => {
-    const candidates = nodeIds.filter((id) => {
-      const stage = getStage(id);
-      return (
-        id < nodeId &&
-        (stage === "IXSCAN" ||
-          stage === "OR" ||
-          stage === "AND_HASH" ||
-          stage === "UNION")
-      );
-    });
-    return candidates.length > 0 ? [candidates[candidates.length - 1]!] : [];
-  },
-
-  // Processing stages — depend on nearest earlier fetch/scan/merge
-  TEXT_MATCH: (nodeId, nodeIds, getStage) =>
-    findNearestProcessingDep(nodeId, nodeIds, getStage),
-  SORT: (nodeId, nodeIds, getStage) =>
-    findNearestProcessingDep(nodeId, nodeIds, getStage),
-  LIMIT: (nodeId, nodeIds, getStage) =>
-    findNearestProcessingDep(nodeId, nodeIds, getStage),
-  PROJECTION_DEFAULT: (nodeId, nodeIds, getStage) =>
-    findNearestProcessingDep(nodeId, nodeIds, getStage),
-};
-
-function findNearestProcessingDep(
-  nodeId: number,
-  nodeIds: number[],
-  getStage: (id: number) => string | undefined,
-): number[] {
-  const candidates = nodeIds.filter((id) => {
-    const stage = getStage(id);
-    return (
-      id < nodeId &&
-      (stage === "FETCH" ||
-        stage === "OR" ||
-        stage === "AND_HASH" ||
-        stage === "IXSCAN")
-    );
-  });
-  return candidates.length > 0 ? [candidates[candidates.length - 1]!] : [];
-}
-
 function extractQueryPlanDependencies(
   sbePlan: ParsedSBEPlan,
+  flowStages: FlowStage[],
 ): Map<number, number[]> {
   const dependencies = new Map<number, number[]>();
-
   const nodeIds = Array.from(sbePlan.queryPlanStages.keys()).sort(
     (a, b) => a - b,
   );
 
-  const getStage = (id: number) => sbePlan.queryPlanStages.get(id);
+  const categoryByNodeId = new Map<number, StageCategory>();
+  for (const stage of flowStages) {
+    const nodeId = extractNodeIdFromStageId(stage.id);
+    if (nodeId !== -1) {
+      categoryByNodeId.set(nodeId, stage.category);
+    }
+  }
 
-  nodeIds.forEach((nodeId) => {
+  for (const nodeId of nodeIds) {
     const stageName = sbePlan.queryPlanStages.get(nodeId);
-
     if (!stageName) {
       dependencies.set(nodeId, []);
-      return;
+      continue;
     }
 
-    const strategy = SBE_DEPENDENCY_STRATEGIES[stageName];
-    if (strategy) {
-      dependencies.set(nodeId, strategy(nodeId, nodeIds, getStage));
+    const category = categoryByNodeId.get(nodeId) ?? StageCategory.Unknown;
+
+    if (isScanCategory(category)) {
+      dependencies.set(nodeId, []);
+    } else if (isMultiInputMerge(stageName)) {
+      dependencies.set(
+        nodeId,
+        nodeIds.filter(
+          (id) =>
+            id < nodeId &&
+            isScanCategory(categoryByNodeId.get(id) ?? StageCategory.Unknown),
+        ),
+      );
     } else {
-      // Unknown stage: fall back to nearest earlier node ID
       const nearestEarlier = findNearestEarlierNodeId(nodeId, nodeIds);
       dependencies.set(
         nodeId,
         nearestEarlier !== undefined ? [nearestEarlier] : [],
       );
     }
-  });
+  }
 
   return dependencies;
 }
 
-/**
- * Find the largest node ID that is strictly less than the given nodeId.
- */
-function findNearestEarlierNodeId(
-  nodeId: number,
-  sortedNodeIds: number[],
-): number | undefined {
-  for (let i = sortedNodeIds.length - 1; i >= 0; i--) {
-    if (sortedNodeIds[i]! < nodeId) {
-      return sortedNodeIds[i];
-    }
-  }
-  return undefined;
-}
-
-/**
- * Extract numeric node ID from an SBE stage ID string (e.g. "sbe_node_3" → 3).
- * Returns -1 if the stageId does not match the expected pattern.
- */
-function extractNodeIdFromStageId(stageId: string): number {
-  const match = /sbe_node_(\d+)/.exec(stageId);
-  return match?.[1] ? parseInt(match[1], 10) : -1;
-}
+// ---------------------------------------------------------------------------
+// Level calculation — dependency-based (leaves at 0, root at max)
+// ---------------------------------------------------------------------------
 
 function calculateSBELevels(
   flowStages: FlowStage[],
@@ -295,42 +230,42 @@ function calculateSBELevels(
     }
 
     visited.add(stageId);
-    const stageDependencies = dependencies.get(stageId) ?? [];
+    const stageDeps = dependencies.get(stageId) ?? [];
 
-    if (stageDependencies.length === 0) {
+    if (stageDeps.length === 0) {
       levels.set(stageId, 0);
       return 0;
     }
 
-    const dependencyLevels = stageDependencies.map((depId) =>
-      calculateLevel(depId),
-    );
-    const maxDependencyLevel = Math.max(...dependencyLevels);
-    const level = maxDependencyLevel + 1;
-
+    const maxDepLevel = Math.max(...stageDeps.map(calculateLevel));
+    const level = maxDepLevel + 1;
     levels.set(stageId, level);
     return level;
   };
 
-  flowStages.forEach((stage) => calculateLevel(stage.id));
+  for (const stage of flowStages) {
+    calculateLevel(stage.id);
+  }
 
   return levels;
 }
+
+// ---------------------------------------------------------------------------
+// Horizontal positioning — simple left-to-right within each level
+// ---------------------------------------------------------------------------
 
 function groupSBEStagesByLevel(
   flowStages: FlowStage[],
   levels: Map<string, number>,
 ): Map<number, FlowStage[]> {
   const groups = new Map<number, FlowStage[]>();
-
-  flowStages.forEach((stage) => {
+  for (const stage of flowStages) {
     const level = levels.get(stage.id) ?? 0;
     if (!groups.has(level)) {
       groups.set(level, []);
     }
     groups.get(level)!.push(stage);
-  });
-
+  }
   return groups;
 }
 
@@ -339,30 +274,52 @@ function calculateSBEHorizontalPositions(
   config: LayoutConfig,
 ): Map<string, number> {
   const positions = new Map<string, number>();
-
-  levelGroups.forEach((stages, _level) => {
+  levelGroups.forEach((stages) => {
     let currentX = 0;
-
-    stages.forEach((stage) => {
+    for (const stage of stages) {
       positions.set(stage.id, currentX);
       currentX += config.nodeWidth + config.horizontalSpacing;
-    });
+    }
   });
-
   return positions;
 }
+
+// ---------------------------------------------------------------------------
+// Connection generation — with anchor spreading for multi-input merges
+// ---------------------------------------------------------------------------
 
 function createSBEConnections(
   flowStages: FlowStage[],
   dependencies: Map<string, string[]>,
-  _positions: Map<string, FlowPosition>,
+  positions: Map<string, FlowPosition>,
   connections: FlowConnection[],
+  config: LayoutConfig,
 ): void {
-  flowStages.forEach((stage) => {
+  for (const stage of flowStages) {
     const producers = dependencies.get(stage.id) ?? [];
 
-    producers.forEach((producerId) => {
-      const connection: FlowConnection = {
+    const sortedProducers = [...producers].sort((a, b) => {
+      const posA = positions.get(a);
+      const posB = positions.get(b);
+      return (posA?.x ?? 0) - (posB?.x ?? 0);
+    });
+
+    for (let i = 0; i < sortedProducers.length; i++) {
+      const producerId = sortedProducers[i]!;
+      const fromAnchorOffsetX = calculateAnchorOffset(
+        i,
+        sortedProducers.length,
+        config.nodeWidth,
+        0.8,
+      );
+      const toAnchorOffsetX = calculateAnchorOffset(
+        i,
+        sortedProducers.length,
+        config.nodeWidth,
+        0.2,
+      );
+
+      connections.push({
         from: producerId,
         to: stage.id,
         dataVolume: 1,
@@ -371,52 +328,34 @@ function createSBEConnections(
           docsExamined: 0,
           keysExamined: 0,
         },
-      };
-
-      connections.push(connection);
-    });
-  });
-}
-
-function calculateSBEDimensions(
-  positions: Map<string, FlowPosition>,
-  config: LayoutConfig,
-): { width: number; height: number } {
-  if (positions.size === 0) {
-    return { width: 0, height: 0 };
+        fromAnchorOffsetX,
+        toAnchorOffsetX,
+      });
+    }
   }
-
-  let minX = Infinity,
-    maxX = -Infinity;
-  let minY = Infinity,
-    maxY = -Infinity;
-
-  positions.forEach((pos) => {
-    minX = Math.min(minX, pos.x);
-    maxX = Math.max(maxX, pos.x + config.nodeWidth);
-    minY = Math.min(minY, pos.y);
-    maxY = Math.max(maxY, pos.y + config.nodeHeight);
-  });
-
-  return {
-    width: maxX - minX + config.containerPadding * 2,
-    height: maxY - minY + config.containerPadding * 2,
-  };
 }
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
 
 /**
- * TODO: Adjust node positions/edges based on ParsedSBEPlan/HybridSBEPlan
- * to reflect SBE-specific layout optimizations (e.g., slot-based grouping,
- * pipeline segment alignment). Currently returns the base layout unchanged.
- * Implement when SBE-specific visual distinctions are needed beyond the
- * standard tree layout.
+ * Extract numeric node ID from an SBE stage ID string (e.g. "sbe_node_3" → 3).
+ * Returns -1 if the stageId does not match the expected pattern.
  */
-function enhanceLayoutForSBE(
-  layout: FlowLayout,
-  _sbePlan?: ParsedSBEPlan,
-  _hybridPlan?: HybridSBEPlan,
-): FlowLayout {
-  return {
-    ...layout,
-  };
+function extractNodeIdFromStageId(stageId: string): number {
+  const match = /sbe_node_(\d+)/.exec(stageId);
+  return match?.[1] ? parseInt(match[1], 10) : -1;
+}
+
+function findNearestEarlierNodeId(
+  nodeId: number,
+  sortedNodeIds: number[],
+): number | undefined {
+  for (let i = sortedNodeIds.length - 1; i >= 0; i--) {
+    if (sortedNodeIds[i]! < nodeId) {
+      return sortedNodeIds[i];
+    }
+  }
+  return undefined;
 }

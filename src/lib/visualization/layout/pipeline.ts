@@ -67,7 +67,7 @@ export function calculateLayout(
   });
 
   // Step 7: Resolve node collisions
-  resolveCollisions(positions, stageHeights, rootStage, config);
+  resolveCollisions(positions, stageHeights, config);
 
   // Step 8: Create connections with smart anchor points
   createConnectionsWithAnchors(rootStage, positions, connections, config);
