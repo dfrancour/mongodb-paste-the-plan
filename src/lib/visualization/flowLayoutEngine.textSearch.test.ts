@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { isSBEPlan, extractSBEPlan } from "#lib/parsers";
-import { FlowLayoutEngine } from "./flowLayoutEngine";
+import { calculateSBELayoutForStages } from "./flowLayoutEngine";
 import { StageCategory, getStage } from "#data/stages";
 import { loadTestPlan } from "#test-utils/test-helpers";
 
@@ -77,15 +77,14 @@ describe("Text Search Multi-Input Layout", () => {
     ]);
 
     // Calculate layout
-    const layout = FlowLayoutEngine.calculateSBELayoutForStages(
-      flowStages,
-      sbePlan,
-    );
+    const layout = calculateSBELayoutForStages(flowStages, sbePlan);
 
     // Verify layout creates proper positioning
     expect(layout.nodes.size).toBe(6);
 
-    // Verify level assignments - IXSCAN stages should be at level 0 (bottom)
+    // Verify level assignments — levels are in layout order (root=0 at top,
+    // leaves at highest level at bottom) so the shared vertical positioning
+    // module places them correctly.
     const ixscanNode1 = layout.nodes.get("sbe_node_1");
     const ixscanNode2 = layout.nodes.get("sbe_node_2");
     const ixscanNode3 = layout.nodes.get("sbe_node_3");
@@ -93,12 +92,12 @@ describe("Text Search Multi-Input Layout", () => {
     const fetchNode = layout.nodes.get("sbe_node_5");
     const textMatchNode = layout.nodes.get("sbe_node_6");
 
-    expect(ixscanNode1?.level).toBe(0); // Bottom level
-    expect(ixscanNode2?.level).toBe(0); // Bottom level
-    expect(ixscanNode3?.level).toBe(0); // Bottom level
-    expect(orNode?.level).toBe(1); // Second level
-    expect(fetchNode?.level).toBe(2); // Third level
-    expect(textMatchNode?.level).toBe(3); // Top level
+    expect(textMatchNode?.level).toBe(0); // Top level (root)
+    expect(fetchNode?.level).toBe(1); // Second from top
+    expect(orNode?.level).toBe(2); // Third from top
+    expect(ixscanNode1?.level).toBe(3); // Bottom level (leaf)
+    expect(ixscanNode2?.level).toBe(3); // Bottom level (leaf)
+    expect(ixscanNode3?.level).toBe(3); // Bottom level (leaf)
 
     // Verify horizontal positioning - IXSCAN stages should have different x coordinates
     expect(ixscanNode1?.x).not.toBe(ixscanNode2?.x);
@@ -148,10 +147,7 @@ describe("Text Search Multi-Input Layout", () => {
       }));
 
     // Calculate layout
-    const layout = FlowLayoutEngine.calculateSBELayoutForStages(
-      flowStages,
-      sbePlan,
-    );
+    const layout = calculateSBELayoutForStages(flowStages, sbePlan);
 
     // Verify connections - OR node should have connections FROM all 3 IXSCAN nodes
     const orConnections = layout.connections.filter(

@@ -1,11 +1,13 @@
 import { describe, it, expect } from "vitest";
 import { validatePlan, normalizeExecution } from "#lib/parsers";
-import { FlowLayoutEngine } from "./flowLayoutEngine";
+import { calculateLayout, transformToFlowStages } from "./flowLayoutEngine";
+import { calculateNodeHeight } from "./flowNodeLogic";
 import { runAllAnalyzers } from "#lib/analyzers";
 import {
   loadTestPlan,
   hasOverlappingPositions,
 } from "#test-utils/test-helpers";
+import type { NormalizedStage } from "#types/explain-plan";
 
 describe("Multi-Input Merge Layout Handling", () => {
   it("should handle merge operations without positioning conflicts", () => {
@@ -19,21 +21,29 @@ describe("Multi-Input Merge Layout Handling", () => {
       const plan = loadTestPlan(planPath);
       const parsed = validatePlan(plan);
       const normalized = normalizeExecution(parsed);
-      const flowLayout = FlowLayoutEngine.calculateLayout(normalized);
+      const flowLayout = calculateLayout(normalized);
       const analysisResults = runAllAnalyzers({
         explainPlan: plan,
         rootStage: normalized,
       });
-      const flowStages = FlowLayoutEngine.transformToFlowStages(
+      const flowStages = transformToFlowStages(
         normalized,
         flowLayout,
         analysisResults,
       );
 
-      // Behavioral expectation: No overlapping positions
+      // Behavioral expectation: No overlapping positions (using dynamic node heights)
+      const stageHeights = new Map<string, number>();
+      const collectHeights = (stage: NormalizedStage) => {
+        stageHeights.set(stage.id, calculateNodeHeight(stage, "execution"));
+        stage.children.forEach(collectHeights);
+      };
+      collectHeights(normalized);
+
       const positions = flowStages.map((s) => ({
         x: s.position.x,
         y: s.position.y,
+        height: stageHeights.get(s.id),
       }));
       expect(hasOverlappingPositions(positions)).toBe(false);
 
@@ -50,12 +60,12 @@ describe("Multi-Input Merge Layout Handling", () => {
     const orQuery = loadTestPlan("complex/or-operation.executionStats.json");
     const parsed = validatePlan(orQuery);
     const normalized = normalizeExecution(parsed);
-    const flowLayout = FlowLayoutEngine.calculateLayout(normalized);
+    const flowLayout = calculateLayout(normalized);
     const analysisResults = runAllAnalyzers({
       explainPlan: orQuery,
       rootStage: normalized,
     });
-    const flowStages = FlowLayoutEngine.transformToFlowStages(
+    const flowStages = transformToFlowStages(
       normalized,
       flowLayout,
       analysisResults,
@@ -90,12 +100,12 @@ describe("Multi-Input Merge Layout Handling", () => {
       const plan = loadTestPlan(planPath);
       const parsed = validatePlan(plan);
       const normalized = normalizeExecution(parsed);
-      const flowLayout = FlowLayoutEngine.calculateLayout(normalized);
+      const flowLayout = calculateLayout(normalized);
       const analysisResults = runAllAnalyzers({
         explainPlan: plan,
         rootStage: normalized,
       });
-      const flowStages = FlowLayoutEngine.transformToFlowStages(
+      const flowStages = transformToFlowStages(
         normalized,
         flowLayout,
         analysisResults,
@@ -118,12 +128,12 @@ describe("Multi-Input Merge Layout Handling", () => {
     const deepPlan = loadTestPlan("complex/deep-nesting.executionStats.json");
     const parsed = validatePlan(deepPlan);
     const normalized = normalizeExecution(parsed);
-    const flowLayout = FlowLayoutEngine.calculateLayout(normalized);
+    const flowLayout = calculateLayout(normalized);
     const analysisResults = runAllAnalyzers({
       explainPlan: deepPlan,
       rootStage: normalized,
     });
-    const flowStages = FlowLayoutEngine.transformToFlowStages(
+    const flowStages = transformToFlowStages(
       normalized,
       flowLayout,
       analysisResults,

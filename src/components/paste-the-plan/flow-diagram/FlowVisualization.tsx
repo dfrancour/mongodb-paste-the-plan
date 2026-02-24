@@ -10,7 +10,7 @@ import type {
   FlowInteractionEvents,
 } from "#types/flow-visualization";
 import { Icon } from "#components/common/Icon";
-import { FlowLayoutEngine } from "#lib/visualization/flowLayoutEngine";
+import { calculateLayout } from "#lib/visualization/flowLayoutEngine";
 import { FlowNode } from "./FlowNode";
 import { FlowConnector, FlowConnectorDefs } from "./FlowConnector";
 import { createStageVisualization } from "#lib/visualization/stageDisplayFormatter";
@@ -19,7 +19,7 @@ import {
   flattenStageTree,
   calculateSelfTime,
 } from "#lib/analyzers";
-import { FlowNodeLogic } from "#lib/visualization/flowNodeLogic";
+import { calculateNodeHeight } from "#lib/visualization/flowNodeLogic";
 import { ExpandableCard } from "#components/common/ExpandableCard";
 import { TabJSONViewer } from "#components/shared/TabJSONViewer";
 import { TabASCIIViewer } from "#components/shared/TabASCIIViewer";
@@ -53,16 +53,29 @@ export function FlowVisualization(props: FlowVisualizationProps) {
     return stage;
   }, [props]);
 
-  // Calculate layout and create flow stages
+  // Expensive layout calculation — only depends on stage tree, mode, and
+  // measured heights. Does NOT depend on highlightedStageId so hover
+  // interactions won't retrigger the layout engine.
+  const layout = useMemo(
+    () =>
+      calculateLayout(
+        rootStage,
+        props.mode,
+        undefined,
+        measuredHeights.size > 0 ? measuredHeights : undefined,
+      ),
+    [rootStage, props.mode, measuredHeights],
+  );
+
+  // Lightweight flow stage building — uses the cached layout and adds
+  // visualization state (highlighting, connections). Safe to rerun on hover.
   const flowData = useMemo(() => {
-    const layout = FlowLayoutEngine.calculateLayout(rootStage, props.mode);
     const flowStages: FlowStage[] = [];
 
     const createFlowStage = (stage: typeof rootStage): void => {
       const position = layout.nodes.get(stage.id) ?? { x: 0, y: 0, level: 0 };
       const connections = layout.connections.filter((c) => c.to === stage.id);
 
-      // Create visualization using modular analyzers when available
       const stageVisualization = createStageVisualization(
         stage,
         props.analysisResults,
@@ -85,7 +98,7 @@ export function FlowVisualization(props: FlowVisualizationProps) {
 
     createFlowStage(rootStage);
     return { flowStages, layout };
-  }, [rootStage, highlightedStageId, props.mode, props.analysisResults]);
+  }, [rootStage, layout, highlightedStageId, props.analysisResults]);
 
   // Measure actual node heights from DOM after render
   // This intentionally sets state from useLayoutEffect to sync with DOM measurements
@@ -462,10 +475,10 @@ export function FlowVisualization(props: FlowVisualizationProps) {
                   // Use measured heights from DOM, fallback to calculated
                   const fromHeight =
                     measuredHeights.get(fromStage.id) ??
-                    FlowNodeLogic.calculateNodeHeight(fromStage, props.mode);
+                    calculateNodeHeight(fromStage, props.mode);
                   const toHeight =
                     measuredHeights.get(toStage.id) ??
-                    FlowNodeLogic.calculateNodeHeight(toStage, props.mode);
+                    calculateNodeHeight(toStage, props.mode);
 
                   return (
                     <FlowConnector
