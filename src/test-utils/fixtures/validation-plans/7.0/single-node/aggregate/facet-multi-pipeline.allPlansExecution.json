@@ -1,0 +1,325 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_mflix.movies",
+          "indexFilterSet": false,
+          "parsedQuery": {},
+          "queryHash": "AA7C5279",
+          "planCacheKey": "D254B652",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "winningPlan": {
+            "stage": "PROJECTION_DEFAULT",
+            "transformBy": {
+              "genres": 1,
+              "imdb.rating": 1,
+              "year": 1,
+              "_id": 0
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "direction": "forward"
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 21349,
+          "executionTimeMillis": 31,
+          "totalKeysExamined": 0,
+          "totalDocsExamined": 21349,
+          "executionStages": {
+            "stage": "PROJECTION_DEFAULT",
+            "nReturned": 21349,
+            "executionTimeMillisEstimate": 1,
+            "works": 21350,
+            "advanced": 21349,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 23,
+            "restoreState": 23,
+            "isEOF": 1,
+            "transformBy": {
+              "genres": 1,
+              "imdb.rating": 1,
+              "year": 1,
+              "_id": 0
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "nReturned": 21349,
+              "executionTimeMillisEstimate": 0,
+              "works": 21350,
+              "advanced": 21349,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 23,
+              "restoreState": 23,
+              "isEOF": 1,
+              "direction": "forward",
+              "docsExamined": 21349
+            }
+          },
+          "allPlansExecution": []
+        }
+      },
+      "nReturned": 21349,
+      "executionTimeMillisEstimate": 10
+    },
+    {
+      "$facet": {
+        "by_year": [
+          {
+            "$internalFacetTeeConsumer": {},
+            "nReturned": 21349,
+            "executionTimeMillisEstimate": 10
+          },
+          {
+            "$match": {
+              "year": {
+                "$gte": 2000
+              }
+            },
+            "nReturned": 12569,
+            "executionTimeMillisEstimate": 10
+          },
+          {
+            "$group": {
+              "_id": "$year",
+              "count": {
+                "$sum": {
+                  "$const": 1
+                }
+              }
+            },
+            "maxAccumulatorMemoryUsageBytes": {
+              "count": 1632
+            },
+            "totalOutputDataSizeBytes": 4165,
+            "usedDisk": false,
+            "spills": 0,
+            "spilledDataStorageSize": 0,
+            "numBytesSpilledEstimate": 0,
+            "spilledRecords": 0,
+            "nReturned": 17,
+            "executionTimeMillisEstimate": 10
+          },
+          {
+            "$sort": {
+              "sortKey": {
+                "count": -1
+              },
+              "limit": 10
+            },
+            "totalDataSizeSortedBytesEstimate": 2530,
+            "usedDisk": false,
+            "spills": 0,
+            "spilledDataStorageSize": 0,
+            "nReturned": 10,
+            "executionTimeMillisEstimate": 10
+          }
+        ],
+        "by_genre": [
+          {
+            "$internalFacetTeeConsumer": {},
+            "nReturned": 21349,
+            "executionTimeMillisEstimate": 0
+          },
+          {
+            "$unwind": {
+              "path": "$genres"
+            },
+            "nReturned": 45278,
+            "executionTimeMillisEstimate": 6
+          },
+          {
+            "$group": {
+              "_id": "$genres",
+              "count": {
+                "$sum": {
+                  "$const": 1
+                }
+              }
+            },
+            "maxAccumulatorMemoryUsageBytes": {
+              "count": 2400
+            },
+            "totalOutputDataSizeBytes": 6125,
+            "usedDisk": false,
+            "spills": 0,
+            "spilledDataStorageSize": 0,
+            "numBytesSpilledEstimate": 0,
+            "spilledRecords": 0,
+            "nReturned": 25,
+            "executionTimeMillisEstimate": 8
+          },
+          {
+            "$sort": {
+              "sortKey": {
+                "count": -1
+              },
+              "limit": 10
+            },
+            "totalDataSizeSortedBytesEstimate": 2530,
+            "usedDisk": false,
+            "spills": 0,
+            "spilledDataStorageSize": 0,
+            "nReturned": 10,
+            "executionTimeMillisEstimate": 8
+          }
+        ],
+        "rating_stats": [
+          {
+            "$internalFacetTeeConsumer": {},
+            "nReturned": 21349,
+            "executionTimeMillisEstimate": 12
+          },
+          {
+            "$match": {
+              "imdb.rating": {
+                "$exists": true
+              }
+            },
+            "nReturned": 21349,
+            "executionTimeMillisEstimate": 12
+          },
+          {
+            "$group": {
+              "_id": {
+                "$const": null
+              },
+              "avg": {
+                "$avg": "$imdb.rating"
+              },
+              "min": {
+                "$min": "$imdb.rating"
+              },
+              "max": {
+                "$max": "$imdb.rating"
+              }
+            },
+            "maxAccumulatorMemoryUsageBytes": {
+              "avg": 104,
+              "min": 72,
+              "max": 72
+            },
+            "totalOutputDataSizeBytes": 309,
+            "usedDisk": false,
+            "spills": 0,
+            "spilledDataStorageSize": 0,
+            "numBytesSpilledEstimate": 0,
+            "spilledRecords": 0,
+            "nReturned": 1,
+            "executionTimeMillisEstimate": 12
+          }
+        ]
+      },
+      "nReturned": 1,
+      "executionTimeMillisEstimate": 30
+    }
+  ],
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "7.0.30",
+    "gitVersion": "67480f41dfa5802ce14af5c95bd0e9826d3b2131"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine"
+  },
+  "command": {
+    "aggregate": "movies",
+    "pipeline": [
+      {
+        "$facet": {
+          "by_year": [
+            {
+              "$match": {
+                "year": {
+                  "$gte": 2000
+                }
+              }
+            },
+            {
+              "$group": {
+                "_id": "$year",
+                "count": {
+                  "$sum": 1
+                }
+              }
+            },
+            {
+              "$sort": {
+                "count": -1
+              }
+            },
+            {
+              "$limit": 10
+            }
+          ],
+          "by_genre": [
+            {
+              "$unwind": "$genres"
+            },
+            {
+              "$group": {
+                "_id": "$genres",
+                "count": {
+                  "$sum": 1
+                }
+              }
+            },
+            {
+              "$sort": {
+                "count": -1
+              }
+            },
+            {
+              "$limit": 10
+            }
+          ],
+          "rating_stats": [
+            {
+              "$match": {
+                "imdb.rating": {
+                  "$exists": true
+                }
+              }
+            },
+            {
+              "$group": {
+                "_id": null,
+                "avg": {
+                  "$avg": "$imdb.rating"
+                },
+                "min": {
+                  "$min": "$imdb.rating"
+                },
+                "max": {
+                  "$max": "$imdb.rating"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_mflix"
+  },
+  "ok": 1.0
+}

@@ -1,0 +1,149 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "indexFilterSet": false,
+    "parsedQuery": {
+      "$and": [
+        {
+          "genres": {
+            "$eq": "Drama"
+          }
+        },
+        {
+          "year": {
+            "$gte": 2000
+          }
+        }
+      ]
+    },
+    "queryHash": "3125DF5C",
+    "planCacheKey": "BB88A5E0",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "winningPlan": {
+      "stage": "FETCH",
+      "filter": {
+        "genres": {
+          "$eq": "Drama"
+        }
+      },
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "year": 1
+        },
+        "indexName": "year_idx",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "year": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "year": [
+            "[2000, inf.0]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 7079,
+    "executionTimeMillis": 7,
+    "totalKeysExamined": 12569,
+    "totalDocsExamined": 12569,
+    "executionStages": {
+      "stage": "FETCH",
+      "filter": {
+        "genres": {
+          "$eq": "Drama"
+        }
+      },
+      "nReturned": 7079,
+      "executionTimeMillisEstimate": 0,
+      "works": 12570,
+      "advanced": 7079,
+      "needTime": 5490,
+      "needYield": 0,
+      "saveState": 12,
+      "restoreState": 12,
+      "isEOF": 1,
+      "docsExamined": 12569,
+      "alreadyHasObj": 0,
+      "inputStage": {
+        "stage": "IXSCAN",
+        "nReturned": 12569,
+        "executionTimeMillisEstimate": 0,
+        "works": 12570,
+        "advanced": 12569,
+        "needTime": 0,
+        "needYield": 0,
+        "saveState": 12,
+        "restoreState": 12,
+        "isEOF": 1,
+        "keyPattern": {
+          "year": 1
+        },
+        "indexName": "year_idx",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "year": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "year": [
+            "[2000, inf.0]"
+          ]
+        },
+        "keysExamined": 12569,
+        "seeks": 1,
+        "dupsTested": 0,
+        "dupsDropped": 0
+      }
+    },
+    "allPlansExecution": []
+  },
+  "command": {
+    "find": "movies",
+    "filter": {
+      "year": {
+        "$gte": 2000
+      },
+      "genres": "Drama"
+    },
+    "hint": {
+      "year": 1
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "7.0.30",
+    "gitVersion": "67480f41dfa5802ce14af5c95bd0e9826d3b2131"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine"
+  },
+  "ok": 1.0
+}

@@ -1,0 +1,119 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_training.logs",
+    "parsedQuery": {
+      "$and": [
+        {
+          "level": {
+            "$eq": "ERROR"
+          }
+        },
+        {
+          "source": {
+            "$eq": "service-1"
+          }
+        }
+      ]
+    },
+    "indexFilterSet": false,
+    "queryHash": "89BD2625",
+    "planCacheShapeHash": "89BD2625",
+    "planCacheKey": "45AF7EFF",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "FETCH",
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "source": 1,
+          "level": 1
+        },
+        "indexName": "source_level_idx",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "source": [],
+          "level": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "source": [
+            "[\"service-1\", \"service-1\"]"
+          ],
+          "level": [
+            "[\"ERROR\", \"ERROR\"]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": [
+      {
+        "isCached": false,
+        "stage": "FETCH",
+        "filter": {
+          "source": {
+            "$eq": "service-1"
+          }
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "level": 1
+          },
+          "indexName": "log_level_idx",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "level": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "level": [
+              "[\"ERROR\", \"ERROR\"]"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "queryShapeHash": "A4D6F16E784639251E90F368903F3F466EFC5EF80CDBF795315E737145E57F6E",
+  "command": {
+    "find": "logs",
+    "filter": {
+      "source": "service-1",
+      "level": "ERROR"
+    },
+    "$db": "sample_training"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

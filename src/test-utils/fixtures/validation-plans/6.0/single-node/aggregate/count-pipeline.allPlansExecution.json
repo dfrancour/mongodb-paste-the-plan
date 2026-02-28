@@ -1,0 +1,156 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_mflix.movies",
+          "indexFilterSet": false,
+          "parsedQuery": {
+            "year": {
+              "$gte": 2000
+            }
+          },
+          "queryHash": "34A15C1B",
+          "planCacheKey": "42D767C8",
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "winningPlan": {
+            "stage": "COUNT_SCAN",
+            "keyPattern": {
+              "year": 1
+            },
+            "indexName": "year_idx",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "year": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "indexBounds": {
+              "startKey": {
+                "year": 2000
+              },
+              "startKeyInclusive": true,
+              "endKey": {
+                "year": Infinity
+              },
+              "endKeyInclusive": true
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 12569,
+          "executionTimeMillis": 1,
+          "totalKeysExamined": 12570,
+          "totalDocsExamined": 0,
+          "executionStages": {
+            "stage": "COUNT_SCAN",
+            "nReturned": 12569,
+            "executionTimeMillisEstimate": 0,
+            "works": 12570,
+            "advanced": 12569,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 13,
+            "restoreState": 13,
+            "isEOF": 1,
+            "keysExamined": 12570,
+            "keyPattern": {
+              "year": 1
+            },
+            "indexName": "year_idx",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "year": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "indexBounds": {
+              "startKey": {
+                "year": 2000
+              },
+              "startKeyInclusive": true,
+              "endKey": {
+                "year": Infinity
+              },
+              "endKeyInclusive": true
+            }
+          },
+          "allPlansExecution": []
+        }
+      },
+      "nReturned": 12569,
+      "executionTimeMillisEstimate": 2
+    },
+    {
+      "$group": {
+        "_id": {
+          "$const": null
+        },
+        "total": {
+          "$sum": {
+            "$const": 1
+          }
+        }
+      },
+      "maxAccumulatorMemoryUsageBytes": {
+        "total": 80
+      },
+      "totalOutputDataSizeBytes": 245,
+      "usedDisk": false,
+      "spills": 0,
+      "nReturned": 1,
+      "executionTimeMillisEstimate": 2
+    },
+    {
+      "$project": {
+        "total": true,
+        "_id": false
+      },
+      "nReturned": 1,
+      "executionTimeMillisEstimate": 2
+    }
+  ],
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "6.0.27",
+    "gitVersion": "fc88ca137231d7457aed6265d4f32a361ae71716"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+  },
+  "command": {
+    "aggregate": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "year": {
+            "$gte": 2000
+          }
+        }
+      },
+      {
+        "$count": "total"
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_mflix"
+  },
+  "ok": 1.0
+}

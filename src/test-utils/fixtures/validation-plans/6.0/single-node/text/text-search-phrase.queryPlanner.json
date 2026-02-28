@@ -1,0 +1,102 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "indexFilterSet": false,
+    "parsedQuery": {
+      "$text": {
+        "$search": "\"world war\"",
+        "$language": "english",
+        "$caseSensitive": false,
+        "$diacriticSensitive": false
+      }
+    },
+    "queryHash": "07C96184",
+    "planCacheKey": "B0024AD9",
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "winningPlan": {
+      "stage": "TEXT_MATCH",
+      "indexPrefix": {},
+      "indexName": "cast_text_fullplot_text_genres_text_title_text",
+      "parsedTextQuery": {
+        "terms": [
+          "war",
+          "world"
+        ],
+        "negatedTerms": [],
+        "phrases": [
+          "world war"
+        ],
+        "negatedPhrases": []
+      },
+      "textIndexVersion": 3,
+      "inputStage": {
+        "stage": "FETCH",
+        "inputStage": {
+          "stage": "OR",
+          "inputStages": [
+            {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "_fts": "text",
+                "_ftsx": 1
+              },
+              "indexName": "cast_text_fullplot_text_genres_text_title_text",
+              "isMultiKey": true,
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "backward",
+              "indexBounds": {}
+            },
+            {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "_fts": "text",
+                "_ftsx": 1
+              },
+              "indexName": "cast_text_fullplot_text_genres_text_title_text",
+              "isMultiKey": true,
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "backward",
+              "indexBounds": {}
+            }
+          ]
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "command": {
+    "find": "movies",
+    "filter": {
+      "$text": {
+        "$search": "\"world war\""
+      }
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "6.0.27",
+    "gitVersion": "fc88ca137231d7457aed6265d4f32a361ae71716"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+  },
+  "ok": 1.0
+}

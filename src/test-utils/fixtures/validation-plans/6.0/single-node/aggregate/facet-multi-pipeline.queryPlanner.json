@@ -1,0 +1,220 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_mflix.movies",
+          "indexFilterSet": false,
+          "parsedQuery": {},
+          "queryHash": "9D685ECA",
+          "planCacheKey": "AEA62C50",
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "winningPlan": {
+            "stage": "PROJECTION_DEFAULT",
+            "transformBy": {
+              "genres": 1,
+              "imdb.rating": 1,
+              "year": 1,
+              "_id": 0
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "direction": "forward"
+            }
+          },
+          "rejectedPlans": []
+        }
+      }
+    },
+    {
+      "$facet": {
+        "by_year": [
+          {
+            "$internalFacetTeeConsumer": {}
+          },
+          {
+            "$match": {
+              "year": {
+                "$gte": 2000
+              }
+            }
+          },
+          {
+            "$group": {
+              "_id": "$year",
+              "count": {
+                "$sum": {
+                  "$const": 1
+                }
+              }
+            }
+          },
+          {
+            "$sort": {
+              "sortKey": {
+                "count": -1
+              },
+              "limit": 10
+            }
+          }
+        ],
+        "by_genre": [
+          {
+            "$internalFacetTeeConsumer": {}
+          },
+          {
+            "$unwind": {
+              "path": "$genres"
+            }
+          },
+          {
+            "$group": {
+              "_id": "$genres",
+              "count": {
+                "$sum": {
+                  "$const": 1
+                }
+              }
+            }
+          },
+          {
+            "$sort": {
+              "sortKey": {
+                "count": -1
+              },
+              "limit": 10
+            }
+          }
+        ],
+        "rating_stats": [
+          {
+            "$internalFacetTeeConsumer": {}
+          },
+          {
+            "$match": {
+              "imdb.rating": {
+                "$exists": true
+              }
+            }
+          },
+          {
+            "$group": {
+              "_id": {
+                "$const": null
+              },
+              "avg": {
+                "$avg": "$imdb.rating"
+              },
+              "min": {
+                "$min": "$imdb.rating"
+              },
+              "max": {
+                "$max": "$imdb.rating"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "6.0.27",
+    "gitVersion": "fc88ca137231d7457aed6265d4f32a361ae71716"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+  },
+  "command": {
+    "aggregate": "movies",
+    "pipeline": [
+      {
+        "$facet": {
+          "by_year": [
+            {
+              "$match": {
+                "year": {
+                  "$gte": 2000
+                }
+              }
+            },
+            {
+              "$group": {
+                "_id": "$year",
+                "count": {
+                  "$sum": 1
+                }
+              }
+            },
+            {
+              "$sort": {
+                "count": -1
+              }
+            },
+            {
+              "$limit": 10
+            }
+          ],
+          "by_genre": [
+            {
+              "$unwind": "$genres"
+            },
+            {
+              "$group": {
+                "_id": "$genres",
+                "count": {
+                  "$sum": 1
+                }
+              }
+            },
+            {
+              "$sort": {
+                "count": -1
+              }
+            },
+            {
+              "$limit": 10
+            }
+          ],
+          "rating_stats": [
+            {
+              "$match": {
+                "imdb.rating": {
+                  "$exists": true
+                }
+              }
+            },
+            {
+              "$group": {
+                "_id": null,
+                "avg": {
+                  "$avg": "$imdb.rating"
+                },
+                "min": {
+                  "$min": "$imdb.rating"
+                },
+                "max": {
+                  "$max": "$imdb.rating"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_mflix"
+  },
+  "ok": 1.0
+}

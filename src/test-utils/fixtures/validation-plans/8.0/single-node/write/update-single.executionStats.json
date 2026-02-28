@@ -1,0 +1,112 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "parsedQuery": {
+      "title": {
+        "$eq": "The Matrix"
+      }
+    },
+    "indexFilterSet": false,
+    "queryHash": "79F2D0D9",
+    "planCacheShapeHash": "79F2D0D9",
+    "planCacheKey": "FC1C2FE7",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "UPDATE",
+      "inputStage": {
+        "stage": "COLLSCAN",
+        "filter": {
+          "title": {
+            "$eq": "The Matrix"
+          }
+        },
+        "direction": "forward"
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 0,
+    "executionTimeMillis": 2,
+    "totalKeysExamined": 0,
+    "totalDocsExamined": 7675,
+    "executionStages": {
+      "isCached": false,
+      "stage": "UPDATE",
+      "nReturned": 0,
+      "executionTimeMillisEstimate": 0,
+      "works": 7675,
+      "advanced": 0,
+      "needTime": 7674,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "nMatched": 1,
+      "nWouldModify": 1,
+      "nWouldUpsert": 0,
+      "inputStage": {
+        "stage": "COLLSCAN",
+        "filter": {
+          "title": {
+            "$eq": "The Matrix"
+          }
+        },
+        "nReturned": 1,
+        "executionTimeMillisEstimate": 0,
+        "works": 7675,
+        "advanced": 1,
+        "needTime": 7674,
+        "needYield": 0,
+        "saveState": 1,
+        "restoreState": 1,
+        "isEOF": 0,
+        "direction": "forward",
+        "docsExamined": 7675
+      }
+    }
+  },
+  "command": {
+    "update": "movies",
+    "updates": [
+      {
+        "q": {
+          "title": "The Matrix"
+        },
+        "u": {
+          "$set": {
+            "reviewed": true
+          }
+        },
+        "multi": false
+      }
+    ],
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

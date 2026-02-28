@@ -1,0 +1,288 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "indexFilterSet": false,
+    "parsedQuery": {
+      "$and": [
+        {
+          "imdb.rating": {
+            "$gte": 8.0
+          }
+        },
+        {
+          "year": {
+            "$gte": 2000
+          }
+        }
+      ]
+    },
+    "queryHash": "809B5B15",
+    "planCacheKey": "B528713B",
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "winningPlan": {
+      "stage": "PROJECTION_DEFAULT",
+      "transformBy": {
+        "_id": 0,
+        "year": 1,
+        "imdb.rating": 1
+      },
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "year": 1,
+          "imdb.rating": -1
+        },
+        "indexName": "year_rating_compound_idx",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "year": [],
+          "imdb.rating": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "year": [
+            "[2000, inf.0]"
+          ],
+          "imdb.rating": [
+            "[inf.0, 8.0]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": [
+      {
+        "stage": "PROJECTION_DEFAULT",
+        "transformBy": {
+          "_id": 0,
+          "year": 1,
+          "imdb.rating": 1
+        },
+        "inputStage": {
+          "stage": "FETCH",
+          "filter": {
+            "year": {
+              "$gte": 2000
+            }
+          },
+          "inputStage": {
+            "stage": "IXSCAN",
+            "keyPattern": {
+              "imdb.rating": 1
+            },
+            "indexName": "imdb_rating_idx",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "imdb.rating": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "imdb.rating": [
+                "[8.0, inf.0]"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "stage": "PROJECTION_DEFAULT",
+        "transformBy": {
+          "_id": 0,
+          "year": 1,
+          "imdb.rating": 1
+        },
+        "inputStage": {
+          "stage": "FETCH",
+          "filter": {
+            "imdb.rating": {
+              "$gte": 8.0
+            }
+          },
+          "inputStage": {
+            "stage": "IXSCAN",
+            "keyPattern": {
+              "year": 1
+            },
+            "indexName": "year_idx",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "year": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "year": [
+                "[2000, inf.0]"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "stage": "PROJECTION_DEFAULT",
+        "transformBy": {
+          "_id": 0,
+          "year": 1,
+          "imdb.rating": 1
+        },
+        "inputStage": {
+          "stage": "FETCH",
+          "filter": {
+            "year": {
+              "$gte": 2000
+            }
+          },
+          "inputStage": {
+            "stage": "IXSCAN",
+            "keyPattern": {
+              "imdb.rating": -1
+            },
+            "indexName": "imdb_rating_desc_idx",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "imdb.rating": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "imdb.rating": [
+                "[inf.0, 8.0]"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "stage": "PROJECTION_DEFAULT",
+        "transformBy": {
+          "_id": 0,
+          "year": 1,
+          "imdb.rating": 1
+        },
+        "inputStage": {
+          "stage": "FETCH",
+          "filter": {
+            "year": {
+              "$gte": 2000
+            }
+          },
+          "inputStage": {
+            "stage": "IXSCAN",
+            "keyPattern": {
+              "imdb.rating": 1
+            },
+            "indexName": "rating_partial_idx",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "imdb.rating": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": true,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "imdb.rating": [
+                "[8.0, inf.0]"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "stage": "PROJECTION_DEFAULT",
+        "transformBy": {
+          "_id": 0,
+          "year": 1,
+          "imdb.rating": 1
+        },
+        "inputStage": {
+          "stage": "FETCH",
+          "filter": {
+            "imdb.rating": {
+              "$gte": 8.0
+            }
+          },
+          "inputStage": {
+            "stage": "IXSCAN",
+            "keyPattern": {
+              "year": 1,
+              "genres": 1
+            },
+            "indexName": "year_genres_compound_idx",
+            "isMultiKey": true,
+            "multiKeyPaths": {
+              "year": [],
+              "genres": [
+                "genres"
+              ]
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "year": [
+                "[2000, inf.0]"
+              ],
+              "genres": [
+                "[MinKey, MaxKey]"
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "command": {
+    "find": "movies",
+    "filter": {
+      "year": {
+        "$gte": 2000
+      },
+      "imdb.rating": {
+        "$gte": 8.0
+      }
+    },
+    "projection": {
+      "_id": 0,
+      "year": 1,
+      "imdb.rating": 1
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "6.0.27",
+    "gitVersion": "fc88ca137231d7457aed6265d4f32a361ae71716"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+  },
+  "ok": 1.0
+}

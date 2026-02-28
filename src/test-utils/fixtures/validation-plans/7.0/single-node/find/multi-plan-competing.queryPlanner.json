@@ -1,0 +1,213 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "indexFilterSet": false,
+    "parsedQuery": {
+      "$and": [
+        {
+          "genres": {
+            "$eq": "Drama"
+          }
+        },
+        {
+          "year": {
+            "$gte": 2000
+          }
+        }
+      ]
+    },
+    "queryHash": "3125DF5C",
+    "planCacheKey": "BB88A5E0",
+    "optimizationTimeMillis": 1,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "winningPlan": {
+      "stage": "FETCH",
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "genres": 1,
+          "year": 1
+        },
+        "indexName": "genres_year_compound_idx",
+        "isMultiKey": true,
+        "multiKeyPaths": {
+          "genres": [
+            "genres"
+          ],
+          "year": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "genres": [
+            "[\"Drama\", \"Drama\"]"
+          ],
+          "year": [
+            "[2000, inf.0]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": [
+      {
+        "stage": "FETCH",
+        "filter": {
+          "year": {
+            "$gte": 2000
+          }
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "genres": 1
+          },
+          "indexName": "genres_idx",
+          "isMultiKey": true,
+          "multiKeyPaths": {
+            "genres": [
+              "genres"
+            ]
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "genres": [
+              "[\"Drama\", \"Drama\"]"
+            ]
+          }
+        }
+      },
+      {
+        "stage": "FETCH",
+        "filter": {
+          "genres": {
+            "$eq": "Drama"
+          }
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "year": 1,
+            "imdb.rating": -1
+          },
+          "indexName": "year_rating_compound_idx",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "year": [],
+            "imdb.rating": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "year": [
+              "[2000, inf.0]"
+            ],
+            "imdb.rating": [
+              "[MaxKey, MinKey]"
+            ]
+          }
+        }
+      },
+      {
+        "stage": "FETCH",
+        "filter": {
+          "genres": {
+            "$eq": "Drama"
+          }
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "year": 1
+          },
+          "indexName": "year_idx",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "year": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "year": [
+              "[2000, inf.0]"
+            ]
+          }
+        }
+      },
+      {
+        "stage": "FETCH",
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "year": 1,
+            "genres": 1
+          },
+          "indexName": "year_genres_compound_idx",
+          "isMultiKey": true,
+          "multiKeyPaths": {
+            "year": [],
+            "genres": [
+              "genres"
+            ]
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "year": [
+              "[2000, inf.0]"
+            ],
+            "genres": [
+              "[\"Drama\", \"Drama\"]"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "command": {
+    "find": "movies",
+    "filter": {
+      "year": {
+        "$gte": 2000
+      },
+      "genres": "Drama"
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "7.0.30",
+    "gitVersion": "67480f41dfa5802ce14af5c95bd0e9826d3b2131"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine"
+  },
+  "ok": 1.0
+}

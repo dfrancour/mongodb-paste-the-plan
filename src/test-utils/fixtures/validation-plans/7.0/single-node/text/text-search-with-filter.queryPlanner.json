@@ -1,0 +1,122 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "indexFilterSet": false,
+    "parsedQuery": {
+      "$and": [
+        {
+          "year": {
+            "$gte": 2000
+          }
+        },
+        {
+          "$text": {
+            "$search": "detective mystery",
+            "$language": "english",
+            "$caseSensitive": false,
+            "$diacriticSensitive": false
+          }
+        }
+      ]
+    },
+    "queryHash": "B9BF9CB7",
+    "planCacheKey": "52925AA8",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "winningPlan": {
+      "stage": "FETCH",
+      "filter": {
+        "year": {
+          "$gte": 2000
+        }
+      },
+      "inputStage": {
+        "stage": "TEXT_MATCH",
+        "indexPrefix": {},
+        "indexName": "cast_text_fullplot_text_genres_text_title_text",
+        "parsedTextQuery": {
+          "terms": [
+            "detect",
+            "mysteri"
+          ],
+          "negatedTerms": [],
+          "phrases": [],
+          "negatedPhrases": []
+        },
+        "textIndexVersion": 3,
+        "inputStage": {
+          "stage": "FETCH",
+          "inputStage": {
+            "stage": "OR",
+            "inputStages": [
+              {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "_fts": "text",
+                  "_ftsx": 1
+                },
+                "indexName": "cast_text_fullplot_text_genres_text_title_text",
+                "isMultiKey": true,
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "backward",
+                "indexBounds": {}
+              },
+              {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "_fts": "text",
+                  "_ftsx": 1
+                },
+                "indexName": "cast_text_fullplot_text_genres_text_title_text",
+                "isMultiKey": true,
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "backward",
+                "indexBounds": {}
+              }
+            ]
+          }
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "command": {
+    "find": "movies",
+    "filter": {
+      "$text": {
+        "$search": "detective mystery"
+      },
+      "year": {
+        "$gte": 2000
+      }
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "7.0.30",
+    "gitVersion": "67480f41dfa5802ce14af5c95bd0e9826d3b2131"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine"
+  },
+  "ok": 1.0
+}

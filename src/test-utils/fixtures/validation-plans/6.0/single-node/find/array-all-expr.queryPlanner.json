@@ -1,0 +1,367 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "indexFilterSet": false,
+    "parsedQuery": {
+      "$and": [
+        {
+          "genres": {
+            "$eq": "Drama"
+          }
+        },
+        {
+          "genres": {
+            "$eq": "Romance"
+          }
+        },
+        {
+          "$expr": {
+            "$gte": [
+              {
+                "$size": [
+                  "$cast"
+                ]
+              },
+              {
+                "$const": 3
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "queryHash": "38975ECF",
+    "planCacheKey": "A57ECF35",
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "winningPlan": {
+      "stage": "FETCH",
+      "filter": {
+        "$and": [
+          {
+            "$expr": {
+              "$gte": [
+                {
+                  "$size": [
+                    "$cast"
+                  ]
+                },
+                {
+                  "$const": 3
+                }
+              ]
+            }
+          },
+          {
+            "genres": {
+              "$eq": "Drama"
+            }
+          }
+        ]
+      },
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "genres": 1
+        },
+        "indexName": "genres_idx",
+        "isMultiKey": true,
+        "multiKeyPaths": {
+          "genres": [
+            "genres"
+          ]
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "genres": [
+            "[\"Romance\", \"Romance\"]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": [
+      {
+        "stage": "FETCH",
+        "filter": {
+          "$and": [
+            {
+              "$expr": {
+                "$gte": [
+                  {
+                    "$size": [
+                      "$cast"
+                    ]
+                  },
+                  {
+                    "$const": 3
+                  }
+                ]
+              }
+            },
+            {
+              "genres": {
+                "$eq": "Romance"
+              }
+            }
+          ]
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "genres": 1
+          },
+          "indexName": "genres_idx",
+          "isMultiKey": true,
+          "multiKeyPaths": {
+            "genres": [
+              "genres"
+            ]
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "genres": [
+              "[\"Drama\", \"Drama\"]"
+            ]
+          }
+        }
+      },
+      {
+        "stage": "FETCH",
+        "filter": {
+          "$and": [
+            {
+              "$expr": {
+                "$gte": [
+                  {
+                    "$size": [
+                      "$cast"
+                    ]
+                  },
+                  {
+                    "$const": 3
+                  }
+                ]
+              }
+            },
+            {
+              "genres": {
+                "$eq": "Romance"
+              }
+            }
+          ]
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "genres": 1,
+            "year": 1
+          },
+          "indexName": "genres_year_compound_idx",
+          "isMultiKey": true,
+          "multiKeyPaths": {
+            "genres": [
+              "genres"
+            ],
+            "year": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "genres": [
+              "[\"Drama\", \"Drama\"]"
+            ],
+            "year": [
+              "[MinKey, MaxKey]"
+            ]
+          }
+        }
+      },
+      {
+        "stage": "FETCH",
+        "filter": {
+          "$and": [
+            {
+              "$expr": {
+                "$gte": [
+                  {
+                    "$size": [
+                      "$cast"
+                    ]
+                  },
+                  {
+                    "$const": 3
+                  }
+                ]
+              }
+            },
+            {
+              "genres": {
+                "$eq": "Drama"
+              }
+            }
+          ]
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "genres": 1,
+            "year": 1
+          },
+          "indexName": "genres_year_compound_idx",
+          "isMultiKey": true,
+          "multiKeyPaths": {
+            "genres": [
+              "genres"
+            ],
+            "year": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "genres": [
+              "[\"Romance\", \"Romance\"]"
+            ],
+            "year": [
+              "[MinKey, MaxKey]"
+            ]
+          }
+        }
+      },
+      {
+        "stage": "FETCH",
+        "filter": {
+          "$and": [
+            {
+              "genres": {
+                "$eq": "Drama"
+              }
+            },
+            {
+              "genres": {
+                "$eq": "Romance"
+              }
+            },
+            {
+              "$expr": {
+                "$gte": [
+                  {
+                    "$size": [
+                      "$cast"
+                    ]
+                  },
+                  {
+                    "$const": 3
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "inputStage": {
+          "stage": "AND_SORTED",
+          "inputStages": [
+            {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "genres": 1
+              },
+              "indexName": "genres_idx",
+              "isMultiKey": true,
+              "multiKeyPaths": {
+                "genres": [
+                  "genres"
+                ]
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "genres": [
+                  "[\"Drama\", \"Drama\"]"
+                ]
+              }
+            },
+            {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "genres": 1
+              },
+              "indexName": "genres_idx",
+              "isMultiKey": true,
+              "multiKeyPaths": {
+                "genres": [
+                  "genres"
+                ]
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "genres": [
+                  "[\"Romance\", \"Romance\"]"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "command": {
+    "find": "movies",
+    "filter": {
+      "genres": {
+        "$all": [
+          "Drama",
+          "Romance"
+        ]
+      },
+      "$expr": {
+        "$gte": [
+          {
+            "$size": "$cast"
+          },
+          3
+        ]
+      }
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "6.0.27",
+    "gitVersion": "fc88ca137231d7457aed6265d4f32a361ae71716"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+  },
+  "ok": 1.0
+}

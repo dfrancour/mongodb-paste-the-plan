@@ -1,0 +1,152 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_weatherdata.data",
+          "indexFilterSet": false,
+          "parsedQuery": {
+            "st": {
+              "$eq": "x]47.9x2"
+            }
+          },
+          "queryHash": "2FB729B9",
+          "planCacheKey": "52AE51B5",
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "winningPlan": {
+            "stage": "SORT",
+            "sortPattern": {
+              "ts": 1
+            },
+            "memLimit": 104857600,
+            "limitAmount": 50,
+            "type": "simple",
+            "inputStage": {
+              "stage": "FETCH",
+              "inputStage": {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "st": 1
+                },
+                "indexName": "station_idx",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "st": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "st": [
+                    "[\"x]47.9x2\", \"x]47.9x2\"]"
+                  ]
+                }
+              }
+            }
+          },
+          "rejectedPlans": [
+            {
+              "stage": "LIMIT",
+              "limitAmount": 50,
+              "inputStage": {
+                "stage": "FETCH",
+                "filter": {
+                  "st": {
+                    "$eq": "x]47.9x2"
+                  }
+                },
+                "inputStage": {
+                  "stage": "IXSCAN",
+                  "keyPattern": {
+                    "ts": 1
+                  },
+                  "indexName": "timestamp_idx",
+                  "isMultiKey": false,
+                  "multiKeyPaths": {
+                    "ts": []
+                  },
+                  "isUnique": false,
+                  "isSparse": false,
+                  "isPartial": false,
+                  "indexVersion": 2,
+                  "direction": "forward",
+                  "indexBounds": {
+                    "ts": [
+                      "[MinKey, MaxKey]"
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "$_internalSetWindowFields": {
+        "sortBy": {
+          "ts": 1
+        },
+        "output": {
+          "airTemperature.value": {
+            "$linearFill": "$airTemperature.value"
+          }
+        }
+      }
+    }
+  ],
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "6.0.27",
+    "gitVersion": "fc88ca137231d7457aed6265d4f32a361ae71716"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+  },
+  "command": {
+    "aggregate": "data",
+    "pipeline": [
+      {
+        "$match": {
+          "st": "x]47.9x2"
+        }
+      },
+      {
+        "$sort": {
+          "ts": 1
+        }
+      },
+      {
+        "$limit": 50
+      },
+      {
+        "$fill": {
+          "sortBy": {
+            "ts": 1
+          },
+          "output": {
+            "airTemperature.value": {
+              "method": "linear"
+            }
+          }
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_weatherdata"
+  },
+  "ok": 1.0
+}

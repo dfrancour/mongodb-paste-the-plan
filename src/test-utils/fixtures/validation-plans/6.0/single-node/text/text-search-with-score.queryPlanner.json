@@ -1,0 +1,143 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "indexFilterSet": false,
+    "parsedQuery": {
+      "$text": {
+        "$search": "space exploration alien",
+        "$language": "english",
+        "$caseSensitive": false,
+        "$diacriticSensitive": false
+      }
+    },
+    "queryHash": "C27C8303",
+    "planCacheKey": "1DF9750B",
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "winningPlan": {
+      "stage": "PROJECTION_DEFAULT",
+      "transformBy": {
+        "title": 1,
+        "score": {
+          "$meta": "textScore"
+        }
+      },
+      "inputStage": {
+        "stage": "SORT",
+        "sortPattern": {
+          "$computed0": {
+            "$meta": "textScore"
+          }
+        },
+        "memLimit": 104857600,
+        "type": "default",
+        "inputStage": {
+          "stage": "TEXT_MATCH",
+          "indexPrefix": {},
+          "indexName": "cast_text_fullplot_text_genres_text_title_text",
+          "parsedTextQuery": {
+            "terms": [
+              "alien",
+              "explor",
+              "space"
+            ],
+            "negatedTerms": [],
+            "phrases": [],
+            "negatedPhrases": []
+          },
+          "textIndexVersion": 3,
+          "inputStage": {
+            "stage": "TEXT_OR",
+            "inputStages": [
+              {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "_fts": "text",
+                  "_ftsx": 1
+                },
+                "indexName": "cast_text_fullplot_text_genres_text_title_text",
+                "isMultiKey": true,
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "backward",
+                "indexBounds": {}
+              },
+              {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "_fts": "text",
+                  "_ftsx": 1
+                },
+                "indexName": "cast_text_fullplot_text_genres_text_title_text",
+                "isMultiKey": true,
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "backward",
+                "indexBounds": {}
+              },
+              {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "_fts": "text",
+                  "_ftsx": 1
+                },
+                "indexName": "cast_text_fullplot_text_genres_text_title_text",
+                "isMultiKey": true,
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "backward",
+                "indexBounds": {}
+              }
+            ]
+          }
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "command": {
+    "find": "movies",
+    "filter": {
+      "$text": {
+        "$search": "space exploration alien"
+      }
+    },
+    "projection": {
+      "title": 1,
+      "score": {
+        "$meta": "textScore"
+      }
+    },
+    "sort": {
+      "score": {
+        "$meta": "textScore"
+      }
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "6.0.27",
+    "gitVersion": "fc88ca137231d7457aed6265d4f32a361ae71716"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+  },
+  "ok": 1.0
+}

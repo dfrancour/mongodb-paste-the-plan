@@ -1,0 +1,307 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "parsedQuery": {
+      "$and": [
+        {
+          "imdb.rating": {
+            "$exists": true
+          }
+        },
+        {
+          "genres": {
+            "$in": [
+              "Comedy",
+              "Drama"
+            ]
+          }
+        },
+        {
+          "imdb.rating": {
+            "$not": {
+              "$eq": null
+            }
+          }
+        }
+      ]
+    },
+    "indexFilterSet": false,
+    "queryHash": "4805C1E3",
+    "planCacheShapeHash": "4805C1E3",
+    "planCacheKey": "49D63E3A",
+    "optimizationTimeMillis": 5,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "PROJECTION_DEFAULT",
+      "transformBy": {
+        "title": 1,
+        "imdb.rating": 1
+      },
+      "inputStage": {
+        "stage": "FETCH",
+        "filter": {
+          "$and": [
+            {
+              "imdb.rating": {
+                "$exists": true
+              }
+            },
+            {
+              "genres": {
+                "$in": [
+                  "Comedy",
+                  "Drama"
+                ]
+              }
+            }
+          ]
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "imdb.rating": -1
+          },
+          "indexName": "imdb_rating_desc_idx",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "imdb.rating": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "imdb.rating": [
+              "[MaxKey, null)",
+              "(null, MinKey]"
+            ]
+          }
+        }
+      }
+    },
+    "rejectedPlans": [
+      {
+        "isCached": false,
+        "stage": "PROJECTION_DEFAULT",
+        "transformBy": {
+          "title": 1,
+          "imdb.rating": 1
+        },
+        "inputStage": {
+          "stage": "FETCH",
+          "filter": {
+            "$and": [
+              {
+                "imdb.rating": {
+                  "$exists": true
+                }
+              },
+              {
+                "genres": {
+                  "$in": [
+                    "Comedy",
+                    "Drama"
+                  ]
+                }
+              }
+            ]
+          },
+          "inputStage": {
+            "stage": "IXSCAN",
+            "keyPattern": {
+              "imdb.rating": 1
+            },
+            "indexName": "imdb_rating_idx",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "imdb.rating": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "backward",
+            "indexBounds": {
+              "imdb.rating": [
+                "[MaxKey, null)",
+                "(null, MinKey]"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "isCached": false,
+        "stage": "SORT",
+        "sortPattern": {
+          "imdb.rating": -1
+        },
+        "memLimit": 104857600,
+        "type": "simple",
+        "inputStage": {
+          "stage": "PROJECTION_DEFAULT",
+          "transformBy": {
+            "title": 1,
+            "imdb.rating": 1
+          },
+          "inputStage": {
+            "stage": "FETCH",
+            "filter": {
+              "$and": [
+                {
+                  "imdb.rating": {
+                    "$not": {
+                      "$eq": null
+                    }
+                  }
+                },
+                {
+                  "imdb.rating": {
+                    "$exists": true
+                  }
+                }
+              ]
+            },
+            "inputStage": {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "genres": 1,
+                "year": 1
+              },
+              "indexName": "genres_year_compound_idx",
+              "isMultiKey": true,
+              "multiKeyPaths": {
+                "genres": [
+                  "genres"
+                ],
+                "year": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "genres": [
+                  "[\"Comedy\", \"Comedy\"]",
+                  "[\"Drama\", \"Drama\"]"
+                ],
+                "year": [
+                  "[MinKey, MaxKey]"
+                ]
+              }
+            }
+          }
+        }
+      },
+      {
+        "isCached": false,
+        "stage": "SORT",
+        "sortPattern": {
+          "imdb.rating": -1
+        },
+        "memLimit": 104857600,
+        "type": "simple",
+        "inputStage": {
+          "stage": "PROJECTION_DEFAULT",
+          "transformBy": {
+            "title": 1,
+            "imdb.rating": 1
+          },
+          "inputStage": {
+            "stage": "FETCH",
+            "filter": {
+              "$and": [
+                {
+                  "imdb.rating": {
+                    "$not": {
+                      "$eq": null
+                    }
+                  }
+                },
+                {
+                  "imdb.rating": {
+                    "$exists": true
+                  }
+                }
+              ]
+            },
+            "inputStage": {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "genres": 1
+              },
+              "indexName": "genres_idx",
+              "isMultiKey": true,
+              "multiKeyPaths": {
+                "genres": [
+                  "genres"
+                ]
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "genres": [
+                  "[\"Comedy\", \"Comedy\"]",
+                  "[\"Drama\", \"Drama\"]"
+                ]
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "queryShapeHash": "164EDBBCCD7C7BCE04C153EF3260E95ED15BE6E5D0BEFDFC1F94445AF0B6B8CC",
+  "command": {
+    "find": "movies",
+    "filter": {
+      "genres": {
+        "$in": [
+          "Drama",
+          "Comedy"
+        ]
+      },
+      "imdb.rating": {
+        "$exists": true,
+        "$ne": null
+      }
+    },
+    "projection": {
+      "title": 1,
+      "imdb.rating": 1
+    },
+    "sort": {
+      "imdb.rating": -1
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

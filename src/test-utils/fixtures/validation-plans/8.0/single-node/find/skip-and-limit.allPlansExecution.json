@@ -1,0 +1,106 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "parsedQuery": {},
+    "indexFilterSet": false,
+    "queryHash": "8F2383EE",
+    "planCacheShapeHash": "8F2383EE",
+    "planCacheKey": "5E39E760",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "LIMIT",
+      "limitAmount": 10,
+      "inputStage": {
+        "stage": "SKIP",
+        "skipAmount": 100,
+        "inputStage": {
+          "stage": "COLLSCAN",
+          "direction": "forward"
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 10,
+    "executionTimeMillis": 0,
+    "totalKeysExamined": 0,
+    "totalDocsExamined": 110,
+    "executionStages": {
+      "isCached": false,
+      "stage": "LIMIT",
+      "nReturned": 10,
+      "executionTimeMillisEstimate": 0,
+      "works": 111,
+      "advanced": 10,
+      "needTime": 100,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "limitAmount": 10,
+      "inputStage": {
+        "stage": "SKIP",
+        "nReturned": 10,
+        "executionTimeMillisEstimate": 0,
+        "works": 110,
+        "advanced": 10,
+        "needTime": 100,
+        "needYield": 0,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 0,
+        "skipAmount": 100,
+        "inputStage": {
+          "stage": "COLLSCAN",
+          "nReturned": 110,
+          "executionTimeMillisEstimate": 0,
+          "works": 110,
+          "advanced": 110,
+          "needTime": 0,
+          "needYield": 0,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 0,
+          "direction": "forward",
+          "docsExamined": 110
+        }
+      }
+    },
+    "allPlansExecution": []
+  },
+  "queryShapeHash": "3D3B5DB5C9D18D1DDB324E4C0AD3961040061F1D6D1A199AE1AD67B4ADC9E33F",
+  "command": {
+    "find": "movies",
+    "filter": {},
+    "limit": 10,
+    "skip": 100,
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

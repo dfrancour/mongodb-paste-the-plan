@@ -1,0 +1,242 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_mflix.movies",
+          "indexFilterSet": false,
+          "parsedQuery": {
+            "$and": [
+              {
+                "imdb.votes": {
+                  "$gt": 0
+                }
+              },
+              {
+                "runtime": {
+                  "$gt": 0
+                }
+              }
+            ]
+          },
+          "queryHash": "79C8BB12",
+          "planCacheKey": "ADE8D2FD",
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "winningPlan": {
+            "stage": "PROJECTION_DEFAULT",
+            "transformBy": {
+              "_id": 1,
+              "genre_count": 1,
+              "genres": 1,
+              "imdb.rating": 1,
+              "imdb.votes": 1,
+              "rating_per_vote": 1,
+              "title": 1
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "filter": {
+                "$and": [
+                  {
+                    "imdb.votes": {
+                      "$gt": 0
+                    }
+                  },
+                  {
+                    "runtime": {
+                      "$gt": 0
+                    }
+                  }
+                ]
+              },
+              "direction": "forward"
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 20861,
+          "executionTimeMillis": 29,
+          "totalKeysExamined": 0,
+          "totalDocsExamined": 21349,
+          "executionStages": {
+            "stage": "PROJECTION_DEFAULT",
+            "nReturned": 20861,
+            "executionTimeMillisEstimate": 1,
+            "works": 21350,
+            "advanced": 20861,
+            "needTime": 488,
+            "needYield": 0,
+            "saveState": 23,
+            "restoreState": 23,
+            "isEOF": 1,
+            "transformBy": {
+              "_id": 1,
+              "genre_count": 1,
+              "genres": 1,
+              "imdb.rating": 1,
+              "imdb.votes": 1,
+              "rating_per_vote": 1,
+              "title": 1
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "filter": {
+                "$and": [
+                  {
+                    "imdb.votes": {
+                      "$gt": 0
+                    }
+                  },
+                  {
+                    "runtime": {
+                      "$gt": 0
+                    }
+                  }
+                ]
+              },
+              "nReturned": 20861,
+              "executionTimeMillisEstimate": 1,
+              "works": 21350,
+              "advanced": 20861,
+              "needTime": 488,
+              "needYield": 0,
+              "saveState": 23,
+              "restoreState": 23,
+              "isEOF": 1,
+              "direction": "forward",
+              "docsExamined": 21349
+            }
+          },
+          "allPlansExecution": []
+        }
+      },
+      "nReturned": 20861,
+      "executionTimeMillisEstimate": 16
+    },
+    {
+      "$addFields": {
+        "rating_per_vote": {
+          "$divide": [
+            "$imdb.rating",
+            {
+              "$log10": [
+                "$imdb.votes"
+              ]
+            }
+          ]
+        },
+        "genre_count": {
+          "$size": [
+            {
+              "$ifNull": [
+                "$genres",
+                {
+                  "$const": []
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "nReturned": 20861,
+      "executionTimeMillisEstimate": 26
+    },
+    {
+      "$project": {
+        "_id": true,
+        "title": true,
+        "rating_per_vote": true,
+        "genre_count": true
+      },
+      "nReturned": 20861,
+      "executionTimeMillisEstimate": 26
+    },
+    {
+      "$sort": {
+        "sortKey": {
+          "rating_per_vote": -1
+        },
+        "limit": 20
+      },
+      "totalDataSizeSortedBytesEstimate": 72579,
+      "usedDisk": false,
+      "spills": 0,
+      "nReturned": 20,
+      "executionTimeMillisEstimate": 26
+    }
+  ],
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "6.0.27",
+    "gitVersion": "fc88ca137231d7457aed6265d4f32a361ae71716"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+  },
+  "command": {
+    "aggregate": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "runtime": {
+            "$gt": 0
+          },
+          "imdb.votes": {
+            "$gt": 0
+          }
+        }
+      },
+      {
+        "$addFields": {
+          "rating_per_vote": {
+            "$divide": [
+              "$imdb.rating",
+              {
+                "$log10": "$imdb.votes"
+              }
+            ]
+          },
+          "genre_count": {
+            "$size": {
+              "$ifNull": [
+                "$genres",
+                []
+              ]
+            }
+          }
+        }
+      },
+      {
+        "$project": {
+          "title": 1,
+          "rating_per_vote": 1,
+          "genre_count": 1
+        }
+      },
+      {
+        "$sort": {
+          "rating_per_vote": -1
+        }
+      },
+      {
+        "$limit": 20
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_mflix"
+  },
+  "ok": 1.0
+}

@@ -13,11 +13,13 @@ import { resolveStandardFind } from "./standardFind";
 import { resolveShardedFind } from "./shardedFind";
 import { resolveShardedAggregation } from "./shardedAggregation";
 import { resolveDirectStage } from "./directStage";
+import { resolveBarePipeline } from "./barePipeline";
 
 export type { FormatResolution } from "./types";
 
 const resolvers: readonly FormatResolver[] = [
   resolveAggregationPipeline, // Must be first: stages[].$cursor wraps other formats
+  resolveBarePipeline, // stages[] without cursor (e.g., $documents → $queue)
   resolveStandardFind, // queryPlanner.winningPlan (most common)
   resolveShardedFind, // executionStats.executionStages.shards[]
   resolveShardedAggregation, // shards.{name} (MongoDB 6.0+)

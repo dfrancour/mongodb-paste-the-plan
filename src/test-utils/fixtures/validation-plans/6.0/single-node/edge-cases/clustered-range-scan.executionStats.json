@@ -1,0 +1,162 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_training.logs",
+    "indexFilterSet": false,
+    "parsedQuery": {
+      "level": {
+        "$eq": "ERROR"
+      }
+    },
+    "queryHash": "8AB33037",
+    "planCacheKey": "39B9A206",
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "winningPlan": {
+      "stage": "SORT",
+      "sortPattern": {
+        "_id": 1
+      },
+      "memLimit": 104857600,
+      "type": "simple",
+      "inputStage": {
+        "stage": "FETCH",
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "level": 1
+          },
+          "indexName": "log_level_idx",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "level": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "level": [
+              "[\"ERROR\", \"ERROR\"]"
+            ]
+          }
+        }
+      }
+    },
+    "rejectedPlans": [
+      {
+        "stage": "COLLSCAN",
+        "filter": {
+          "level": {
+            "$eq": "ERROR"
+          }
+        },
+        "direction": "forward"
+      }
+    ]
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 118,
+    "executionTimeMillis": 0,
+    "totalKeysExamined": 118,
+    "totalDocsExamined": 118,
+    "executionStages": {
+      "stage": "SORT",
+      "nReturned": 118,
+      "executionTimeMillisEstimate": 0,
+      "works": 238,
+      "advanced": 118,
+      "needTime": 119,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "sortPattern": {
+        "_id": 1
+      },
+      "memLimit": 104857600,
+      "type": "simple",
+      "totalDataSizeSorted": 16616,
+      "usedDisk": false,
+      "spills": 0,
+      "inputStage": {
+        "stage": "FETCH",
+        "nReturned": 118,
+        "executionTimeMillisEstimate": 0,
+        "works": 119,
+        "advanced": 118,
+        "needTime": 0,
+        "needYield": 0,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 1,
+        "docsExamined": 118,
+        "alreadyHasObj": 0,
+        "inputStage": {
+          "stage": "IXSCAN",
+          "nReturned": 118,
+          "executionTimeMillisEstimate": 0,
+          "works": 119,
+          "advanced": 118,
+          "needTime": 0,
+          "needYield": 0,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 1,
+          "keyPattern": {
+            "level": 1
+          },
+          "indexName": "log_level_idx",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "level": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "level": [
+              "[\"ERROR\", \"ERROR\"]"
+            ]
+          },
+          "keysExamined": 118,
+          "seeks": 1,
+          "dupsTested": 0,
+          "dupsDropped": 0
+        }
+      }
+    }
+  },
+  "command": {
+    "find": "logs",
+    "filter": {
+      "level": "ERROR"
+    },
+    "sort": {
+      "_id": 1
+    },
+    "$db": "sample_training"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "6.0.27",
+    "gitVersion": "fc88ca137231d7457aed6265d4f32a361ae71716"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+  },
+  "ok": 1.0
+}

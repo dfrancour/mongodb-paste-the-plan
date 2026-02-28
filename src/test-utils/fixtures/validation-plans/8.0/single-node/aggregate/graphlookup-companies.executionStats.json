@@ -1,0 +1,212 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_training.companies",
+          "parsedQuery": {
+            "name": {
+              "$eq": "Facebook"
+            }
+          },
+          "indexFilterSet": false,
+          "queryHash": "248AC49A",
+          "planCacheShapeHash": "248AC49A",
+          "planCacheKey": "711368EC",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "stage": "PROJECTION_DEFAULT",
+            "transformBy": {
+              "_id": 1,
+              "name": 1,
+              "relationships.person.permalink": 1
+            },
+            "inputStage": {
+              "stage": "FETCH",
+              "inputStage": {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "name": 1
+                },
+                "indexName": "name_idx",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "name": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "name": [
+                    "[\"Facebook\", \"Facebook\"]"
+                  ]
+                }
+              }
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 1,
+          "executionTimeMillis": 11,
+          "totalKeysExamined": 1,
+          "totalDocsExamined": 1,
+          "executionStages": {
+            "isCached": false,
+            "stage": "PROJECTION_DEFAULT",
+            "nReturned": 1,
+            "executionTimeMillisEstimate": 0,
+            "works": 2,
+            "advanced": 1,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 1,
+            "isEOF": 1,
+            "transformBy": {
+              "_id": 1,
+              "name": 1,
+              "relationships.person.permalink": 1
+            },
+            "inputStage": {
+              "stage": "FETCH",
+              "nReturned": 1,
+              "executionTimeMillisEstimate": 0,
+              "works": 2,
+              "advanced": 1,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 1,
+              "restoreState": 1,
+              "isEOF": 1,
+              "docsExamined": 1,
+              "alreadyHasObj": 0,
+              "inputStage": {
+                "stage": "IXSCAN",
+                "nReturned": 1,
+                "executionTimeMillisEstimate": 0,
+                "works": 2,
+                "advanced": 1,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 1,
+                "restoreState": 1,
+                "isEOF": 1,
+                "keyPattern": {
+                  "name": 1
+                },
+                "indexName": "name_idx",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "name": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "name": [
+                    "[\"Facebook\", \"Facebook\"]"
+                  ]
+                },
+                "keysExamined": 1,
+                "seeks": 1,
+                "dupsTested": 0,
+                "dupsDropped": 0
+              }
+            }
+          }
+        }
+      },
+      "nReturned": 1,
+      "executionTimeMillisEstimate": 0
+    },
+    {
+      "$graphLookup": {
+        "from": "companies",
+        "as": "network",
+        "connectToField": "permalink",
+        "connectFromField": "relationships.person.permalink",
+        "startWith": "$relationships.person.permalink",
+        "depthField": "depth",
+        "maxDepth": 1
+      },
+      "nReturned": 1,
+      "executionTimeMillisEstimate": 5
+    },
+    {
+      "$project": {
+        "_id": true,
+        "name": true,
+        "network_size": {
+          "$size": [
+            "$network"
+          ]
+        }
+      },
+      "nReturned": 1,
+      "executionTimeMillisEstimate": 5
+    }
+  ],
+  "queryShapeHash": "6DE7B8E113B553D4D364478E04F1783C3D4FF46A6BBA286DB1B465CF7F236643",
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "companies",
+    "pipeline": [
+      {
+        "$match": {
+          "name": "Facebook"
+        }
+      },
+      {
+        "$graphLookup": {
+          "from": "companies",
+          "startWith": "$relationships.person.permalink",
+          "connectFromField": "relationships.person.permalink",
+          "connectToField": "permalink",
+          "as": "network",
+          "maxDepth": 1,
+          "depthField": "depth"
+        }
+      },
+      {
+        "$project": {
+          "name": 1,
+          "network_size": {
+            "$size": "$network"
+          }
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_training"
+  },
+  "ok": 1.0
+}

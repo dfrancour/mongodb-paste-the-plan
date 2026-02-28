@@ -1,0 +1,295 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_training.logs",
+    "indexFilterSet": false,
+    "parsedQuery": {
+      "$and": [
+        {
+          "level": {
+            "$eq": "ERROR"
+          }
+        },
+        {
+          "source": {
+            "$eq": "service-1"
+          }
+        }
+      ]
+    },
+    "queryHash": "C613C268",
+    "planCacheKey": "C4A6319E",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "winningPlan": {
+      "stage": "FETCH",
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "source": 1,
+          "level": 1
+        },
+        "indexName": "source_level_idx",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "source": [],
+          "level": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "source": [
+            "[\"service-1\", \"service-1\"]"
+          ],
+          "level": [
+            "[\"ERROR\", \"ERROR\"]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": [
+      {
+        "stage": "FETCH",
+        "filter": {
+          "source": {
+            "$eq": "service-1"
+          }
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "level": 1
+          },
+          "indexName": "log_level_idx",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "level": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "level": [
+              "[\"ERROR\", \"ERROR\"]"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 21,
+    "executionTimeMillis": 0,
+    "totalKeysExamined": 21,
+    "totalDocsExamined": 21,
+    "executionStages": {
+      "stage": "FETCH",
+      "nReturned": 21,
+      "executionTimeMillisEstimate": 0,
+      "works": 23,
+      "advanced": 21,
+      "needTime": 0,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "docsExamined": 21,
+      "alreadyHasObj": 0,
+      "inputStage": {
+        "stage": "IXSCAN",
+        "nReturned": 21,
+        "executionTimeMillisEstimate": 0,
+        "works": 22,
+        "advanced": 21,
+        "needTime": 0,
+        "needYield": 0,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 1,
+        "keyPattern": {
+          "source": 1,
+          "level": 1
+        },
+        "indexName": "source_level_idx",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "source": [],
+          "level": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "source": [
+            "[\"service-1\", \"service-1\"]"
+          ],
+          "level": [
+            "[\"ERROR\", \"ERROR\"]"
+          ]
+        },
+        "keysExamined": 21,
+        "seeks": 1,
+        "dupsTested": 0,
+        "dupsDropped": 0
+      }
+    },
+    "allPlansExecution": [
+      {
+        "nReturned": 21,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 21,
+        "totalDocsExamined": 21,
+        "score": 2.9547454545454546,
+        "executionStages": {
+          "stage": "FETCH",
+          "nReturned": 21,
+          "executionTimeMillisEstimate": 0,
+          "works": 22,
+          "advanced": 21,
+          "needTime": 0,
+          "needYield": 0,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 1,
+          "docsExamined": 21,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nReturned": 21,
+            "executionTimeMillisEstimate": 0,
+            "works": 22,
+            "advanced": 21,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 0,
+            "restoreState": 0,
+            "isEOF": 1,
+            "keyPattern": {
+              "source": 1,
+              "level": 1
+            },
+            "indexName": "source_level_idx",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "source": [],
+              "level": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "source": [
+                "[\"service-1\", \"service-1\"]"
+              ],
+              "level": [
+                "[\"ERROR\", \"ERROR\"]"
+              ]
+            },
+            "keysExamined": 21,
+            "seeks": 1,
+            "dupsTested": 0,
+            "dupsDropped": 0
+          }
+        }
+      },
+      {
+        "nReturned": 5,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 22,
+        "totalDocsExamined": 22,
+        "score": 1.2274727272727273,
+        "executionStages": {
+          "stage": "FETCH",
+          "filter": {
+            "source": {
+              "$eq": "service-1"
+            }
+          },
+          "nReturned": 5,
+          "executionTimeMillisEstimate": 0,
+          "works": 22,
+          "advanced": 5,
+          "needTime": 17,
+          "needYield": 0,
+          "saveState": 1,
+          "restoreState": 0,
+          "isEOF": 0,
+          "docsExamined": 22,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nReturned": 22,
+            "executionTimeMillisEstimate": 0,
+            "works": 22,
+            "advanced": 22,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 0,
+            "isEOF": 0,
+            "keyPattern": {
+              "level": 1
+            },
+            "indexName": "log_level_idx",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "level": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "level": [
+                "[\"ERROR\", \"ERROR\"]"
+              ]
+            },
+            "keysExamined": 22,
+            "seeks": 1,
+            "dupsTested": 0,
+            "dupsDropped": 0
+          }
+        }
+      }
+    ]
+  },
+  "command": {
+    "find": "logs",
+    "filter": {
+      "source": "service-1",
+      "level": "ERROR"
+    },
+    "$db": "sample_training"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "7.0.30",
+    "gitVersion": "67480f41dfa5802ce14af5c95bd0e9826d3b2131"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine"
+  },
+  "ok": 1.0
+}

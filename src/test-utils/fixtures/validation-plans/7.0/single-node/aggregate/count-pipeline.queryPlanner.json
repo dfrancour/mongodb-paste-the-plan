@@ -1,0 +1,103 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_mflix.movies",
+          "indexFilterSet": false,
+          "parsedQuery": {
+            "year": {
+              "$gte": 2000
+            }
+          },
+          "queryHash": "1EBBA81C",
+          "planCacheKey": "4B2669ED",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "winningPlan": {
+            "stage": "COUNT_SCAN",
+            "keyPattern": {
+              "year": 1
+            },
+            "indexName": "year_idx",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "year": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "indexBounds": {
+              "startKey": {
+                "year": 2000
+              },
+              "startKeyInclusive": true,
+              "endKey": {
+                "year": Infinity
+              },
+              "endKeyInclusive": true
+            }
+          },
+          "rejectedPlans": []
+        }
+      }
+    },
+    {
+      "$group": {
+        "_id": {
+          "$const": null
+        },
+        "total": {
+          "$sum": {
+            "$const": 1
+          }
+        }
+      }
+    },
+    {
+      "$project": {
+        "total": true,
+        "_id": false
+      }
+    }
+  ],
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "7.0.30",
+    "gitVersion": "67480f41dfa5802ce14af5c95bd0e9826d3b2131"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine"
+  },
+  "command": {
+    "aggregate": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "year": {
+            "$gte": 2000
+          }
+        }
+      },
+      {
+        "$count": "total"
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_mflix"
+  },
+  "ok": 1.0
+}

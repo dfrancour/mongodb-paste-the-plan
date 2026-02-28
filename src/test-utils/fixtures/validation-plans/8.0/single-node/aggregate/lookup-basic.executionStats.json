@@ -1,0 +1,918 @@
+{
+  "explainVersion": "2",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "parsedQuery": {
+      "year": {
+        "$eq": 2000
+      }
+    },
+    "indexFilterSet": false,
+    "queryHash": "01D668DE",
+    "planCacheShapeHash": "01D668DE",
+    "planCacheKey": "F61D1D32",
+    "optimizationTimeMillis": 0,
+    "optimizedPipeline": true,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "queryPlan": {
+        "stage": "EQ_LOOKUP",
+        "planNodeId": 4,
+        "foreignCollection": "sample_mflix.comments",
+        "localField": "_id",
+        "foreignField": "movie_id",
+        "asField": "movie_comments",
+        "strategy": "IndexedLoopJoin",
+        "indexName": "movie_id_idx",
+        "indexKeyPattern": {
+          "movie_id": 1
+        },
+        "scanDirection": "forward",
+        "inputStage": {
+          "stage": "LIMIT",
+          "planNodeId": 3,
+          "limitAmount": 10,
+          "inputStage": {
+            "stage": "FETCH",
+            "planNodeId": 2,
+            "inputStage": {
+              "stage": "IXSCAN",
+              "planNodeId": 1,
+              "keyPattern": {
+                "year": 1
+              },
+              "indexName": "year_idx",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "year": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "year": [
+                  "[2000, 2000]"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "slotBasedPlan": {
+        "slots": "$$RESULT=s34 env: { s5 = {\"year\" : 1}, s8 = 10 }",
+        "stages": "[4] mkbson s34 s6 [] drop [movie_comments = s33] true false \n[4] nlj inner [s6] [s14] \n    left \n        [4] nlj inner [s6] [s6] \n            left \n                [3] limit s8 \n                [2] nlj inner [] [s1, s2, s3, s4, s5] \n                    left \n                        [1] ixseek KS(2C0FA00104) KS(2C0FA0FE04) s4 s1 s2 s3 [] @\"3190a565-2d61-42a7-9b3c-6f84ae5e9580\" @\"year_idx\" true \n                    right \n                        [2] limit 1ll \n                        [2] seek s1 s6 s7 s2 s3 s4 s5 none none [] @\"3190a565-2d61-42a7-9b3c-6f84ae5e9580\" true false \n            right \n                [4] project [s14 = \n                    if isArrayEmpty(s12) \n                    then [null] \n                    else s12 \n               ] \n                [4] group [] [s12 = addToSet(s10)] spillSlots[s13] mergingExprs[aggSetUnion(s13)] \n                [4] unwind s10 s11 s9 true \n                [4] project [s9 = getField(s6, \"_id\")] \n                [4] limit 1ll \n                [4] coscan \n    right \n        [4] limit 1ll \n        [4] union [s33] \n            branch0 [s31] \n                [4] project [s31 = getElement(s29, 0)] \n                [4] group [] [s29 = addToArrayCapped(s27, 104857600)] spillSlots[s30] mergingExprs[aggConcatArraysCapped(s30, 104857600)] \n                [4] filter {traverseF((getField(s27, \"movie_id\") ?: null), lambda(l1.0) { isMember(l1.0, s14) }, true)} \n                [4] nlj inner [] [s23, s25, s26, s24, s22] \n                    left \n                        [4] nlj inner [s22] [s20, s21] \n                            left \n                                [4] nlj inner [] [s15] \n                                    left \n                                        [4] unwind s15 s16 s14 true \n                                        [4] limit 1ll \n                                        [4] coscan \n                                    right \n                                        [4] project [s20 = ks(1ll, 0, s19, 1ll), s21 = ks(1ll, 0, s19, 2ll), s22 = {\"movie_id\" : 1}] \n                                        [4] union [s19] \n                                            branch0 [s17] \n                                                [4] filter {(isArray(s15) && !(isMember(s17, s14)))} \n                                                [4] project [s17 = (getElement(s15, 0) ?: undefined)] \n                                                [4] limit 1ll \n                                                [4] coscan \n                                            branch1 [s18] \n                                                [4] project [s18 = s15] \n                                                [4] limit 1ll \n                                                [4] coscan \n                            right \n                                [4] ixseek s20 s21 s24 s23 s25 s26 [] @\"e7964a1e-3528-4ae2-b6d7-89b7c9c03f96\" @\"movie_id_idx\" true \n                    right \n                        [4] limit 1ll \n                        [4] seek s23 s27 s28 s25 s26 s24 s22 none none [] @\"e7964a1e-3528-4ae2-b6d7-89b7c9c03f96\" true false \n            branch1 [s32] \n                [4] project [s32 = []] \n                [4] limit 1ll \n                [4] coscan \n"
+      }
+    },
+    "rejectedPlans": [
+      {
+        "isCached": false,
+        "stage": "LIMIT",
+        "limitAmount": 10,
+        "inputStage": {
+          "stage": "FETCH",
+          "inputStage": {
+            "stage": "IXSCAN",
+            "keyPattern": {
+              "year": 1,
+              "imdb.rating": -1
+            },
+            "indexName": "year_rating_compound_idx",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "year": [],
+              "imdb.rating": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "year": [
+                "[2000, 2000]"
+              ],
+              "imdb.rating": [
+                "[MaxKey, MinKey]"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "isCached": false,
+        "stage": "LIMIT",
+        "limitAmount": 10,
+        "inputStage": {
+          "stage": "FETCH",
+          "filter": {
+            "year": {
+              "$eq": 2000
+            }
+          },
+          "inputStage": {
+            "stage": "IXSCAN",
+            "keyPattern": {
+              "year": "hashed"
+            },
+            "indexName": "year_hashed_idx",
+            "isMultiKey": false,
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "year": [
+                "[8612218595614068147, 8612218595614068147]"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "isCached": false,
+        "stage": "LIMIT",
+        "limitAmount": 10,
+        "inputStage": {
+          "stage": "FETCH",
+          "inputStage": {
+            "stage": "IXSCAN",
+            "keyPattern": {
+              "year": 1,
+              "genres": 1
+            },
+            "indexName": "year_genres_compound_idx",
+            "isMultiKey": true,
+            "multiKeyPaths": {
+              "year": [],
+              "genres": [
+                "genres"
+              ]
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "year": [
+                "[2000, 2000]"
+              ],
+              "genres": [
+                "[MinKey, MaxKey]"
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 10,
+    "executionTimeMillis": 1,
+    "totalKeysExamined": 163,
+    "totalDocsExamined": 163,
+    "executionStages": {
+      "stage": "mkbson",
+      "planNodeId": 4,
+      "nReturned": 10,
+      "executionTimeMillisEstimate": 0,
+      "opens": 1,
+      "closes": 1,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "objSlot": 34,
+      "rootSlot": 6,
+      "fieldBehavior": "drop",
+      "fields": [],
+      "projectFields": [
+        "movie_comments"
+      ],
+      "projectSlots": [
+        33
+      ],
+      "forceNewObject": true,
+      "returnOldObject": false,
+      "inputStage": {
+        "stage": "nlj",
+        "planNodeId": 4,
+        "nReturned": 10,
+        "executionTimeMillisEstimate": 0,
+        "opens": 1,
+        "closes": 1,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 1,
+        "totalDocsExamined": 163,
+        "totalKeysExamined": 163,
+        "collectionScans": 0,
+        "collectionSeeks": 163,
+        "indexScans": 0,
+        "indexSeeks": 11,
+        "indexesUsed": [
+          "year_idx",
+          "movie_id_idx"
+        ],
+        "innerOpens": 10,
+        "innerCloses": 1,
+        "outerProjects": [
+          6
+        ],
+        "outerCorrelated": [
+          14
+        ],
+        "outerStage": {
+          "stage": "nlj",
+          "planNodeId": 4,
+          "nReturned": 10,
+          "executionTimeMillisEstimate": 0,
+          "opens": 1,
+          "closes": 1,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 1,
+          "totalDocsExamined": 10,
+          "totalKeysExamined": 10,
+          "collectionScans": 0,
+          "collectionSeeks": 10,
+          "indexScans": 0,
+          "indexSeeks": 1,
+          "indexesUsed": [
+            "year_idx"
+          ],
+          "innerOpens": 10,
+          "innerCloses": 1,
+          "outerProjects": [
+            6
+          ],
+          "outerCorrelated": [
+            6
+          ],
+          "outerStage": {
+            "stage": "limit",
+            "planNodeId": 3,
+            "nReturned": 10,
+            "executionTimeMillisEstimate": 0,
+            "opens": 1,
+            "closes": 1,
+            "saveState": 0,
+            "restoreState": 0,
+            "isEOF": 1,
+            "limit": 10,
+            "inputStage": {
+              "stage": "nlj",
+              "planNodeId": 2,
+              "nReturned": 10,
+              "executionTimeMillisEstimate": 0,
+              "opens": 1,
+              "closes": 1,
+              "saveState": 0,
+              "restoreState": 0,
+              "isEOF": 0,
+              "totalDocsExamined": 10,
+              "totalKeysExamined": 10,
+              "collectionScans": 0,
+              "collectionSeeks": 10,
+              "indexScans": 0,
+              "indexSeeks": 1,
+              "indexesUsed": [
+                "year_idx"
+              ],
+              "innerOpens": 10,
+              "innerCloses": 1,
+              "outerProjects": [],
+              "outerCorrelated": [
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "outerStage": {
+                "stage": "ixseek",
+                "planNodeId": 1,
+                "nReturned": 10,
+                "executionTimeMillisEstimate": 0,
+                "opens": 1,
+                "closes": 1,
+                "saveState": 0,
+                "restoreState": 0,
+                "isEOF": 0,
+                "indexName": "year_idx",
+                "keysExamined": 10,
+                "seeks": 1,
+                "numReads": 10,
+                "indexKeySlot": 4,
+                "recordIdSlot": 1,
+                "snapshotIdSlot": 2,
+                "indexIdentSlot": 3,
+                "outputSlots": [],
+                "indexKeysToInclude": "00000000000000000000000000000000",
+                "seekKeyLow": "KS(2C0FA00104) ",
+                "seekKeyHigh": "KS(2C0FA0FE04) "
+              },
+              "innerStage": {
+                "stage": "limit",
+                "planNodeId": 2,
+                "nReturned": 10,
+                "executionTimeMillisEstimate": 0,
+                "opens": 10,
+                "closes": 1,
+                "saveState": 0,
+                "restoreState": 0,
+                "isEOF": 1,
+                "limit": 1,
+                "inputStage": {
+                  "stage": "seek",
+                  "planNodeId": 2,
+                  "nReturned": 10,
+                  "executionTimeMillisEstimate": 0,
+                  "opens": 10,
+                  "closes": 1,
+                  "saveState": 0,
+                  "restoreState": 0,
+                  "isEOF": 0,
+                  "numReads": 10,
+                  "recordSlot": 6,
+                  "recordIdSlot": 7,
+                  "seekRecordIdSlot": 1,
+                  "snapshotIdSlot": 2,
+                  "indexIdentSlot": 3,
+                  "indexKeySlot": 4,
+                  "indexKeyPatternSlot": 5,
+                  "scanFieldNames": [],
+                  "scanFieldSlots": []
+                }
+              }
+            }
+          },
+          "innerStage": {
+            "stage": "project",
+            "planNodeId": 4,
+            "nReturned": 10,
+            "executionTimeMillisEstimate": 0,
+            "opens": 10,
+            "closes": 1,
+            "saveState": 0,
+            "restoreState": 0,
+            "isEOF": 1,
+            "projections": {
+              "14": "\n    if isArrayEmpty(s12) \n    then [null] \n    else s12 \n"
+            },
+            "inputStage": {
+              "stage": "group",
+              "planNodeId": 4,
+              "nReturned": 10,
+              "executionTimeMillisEstimate": 0,
+              "opens": 10,
+              "closes": 1,
+              "saveState": 0,
+              "restoreState": 0,
+              "isEOF": 1,
+              "groupBySlots": [],
+              "expressions": {
+                "12": "addToSet(s10) ",
+                "initExprs": {
+                  "12": null
+                }
+              },
+              "mergingExprs": {
+                "13": "aggSetUnion(s13) "
+              },
+              "usedDisk": false,
+              "spills": 0,
+              "spilledBytes": 0,
+              "spilledRecords": 0,
+              "spilledDataStorageSize": 0,
+              "inputStage": {
+                "stage": "unwind",
+                "planNodeId": 4,
+                "nReturned": 10,
+                "executionTimeMillisEstimate": 0,
+                "opens": 10,
+                "closes": 10,
+                "saveState": 0,
+                "restoreState": 0,
+                "isEOF": 1,
+                "inputSlot": 9,
+                "outSlot": 10,
+                "outIndexSlot": 11,
+                "preserveNullAndEmptyArrays": 1,
+                "inputStage": {
+                  "stage": "project",
+                  "planNodeId": 4,
+                  "nReturned": 10,
+                  "executionTimeMillisEstimate": 0,
+                  "opens": 10,
+                  "closes": 10,
+                  "saveState": 0,
+                  "restoreState": 0,
+                  "isEOF": 1,
+                  "projections": {
+                    "9": "getField(s6, \"_id\") "
+                  },
+                  "inputStage": {
+                    "stage": "limit",
+                    "planNodeId": 4,
+                    "nReturned": 10,
+                    "executionTimeMillisEstimate": 0,
+                    "opens": 10,
+                    "closes": 10,
+                    "saveState": 0,
+                    "restoreState": 0,
+                    "isEOF": 1,
+                    "limit": 1,
+                    "inputStage": {
+                      "stage": "coscan",
+                      "planNodeId": 4,
+                      "nReturned": 10,
+                      "executionTimeMillisEstimate": 0,
+                      "opens": 10,
+                      "closes": 10,
+                      "saveState": 0,
+                      "restoreState": 0,
+                      "isEOF": 0
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "innerStage": {
+          "stage": "limit",
+          "planNodeId": 4,
+          "nReturned": 10,
+          "executionTimeMillisEstimate": 0,
+          "opens": 10,
+          "closes": 1,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 1,
+          "limit": 1,
+          "inputStage": {
+            "stage": "union",
+            "planNodeId": 4,
+            "nReturned": 10,
+            "executionTimeMillisEstimate": 0,
+            "opens": 10,
+            "closes": 1,
+            "saveState": 0,
+            "restoreState": 0,
+            "isEOF": 0,
+            "inputSlots": [
+              31,
+              32
+            ],
+            "outputSlots": [
+              33
+            ],
+            "inputStages": [
+              {
+                "stage": "project",
+                "planNodeId": 4,
+                "nReturned": 1,
+                "executionTimeMillisEstimate": 0,
+                "opens": 10,
+                "closes": 10,
+                "saveState": 0,
+                "restoreState": 0,
+                "isEOF": 1,
+                "projections": {
+                  "31": "getElement(s29, 0) "
+                },
+                "inputStage": {
+                  "stage": "group",
+                  "planNodeId": 4,
+                  "nReturned": 1,
+                  "executionTimeMillisEstimate": 0,
+                  "opens": 10,
+                  "closes": 10,
+                  "saveState": 0,
+                  "restoreState": 0,
+                  "isEOF": 1,
+                  "groupBySlots": [],
+                  "expressions": {
+                    "29": "addToArrayCapped(s27, 104857600) ",
+                    "initExprs": {
+                      "29": null
+                    }
+                  },
+                  "mergingExprs": {
+                    "30": "aggConcatArraysCapped(s30, 104857600) "
+                  },
+                  "usedDisk": false,
+                  "spills": 0,
+                  "spilledBytes": 0,
+                  "spilledRecords": 0,
+                  "spilledDataStorageSize": 0,
+                  "inputStage": {
+                    "stage": "filter",
+                    "planNodeId": 4,
+                    "nReturned": 153,
+                    "executionTimeMillisEstimate": 0,
+                    "opens": 10,
+                    "closes": 10,
+                    "saveState": 0,
+                    "restoreState": 0,
+                    "isEOF": 1,
+                    "numTested": 153,
+                    "filter": "traverseF((getField(s27, \"movie_id\") ?: null), lambda(l1.0) { isMember(l1.0, s14) }, true) ",
+                    "inputStage": {
+                      "stage": "nlj",
+                      "planNodeId": 4,
+                      "nReturned": 153,
+                      "executionTimeMillisEstimate": 0,
+                      "opens": 10,
+                      "closes": 10,
+                      "saveState": 0,
+                      "restoreState": 0,
+                      "isEOF": 1,
+                      "totalDocsExamined": 153,
+                      "totalKeysExamined": 153,
+                      "collectionScans": 0,
+                      "collectionSeeks": 153,
+                      "indexScans": 0,
+                      "indexSeeks": 10,
+                      "indexesUsed": [
+                        "movie_id_idx"
+                      ],
+                      "innerOpens": 153,
+                      "innerCloses": 1,
+                      "outerProjects": [],
+                      "outerCorrelated": [
+                        23,
+                        25,
+                        26,
+                        24,
+                        22
+                      ],
+                      "outerStage": {
+                        "stage": "nlj",
+                        "planNodeId": 4,
+                        "nReturned": 153,
+                        "executionTimeMillisEstimate": 0,
+                        "opens": 10,
+                        "closes": 10,
+                        "saveState": 0,
+                        "restoreState": 0,
+                        "isEOF": 1,
+                        "totalDocsExamined": 0,
+                        "totalKeysExamined": 153,
+                        "collectionScans": 0,
+                        "collectionSeeks": 0,
+                        "indexScans": 0,
+                        "indexSeeks": 10,
+                        "indexesUsed": [
+                          "movie_id_idx"
+                        ],
+                        "innerOpens": 10,
+                        "innerCloses": 10,
+                        "outerProjects": [
+                          22
+                        ],
+                        "outerCorrelated": [
+                          20,
+                          21
+                        ],
+                        "outerStage": {
+                          "stage": "nlj",
+                          "planNodeId": 4,
+                          "nReturned": 10,
+                          "executionTimeMillisEstimate": 0,
+                          "opens": 10,
+                          "closes": 10,
+                          "saveState": 0,
+                          "restoreState": 0,
+                          "isEOF": 1,
+                          "totalDocsExamined": 0,
+                          "totalKeysExamined": 0,
+                          "collectionScans": 0,
+                          "collectionSeeks": 0,
+                          "indexScans": 0,
+                          "indexSeeks": 0,
+                          "indexesUsed": [],
+                          "innerOpens": 10,
+                          "innerCloses": 10,
+                          "outerProjects": [],
+                          "outerCorrelated": [
+                            15
+                          ],
+                          "outerStage": {
+                            "stage": "unwind",
+                            "planNodeId": 4,
+                            "nReturned": 10,
+                            "executionTimeMillisEstimate": 0,
+                            "opens": 10,
+                            "closes": 10,
+                            "saveState": 0,
+                            "restoreState": 0,
+                            "isEOF": 1,
+                            "inputSlot": 14,
+                            "outSlot": 15,
+                            "outIndexSlot": 16,
+                            "preserveNullAndEmptyArrays": 1,
+                            "inputStage": {
+                              "stage": "limit",
+                              "planNodeId": 4,
+                              "nReturned": 10,
+                              "executionTimeMillisEstimate": 0,
+                              "opens": 10,
+                              "closes": 10,
+                              "saveState": 0,
+                              "restoreState": 0,
+                              "isEOF": 1,
+                              "limit": 1,
+                              "inputStage": {
+                                "stage": "coscan",
+                                "planNodeId": 4,
+                                "nReturned": 10,
+                                "executionTimeMillisEstimate": 0,
+                                "opens": 10,
+                                "closes": 10,
+                                "saveState": 0,
+                                "restoreState": 0,
+                                "isEOF": 0
+                              }
+                            }
+                          },
+                          "innerStage": {
+                            "stage": "project",
+                            "planNodeId": 4,
+                            "nReturned": 10,
+                            "executionTimeMillisEstimate": 0,
+                            "opens": 10,
+                            "closes": 10,
+                            "saveState": 0,
+                            "restoreState": 0,
+                            "isEOF": 1,
+                            "projections": {
+                              "20": "ks(1ll, 0, s19, 1ll) ",
+                              "21": "ks(1ll, 0, s19, 2ll) ",
+                              "22": "{\"movie_id\" : 1} "
+                            },
+                            "inputStage": {
+                              "stage": "union",
+                              "planNodeId": 4,
+                              "nReturned": 10,
+                              "executionTimeMillisEstimate": 0,
+                              "opens": 10,
+                              "closes": 10,
+                              "saveState": 0,
+                              "restoreState": 0,
+                              "isEOF": 1,
+                              "inputSlots": [
+                                17,
+                                18
+                              ],
+                              "outputSlots": [
+                                19
+                              ],
+                              "inputStages": [
+                                {
+                                  "stage": "filter",
+                                  "planNodeId": 4,
+                                  "nReturned": 0,
+                                  "executionTimeMillisEstimate": 0,
+                                  "opens": 10,
+                                  "closes": 10,
+                                  "saveState": 0,
+                                  "restoreState": 0,
+                                  "isEOF": 1,
+                                  "numTested": 10,
+                                  "filter": "(isArray(s15) && !(isMember(s17, s14))) ",
+                                  "inputStage": {
+                                    "stage": "project",
+                                    "planNodeId": 4,
+                                    "nReturned": 10,
+                                    "executionTimeMillisEstimate": 0,
+                                    "opens": 10,
+                                    "closes": 10,
+                                    "saveState": 0,
+                                    "restoreState": 0,
+                                    "isEOF": 1,
+                                    "projections": {
+                                      "17": "(getElement(s15, 0) ?: undefined) "
+                                    },
+                                    "inputStage": {
+                                      "stage": "limit",
+                                      "planNodeId": 4,
+                                      "nReturned": 10,
+                                      "executionTimeMillisEstimate": 0,
+                                      "opens": 10,
+                                      "closes": 10,
+                                      "saveState": 0,
+                                      "restoreState": 0,
+                                      "isEOF": 1,
+                                      "limit": 1,
+                                      "inputStage": {
+                                        "stage": "coscan",
+                                        "planNodeId": 4,
+                                        "nReturned": 10,
+                                        "executionTimeMillisEstimate": 0,
+                                        "opens": 10,
+                                        "closes": 10,
+                                        "saveState": 0,
+                                        "restoreState": 0,
+                                        "isEOF": 0
+                                      }
+                                    }
+                                  }
+                                },
+                                {
+                                  "stage": "project",
+                                  "planNodeId": 4,
+                                  "nReturned": 10,
+                                  "executionTimeMillisEstimate": 0,
+                                  "opens": 10,
+                                  "closes": 10,
+                                  "saveState": 0,
+                                  "restoreState": 0,
+                                  "isEOF": 1,
+                                  "projections": {
+                                    "18": "s15 "
+                                  },
+                                  "inputStage": {
+                                    "stage": "limit",
+                                    "planNodeId": 4,
+                                    "nReturned": 10,
+                                    "executionTimeMillisEstimate": 0,
+                                    "opens": 10,
+                                    "closes": 10,
+                                    "saveState": 0,
+                                    "restoreState": 0,
+                                    "isEOF": 1,
+                                    "limit": 1,
+                                    "inputStage": {
+                                      "stage": "coscan",
+                                      "planNodeId": 4,
+                                      "nReturned": 10,
+                                      "executionTimeMillisEstimate": 0,
+                                      "opens": 10,
+                                      "closes": 10,
+                                      "saveState": 0,
+                                      "restoreState": 0,
+                                      "isEOF": 0
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        "innerStage": {
+                          "stage": "ixseek",
+                          "planNodeId": 4,
+                          "nReturned": 153,
+                          "executionTimeMillisEstimate": 0,
+                          "opens": 10,
+                          "closes": 10,
+                          "saveState": 0,
+                          "restoreState": 0,
+                          "isEOF": 1,
+                          "indexName": "movie_id_idx",
+                          "keysExamined": 153,
+                          "seeks": 10,
+                          "numReads": 163,
+                          "indexKeySlot": 24,
+                          "recordIdSlot": 23,
+                          "snapshotIdSlot": 25,
+                          "indexIdentSlot": 26,
+                          "outputSlots": [],
+                          "indexKeysToInclude": "00000000000000000000000000000000",
+                          "seekKeyLow": "s20 ",
+                          "seekKeyHigh": "s21 "
+                        }
+                      },
+                      "innerStage": {
+                        "stage": "limit",
+                        "planNodeId": 4,
+                        "nReturned": 153,
+                        "executionTimeMillisEstimate": 0,
+                        "opens": 153,
+                        "closes": 1,
+                        "saveState": 0,
+                        "restoreState": 0,
+                        "isEOF": 1,
+                        "limit": 1,
+                        "inputStage": {
+                          "stage": "seek",
+                          "planNodeId": 4,
+                          "nReturned": 153,
+                          "executionTimeMillisEstimate": 0,
+                          "opens": 153,
+                          "closes": 1,
+                          "saveState": 0,
+                          "restoreState": 0,
+                          "isEOF": 0,
+                          "numReads": 153,
+                          "recordSlot": 27,
+                          "recordIdSlot": 28,
+                          "seekRecordIdSlot": 23,
+                          "snapshotIdSlot": 25,
+                          "indexIdentSlot": 26,
+                          "indexKeySlot": 24,
+                          "indexKeyPatternSlot": 22,
+                          "scanFieldNames": [],
+                          "scanFieldSlots": []
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "stage": "project",
+                "planNodeId": 4,
+                "nReturned": 9,
+                "executionTimeMillisEstimate": 0,
+                "opens": 9,
+                "closes": 9,
+                "saveState": 0,
+                "restoreState": 0,
+                "isEOF": 0,
+                "projections": {
+                  "32": "[] "
+                },
+                "inputStage": {
+                  "stage": "limit",
+                  "planNodeId": 4,
+                  "nReturned": 9,
+                  "executionTimeMillisEstimate": 0,
+                  "opens": 9,
+                  "closes": 9,
+                  "saveState": 0,
+                  "restoreState": 0,
+                  "isEOF": 0,
+                  "limit": 1,
+                  "inputStage": {
+                    "stage": "coscan",
+                    "planNodeId": 4,
+                    "nReturned": 9,
+                    "executionTimeMillisEstimate": 0,
+                    "opens": 9,
+                    "closes": 9,
+                    "saveState": 0,
+                    "restoreState": 0,
+                    "isEOF": 0
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "queryShapeHash": "DB8CBB139B5B157A312DBFF788222AAC14EC6FDD9A2C06E0C8D0744F34CA80C2",
+  "command": {
+    "aggregate": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "year": 2000
+        }
+      },
+      {
+        "$lookup": {
+          "from": "comments",
+          "localField": "_id",
+          "foreignField": "movie_id",
+          "as": "movie_comments"
+        }
+      },
+      {
+        "$limit": 10
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

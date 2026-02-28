@@ -1,0 +1,207 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_supplies.sales",
+          "indexFilterSet": false,
+          "parsedQuery": {},
+          "queryHash": "B5352C2D",
+          "planCacheKey": "B5352C2D",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "winningPlan": {
+            "stage": "PROJECTION_DEFAULT",
+            "transformBy": {
+              "customer.satisfaction": 1,
+              "storeLocation": 1,
+              "_id": 0
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "direction": "forward"
+            }
+          },
+          "rejectedPlans": []
+        }
+      }
+    },
+    {
+      "$group": {
+        "_id": {
+          "$switch": {
+            "branches": [
+              {
+                "case": {
+                  "$and": [
+                    {
+                      "$gte": [
+                        "$customer.satisfaction",
+                        {
+                          "$const": 1
+                        }
+                      ]
+                    },
+                    {
+                      "$lt": [
+                        "$customer.satisfaction",
+                        {
+                          "$const": 2
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "then": {
+                  "$const": 1
+                }
+              },
+              {
+                "case": {
+                  "$and": [
+                    {
+                      "$gte": [
+                        "$customer.satisfaction",
+                        {
+                          "$const": 2
+                        }
+                      ]
+                    },
+                    {
+                      "$lt": [
+                        "$customer.satisfaction",
+                        {
+                          "$const": 3
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "then": {
+                  "$const": 2
+                }
+              },
+              {
+                "case": {
+                  "$and": [
+                    {
+                      "$gte": [
+                        "$customer.satisfaction",
+                        {
+                          "$const": 3
+                        }
+                      ]
+                    },
+                    {
+                      "$lt": [
+                        "$customer.satisfaction",
+                        {
+                          "$const": 4
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "then": {
+                  "$const": 3
+                }
+              },
+              {
+                "case": {
+                  "$and": [
+                    {
+                      "$gte": [
+                        "$customer.satisfaction",
+                        {
+                          "$const": 4
+                        }
+                      ]
+                    },
+                    {
+                      "$lt": [
+                        "$customer.satisfaction",
+                        {
+                          "$const": 5
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "then": {
+                  "$const": 4
+                }
+              }
+            ],
+            "default": {
+              "$const": "Other"
+            }
+          }
+        },
+        "count": {
+          "$sum": {
+            "$const": 1
+          }
+        },
+        "stores": {
+          "$addToSet": "$storeLocation"
+        }
+      }
+    },
+    {
+      "$sort": {
+        "sortKey": {
+          "_id": 1
+        }
+      }
+    }
+  ],
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "7.0.30",
+    "gitVersion": "67480f41dfa5802ce14af5c95bd0e9826d3b2131"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine"
+  },
+  "command": {
+    "aggregate": "sales",
+    "pipeline": [
+      {
+        "$bucket": {
+          "groupBy": "$customer.satisfaction",
+          "boundaries": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "default": "Other",
+          "output": {
+            "count": {
+              "$sum": 1
+            },
+            "stores": {
+              "$addToSet": "$storeLocation"
+            }
+          }
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_supplies"
+  },
+  "ok": 1.0
+}

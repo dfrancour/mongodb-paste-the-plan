@@ -1,0 +1,170 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_mflix.movies",
+          "indexFilterSet": false,
+          "parsedQuery": {
+            "$and": [
+              {
+                "imdb.rating": {
+                  "$gt": 0
+                }
+              },
+              {
+                "imdb.rating": {
+                  "$exists": true
+                }
+              }
+            ]
+          },
+          "queryHash": "D22F2CAE",
+          "planCacheKey": "211DE8A4",
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "winningPlan": {
+            "stage": "PROJECTION_DEFAULT",
+            "transformBy": {
+              "imdb.rating": 1,
+              "imdb.votes": 1,
+              "_id": 0
+            },
+            "inputStage": {
+              "stage": "FETCH",
+              "filter": {
+                "imdb.rating": {
+                  "$exists": true
+                }
+              },
+              "inputStage": {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "imdb.rating": 1
+                },
+                "indexName": "imdb_rating_idx",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "imdb.rating": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "imdb.rating": [
+                    "(0, inf.0]"
+                  ]
+                }
+              }
+            }
+          },
+          "rejectedPlans": [
+            {
+              "stage": "PROJECTION_DEFAULT",
+              "transformBy": {
+                "imdb.rating": 1,
+                "imdb.votes": 1,
+                "_id": 0
+              },
+              "inputStage": {
+                "stage": "FETCH",
+                "filter": {
+                  "imdb.rating": {
+                    "$exists": true
+                  }
+                },
+                "inputStage": {
+                  "stage": "IXSCAN",
+                  "keyPattern": {
+                    "imdb.rating": -1
+                  },
+                  "indexName": "imdb_rating_desc_idx",
+                  "isMultiKey": false,
+                  "multiKeyPaths": {
+                    "imdb.rating": []
+                  },
+                  "isUnique": false,
+                  "isSparse": false,
+                  "isPartial": false,
+                  "indexVersion": 2,
+                  "direction": "forward",
+                  "indexBounds": {
+                    "imdb.rating": [
+                      "[inf.0, 0)"
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "$bucketAuto": {
+        "groupBy": "$imdb.rating",
+        "buckets": 5,
+        "output": {
+          "count": {
+            "$sum": {
+              "$const": 1
+            }
+          },
+          "avg_votes": {
+            "$avg": "$imdb.votes"
+          }
+        }
+      }
+    }
+  ],
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "6.0.27",
+    "gitVersion": "fc88ca137231d7457aed6265d4f32a361ae71716"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+  },
+  "command": {
+    "aggregate": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "imdb.rating": {
+            "$exists": true,
+            "$gt": 0
+          }
+        }
+      },
+      {
+        "$bucketAuto": {
+          "groupBy": "$imdb.rating",
+          "buckets": 5,
+          "output": {
+            "count": {
+              "$sum": 1
+            },
+            "avg_votes": {
+              "$avg": "$imdb.votes"
+            }
+          }
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_mflix"
+  },
+  "ok": 1.0
+}

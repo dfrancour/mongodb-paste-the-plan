@@ -1,0 +1,264 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "indexFilterSet": false,
+    "parsedQuery": {
+      "$text": {
+        "$search": "drama love story",
+        "$language": "english",
+        "$caseSensitive": false,
+        "$diacriticSensitive": false
+      }
+    },
+    "queryHash": "07C96184",
+    "planCacheKey": "B0024AD9",
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "winningPlan": {
+      "stage": "TEXT_MATCH",
+      "indexPrefix": {},
+      "indexName": "cast_text_fullplot_text_genres_text_title_text",
+      "parsedTextQuery": {
+        "terms": [
+          "drama",
+          "love",
+          "stori"
+        ],
+        "negatedTerms": [],
+        "phrases": [],
+        "negatedPhrases": []
+      },
+      "textIndexVersion": 3,
+      "inputStage": {
+        "stage": "FETCH",
+        "inputStage": {
+          "stage": "OR",
+          "inputStages": [
+            {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "_fts": "text",
+                "_ftsx": 1
+              },
+              "indexName": "cast_text_fullplot_text_genres_text_title_text",
+              "isMultiKey": true,
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "backward",
+              "indexBounds": {}
+            },
+            {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "_fts": "text",
+                "_ftsx": 1
+              },
+              "indexName": "cast_text_fullplot_text_genres_text_title_text",
+              "isMultiKey": true,
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "backward",
+              "indexBounds": {}
+            },
+            {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "_fts": "text",
+                "_ftsx": 1
+              },
+              "indexName": "cast_text_fullplot_text_genres_text_title_text",
+              "isMultiKey": true,
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "backward",
+              "indexBounds": {}
+            }
+          ]
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 14284,
+    "executionTimeMillis": 12,
+    "totalKeysExamined": 18892,
+    "totalDocsExamined": 14284,
+    "executionStages": {
+      "stage": "TEXT_MATCH",
+      "nReturned": 14284,
+      "executionTimeMillisEstimate": 3,
+      "works": 18895,
+      "advanced": 14284,
+      "needTime": 4610,
+      "needYield": 0,
+      "saveState": 18,
+      "restoreState": 18,
+      "isEOF": 1,
+      "indexPrefix": {},
+      "indexName": "cast_text_fullplot_text_genres_text_title_text",
+      "parsedTextQuery": {
+        "terms": [
+          "drama",
+          "love",
+          "stori"
+        ],
+        "negatedTerms": [],
+        "phrases": [],
+        "negatedPhrases": []
+      },
+      "textIndexVersion": 3,
+      "docsRejected": 0,
+      "inputStage": {
+        "stage": "FETCH",
+        "nReturned": 14284,
+        "executionTimeMillisEstimate": 3,
+        "works": 18895,
+        "advanced": 14284,
+        "needTime": 4610,
+        "needYield": 0,
+        "saveState": 18,
+        "restoreState": 18,
+        "isEOF": 1,
+        "docsExamined": 14284,
+        "alreadyHasObj": 0,
+        "inputStage": {
+          "stage": "OR",
+          "nReturned": 14284,
+          "executionTimeMillisEstimate": 2,
+          "works": 18895,
+          "advanced": 14284,
+          "needTime": 4610,
+          "needYield": 0,
+          "saveState": 18,
+          "restoreState": 18,
+          "isEOF": 1,
+          "dupsTested": 18892,
+          "dupsDropped": 4608,
+          "inputStages": [
+            {
+              "stage": "IXSCAN",
+              "nReturned": 12440,
+              "executionTimeMillisEstimate": 0,
+              "works": 12441,
+              "advanced": 12440,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 18,
+              "restoreState": 18,
+              "isEOF": 1,
+              "keyPattern": {
+                "_fts": "text",
+                "_ftsx": 1
+              },
+              "indexName": "cast_text_fullplot_text_genres_text_title_text",
+              "isMultiKey": true,
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "backward",
+              "indexBounds": {},
+              "keysExamined": 12440,
+              "seeks": 1,
+              "dupsTested": 12440,
+              "dupsDropped": 0
+            },
+            {
+              "stage": "IXSCAN",
+              "nReturned": 3592,
+              "executionTimeMillisEstimate": 0,
+              "works": 3593,
+              "advanced": 3592,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 18,
+              "restoreState": 18,
+              "isEOF": 1,
+              "keyPattern": {
+                "_fts": "text",
+                "_ftsx": 1
+              },
+              "indexName": "cast_text_fullplot_text_genres_text_title_text",
+              "isMultiKey": true,
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "backward",
+              "indexBounds": {},
+              "keysExamined": 3592,
+              "seeks": 1,
+              "dupsTested": 3592,
+              "dupsDropped": 0
+            },
+            {
+              "stage": "IXSCAN",
+              "nReturned": 2860,
+              "executionTimeMillisEstimate": 2,
+              "works": 2861,
+              "advanced": 2860,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 18,
+              "restoreState": 18,
+              "isEOF": 1,
+              "keyPattern": {
+                "_fts": "text",
+                "_ftsx": 1
+              },
+              "indexName": "cast_text_fullplot_text_genres_text_title_text",
+              "isMultiKey": true,
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "backward",
+              "indexBounds": {},
+              "keysExamined": 2860,
+              "seeks": 1,
+              "dupsTested": 2860,
+              "dupsDropped": 0
+            }
+          ]
+        }
+      }
+    },
+    "allPlansExecution": []
+  },
+  "command": {
+    "find": "movies",
+    "filter": {
+      "$text": {
+        "$search": "drama love story"
+      }
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "6.0.27",
+    "gitVersion": "fc88ca137231d7457aed6265d4f32a361ae71716"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+  },
+  "ok": 1.0
+}

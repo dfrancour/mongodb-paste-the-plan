@@ -1,0 +1,78 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$geoNearCursor": {
+        "queryPlanner": {
+          "namespace": "sample_training.zips",
+          "indexFilterSet": false,
+          "parsedQuery": {
+            "loc": {
+              "$near": [
+                -73.9857,
+                40.7484
+              ],
+              "$maxDistance": 0.5
+            }
+          },
+          "queryHash": "30299380",
+          "planCacheKey": "9715EE4E",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "winningPlan": {
+            "stage": "GEO_NEAR_2D",
+            "keyPattern": {
+              "loc": "2d"
+            },
+            "indexName": "loc_2d_idx",
+            "indexVersion": 2
+          },
+          "rejectedPlans": []
+        }
+      }
+    },
+    {
+      "$limit": 10
+    }
+  ],
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "7.0.30",
+    "gitVersion": "67480f41dfa5802ce14af5c95bd0e9826d3b2131"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine"
+  },
+  "command": {
+    "aggregate": "zips",
+    "pipeline": [
+      {
+        "$geoNear": {
+          "near": [
+            -73.9857,
+            40.7484
+          ],
+          "distanceField": "distance",
+          "maxDistance": 0.5
+        }
+      },
+      {
+        "$limit": 10
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_training"
+  },
+  "ok": 1.0
+}

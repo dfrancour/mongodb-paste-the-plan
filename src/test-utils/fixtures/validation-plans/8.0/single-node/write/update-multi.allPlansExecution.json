@@ -1,0 +1,454 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "parsedQuery": {
+      "year": {
+        "$gte": 2020
+      }
+    },
+    "indexFilterSet": false,
+    "queryHash": "19A0C636",
+    "planCacheShapeHash": "19A0C636",
+    "planCacheKey": "4ECA98E1",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "UPDATE",
+      "inputStage": {
+        "stage": "FETCH",
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "year": 1
+          },
+          "indexName": "year_idx",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "year": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "year": [
+              "[2020, inf.0]"
+            ]
+          }
+        }
+      }
+    },
+    "rejectedPlans": [
+      {
+        "isCached": false,
+        "stage": "UPDATE",
+        "inputStage": {
+          "stage": "FETCH",
+          "inputStage": {
+            "stage": "IXSCAN",
+            "keyPattern": {
+              "year": 1,
+              "imdb.rating": -1
+            },
+            "indexName": "year_rating_compound_idx",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "year": [],
+              "imdb.rating": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "year": [
+                "[2020, inf.0]"
+              ],
+              "imdb.rating": [
+                "[MaxKey, MinKey]"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "isCached": false,
+        "stage": "UPDATE",
+        "inputStage": {
+          "stage": "FETCH",
+          "inputStage": {
+            "stage": "IXSCAN",
+            "keyPattern": {
+              "year": 1,
+              "genres": 1
+            },
+            "indexName": "year_genres_compound_idx",
+            "isMultiKey": true,
+            "multiKeyPaths": {
+              "year": [],
+              "genres": [
+                "genres"
+              ]
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "year": [
+                "[2020, inf.0]"
+              ],
+              "genres": [
+                "[MinKey, MaxKey]"
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 0,
+    "executionTimeMillis": 0,
+    "totalKeysExamined": 0,
+    "totalDocsExamined": 0,
+    "executionStages": {
+      "isCached": false,
+      "stage": "UPDATE",
+      "nReturned": 0,
+      "executionTimeMillisEstimate": 0,
+      "works": 1,
+      "advanced": 0,
+      "needTime": 0,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "nMatched": 0,
+      "nWouldModify": 0,
+      "nWouldUpsert": 0,
+      "inputStage": {
+        "stage": "FETCH",
+        "nReturned": 0,
+        "executionTimeMillisEstimate": 0,
+        "works": 1,
+        "advanced": 0,
+        "needTime": 0,
+        "needYield": 0,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 1,
+        "docsExamined": 0,
+        "alreadyHasObj": 0,
+        "inputStage": {
+          "stage": "IXSCAN",
+          "nReturned": 0,
+          "executionTimeMillisEstimate": 0,
+          "works": 1,
+          "advanced": 0,
+          "needTime": 0,
+          "needYield": 0,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 1,
+          "keyPattern": {
+            "year": 1
+          },
+          "indexName": "year_idx",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "year": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "year": [
+              "[2020, inf.0]"
+            ]
+          },
+          "keysExamined": 0,
+          "seeks": 1,
+          "dupsTested": 0,
+          "dupsDropped": 0
+        }
+      }
+    },
+    "allPlansExecution": [
+      {
+        "nReturned": 0,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 0,
+        "totalDocsExamined": 0,
+        "score": 2.0002,
+        "executionStages": {
+          "isCached": false,
+          "stage": "UPDATE",
+          "nReturned": 0,
+          "executionTimeMillisEstimate": 0,
+          "works": 0,
+          "advanced": 0,
+          "needTime": 0,
+          "needYield": 0,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 1,
+          "nMatched": 0,
+          "nWouldModify": 0,
+          "nWouldUpsert": 0,
+          "inputStage": {
+            "stage": "FETCH",
+            "nReturned": 0,
+            "executionTimeMillisEstimate": 0,
+            "works": 1,
+            "advanced": 0,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 0,
+            "restoreState": 0,
+            "isEOF": 1,
+            "docsExamined": 0,
+            "alreadyHasObj": 0,
+            "inputStage": {
+              "stage": "IXSCAN",
+              "nReturned": 0,
+              "executionTimeMillisEstimate": 0,
+              "works": 1,
+              "advanced": 0,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 0,
+              "restoreState": 0,
+              "isEOF": 1,
+              "keyPattern": {
+                "year": 1
+              },
+              "indexName": "year_idx",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "year": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "year": [
+                  "[2020, inf.0]"
+                ]
+              },
+              "keysExamined": 0,
+              "seeks": 1,
+              "dupsTested": 0,
+              "dupsDropped": 0
+            }
+          }
+        }
+      },
+      {
+        "nReturned": 0,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 0,
+        "totalDocsExamined": 0,
+        "score": 2.0002,
+        "executionStages": {
+          "isCached": false,
+          "stage": "UPDATE",
+          "nReturned": 0,
+          "executionTimeMillisEstimate": 0,
+          "works": 1,
+          "advanced": 0,
+          "needTime": 0,
+          "needYield": 0,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 1,
+          "nMatched": 0,
+          "nWouldModify": 0,
+          "nWouldUpsert": 0,
+          "inputStage": {
+            "stage": "FETCH",
+            "nReturned": 0,
+            "executionTimeMillisEstimate": 0,
+            "works": 1,
+            "advanced": 0,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 0,
+            "isEOF": 1,
+            "docsExamined": 0,
+            "alreadyHasObj": 0,
+            "inputStage": {
+              "stage": "IXSCAN",
+              "nReturned": 0,
+              "executionTimeMillisEstimate": 0,
+              "works": 1,
+              "advanced": 0,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 1,
+              "restoreState": 0,
+              "isEOF": 1,
+              "keyPattern": {
+                "year": 1,
+                "imdb.rating": -1
+              },
+              "indexName": "year_rating_compound_idx",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "year": [],
+                "imdb.rating": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "year": [
+                  "[2020, inf.0]"
+                ],
+                "imdb.rating": [
+                  "[MaxKey, MinKey]"
+                ]
+              },
+              "keysExamined": 0,
+              "seeks": 1,
+              "dupsTested": 0,
+              "dupsDropped": 0
+            }
+          }
+        }
+      },
+      {
+        "nReturned": 0,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 0,
+        "totalDocsExamined": 0,
+        "score": 2.0002,
+        "executionStages": {
+          "isCached": false,
+          "stage": "UPDATE",
+          "nReturned": 0,
+          "executionTimeMillisEstimate": 0,
+          "works": 1,
+          "advanced": 0,
+          "needTime": 0,
+          "needYield": 0,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 1,
+          "nMatched": 0,
+          "nWouldModify": 0,
+          "nWouldUpsert": 0,
+          "inputStage": {
+            "stage": "FETCH",
+            "nReturned": 0,
+            "executionTimeMillisEstimate": 0,
+            "works": 1,
+            "advanced": 0,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 0,
+            "isEOF": 1,
+            "docsExamined": 0,
+            "alreadyHasObj": 0,
+            "inputStage": {
+              "stage": "IXSCAN",
+              "nReturned": 0,
+              "executionTimeMillisEstimate": 0,
+              "works": 1,
+              "advanced": 0,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 1,
+              "restoreState": 0,
+              "isEOF": 1,
+              "keyPattern": {
+                "year": 1,
+                "genres": 1
+              },
+              "indexName": "year_genres_compound_idx",
+              "isMultiKey": true,
+              "multiKeyPaths": {
+                "year": [],
+                "genres": [
+                  "genres"
+                ]
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "year": [
+                  "[2020, inf.0]"
+                ],
+                "genres": [
+                  "[MinKey, MaxKey]"
+                ]
+              },
+              "keysExamined": 0,
+              "seeks": 1,
+              "dupsTested": 0,
+              "dupsDropped": 0
+            }
+          }
+        }
+      }
+    ]
+  },
+  "command": {
+    "update": "movies",
+    "updates": [
+      {
+        "q": {
+          "year": {
+            "$gte": 2020
+          }
+        },
+        "u": {
+          "$set": {
+            "recent": true
+          }
+        },
+        "multi": true
+      }
+    ],
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

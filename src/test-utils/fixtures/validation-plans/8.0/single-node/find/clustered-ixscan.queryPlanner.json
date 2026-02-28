@@ -1,0 +1,73 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_training.logs",
+    "parsedQuery": {
+      "level": {
+        "$eq": "ERROR"
+      }
+    },
+    "indexFilterSet": false,
+    "queryHash": "626DD88C",
+    "planCacheShapeHash": "626DD88C",
+    "planCacheKey": "85ACA678",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "FETCH",
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "level": 1
+        },
+        "indexName": "log_level_idx",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "level": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "level": [
+            "[\"ERROR\", \"ERROR\"]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "queryShapeHash": "518C37AF42E6068D79A72884BC0D2F0611F381F685FD1DA884EFF4204BB85689",
+  "command": {
+    "find": "logs",
+    "filter": {
+      "level": "ERROR"
+    },
+    "$db": "sample_training"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

@@ -1,0 +1,246 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_mflix.movies",
+          "parsedQuery": {
+            "$and": [
+              {
+                "imdb.votes": {
+                  "$gt": 0
+                }
+              },
+              {
+                "runtime": {
+                  "$gt": 0
+                }
+              }
+            ]
+          },
+          "indexFilterSet": false,
+          "queryHash": "4690B9C5",
+          "planCacheShapeHash": "4690B9C5",
+          "planCacheKey": "FDB288EE",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "stage": "PROJECTION_DEFAULT",
+            "transformBy": {
+              "_id": 1,
+              "genres": 1,
+              "imdb.rating": 1,
+              "imdb.votes": 1,
+              "title": 1
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "filter": {
+                "$and": [
+                  {
+                    "imdb.votes": {
+                      "$gt": 0
+                    }
+                  },
+                  {
+                    "runtime": {
+                      "$gt": 0
+                    }
+                  }
+                ]
+              },
+              "direction": "forward"
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 20861,
+          "executionTimeMillis": 35,
+          "totalKeysExamined": 0,
+          "totalDocsExamined": 21349,
+          "executionStages": {
+            "isCached": false,
+            "stage": "PROJECTION_DEFAULT",
+            "nReturned": 20861,
+            "executionTimeMillisEstimate": 1,
+            "works": 21350,
+            "advanced": 20861,
+            "needTime": 488,
+            "needYield": 0,
+            "saveState": 11,
+            "restoreState": 11,
+            "isEOF": 1,
+            "transformBy": {
+              "_id": 1,
+              "genres": 1,
+              "imdb.rating": 1,
+              "imdb.votes": 1,
+              "title": 1
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "filter": {
+                "$and": [
+                  {
+                    "imdb.votes": {
+                      "$gt": 0
+                    }
+                  },
+                  {
+                    "runtime": {
+                      "$gt": 0
+                    }
+                  }
+                ]
+              },
+              "nReturned": 20861,
+              "executionTimeMillisEstimate": 0,
+              "works": 21350,
+              "advanced": 20861,
+              "needTime": 488,
+              "needYield": 0,
+              "saveState": 11,
+              "restoreState": 11,
+              "isEOF": 1,
+              "direction": "forward",
+              "docsExamined": 21349
+            }
+          }
+        }
+      },
+      "nReturned": 20861,
+      "executionTimeMillisEstimate": 16
+    },
+    {
+      "$addFields": {
+        "rating_per_vote": {
+          "$divide": [
+            "$imdb.rating",
+            {
+              "$log10": [
+                "$imdb.votes"
+              ]
+            }
+          ]
+        },
+        "genre_count": {
+          "$size": [
+            {
+              "$ifNull": [
+                "$genres",
+                {
+                  "$const": []
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "nReturned": 20861,
+      "executionTimeMillisEstimate": 16
+    },
+    {
+      "$project": {
+        "_id": true,
+        "title": true,
+        "rating_per_vote": true,
+        "genre_count": true
+      },
+      "nReturned": 20861,
+      "executionTimeMillisEstimate": 28
+    },
+    {
+      "$sort": {
+        "sortKey": {
+          "rating_per_vote": -1
+        },
+        "limit": 20
+      },
+      "totalDataSizeSortedBytesEstimate": 7062,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledDataStorageSize": 0,
+      "nReturned": 20,
+      "executionTimeMillisEstimate": 28
+    }
+  ],
+  "queryShapeHash": "10024189ED65DEC3C2F4DE27999370F669A952E70A69C99E8BA1B76D4307A6BD",
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "runtime": {
+            "$gt": 0
+          },
+          "imdb.votes": {
+            "$gt": 0
+          }
+        }
+      },
+      {
+        "$addFields": {
+          "rating_per_vote": {
+            "$divide": [
+              "$imdb.rating",
+              {
+                "$log10": "$imdb.votes"
+              }
+            ]
+          },
+          "genre_count": {
+            "$size": {
+              "$ifNull": [
+                "$genres",
+                []
+              ]
+            }
+          }
+        }
+      },
+      {
+        "$project": {
+          "title": 1,
+          "rating_per_vote": 1,
+          "genre_count": 1
+        }
+      },
+      {
+        "$sort": {
+          "rating_per_vote": -1
+        }
+      },
+      {
+        "$limit": 20
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_mflix"
+  },
+  "ok": 1.0
+}

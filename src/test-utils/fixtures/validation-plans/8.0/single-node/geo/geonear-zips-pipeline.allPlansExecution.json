@@ -1,0 +1,224 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$geoNearCursor": {
+        "queryPlanner": {
+          "namespace": "sample_training.zips",
+          "parsedQuery": {
+            "loc": {
+              "$near": [
+                -73.9857,
+                40.7484
+              ],
+              "$maxDistance": 0.5
+            }
+          },
+          "indexFilterSet": false,
+          "queryHash": "24C976C4",
+          "planCacheShapeHash": "24C976C4",
+          "planCacheKey": "641678A0",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "stage": "GEO_NEAR_2D",
+            "keyPattern": {
+              "loc": "2d"
+            },
+            "indexName": "loc_2d_idx",
+            "indexVersion": 2,
+            "inputStage": {
+              "stage": "FETCH",
+              "filter": {
+                "$TwoDPtInAnnulusExpression": true
+              },
+              "inputStage": {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "loc": "2d"
+                },
+                "indexName": "loc_2d_idx",
+                "isMultiKey": false,
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "loc": [
+                    "[BinData(128, 61DA47F000000000), BinData(128, 61DA47FFFFFFFFFF)]",
+                    "[BinData(128, 61DA4C0000000000), BinData(128, 61DA4FFFFFFFFFFF)]",
+                    "[BinData(128, 61DA500000000000), BinData(128, 61DA5FFFFFFFFFFF)]",
+                    "[BinData(128, 61DA600000000000), BinData(128, 61DA6FFFFFFFFFFF)]",
+                    "[BinData(128, 61DA700000000000), BinData(128, 61DA7FFFFFFFFFFF)]",
+                    "[BinData(128, 61DAC40000000000), BinData(128, 61DAC7FFFFFFFFFF)]",
+                    "[BinData(128, 61DACD0000000000), BinData(128, 61DACDFFFFFFFFFF)]",
+                    "[BinData(128, 61DAD00000000000), BinData(128, 61DADFFFFFFFFFFF)]",
+                    "[BinData(128, 61DB000000000000), BinData(128, 61DB0FFFFFFFFFFF)]",
+                    "[BinData(128, 61DB188000000000), BinData(128, 61DB18BFFFFFFFFF)]",
+                    "[BinData(128, 61DB1A0000000000), BinData(128, 61DB1AFFFFFFFFFF)]",
+                    "[BinData(128, 61DB200000000000), BinData(128, 61DB2FFFFFFFFFFF)]",
+                    "[BinData(128, 61DB300000000000), BinData(128, 61DB33FFFFFFFFFF)]",
+                    "[BinData(128, 61DB380000000000), BinData(128, 61DB3BFFFFFFFFFF)]",
+                    "[BinData(128, 61DB800000000000), BinData(128, 61DB8FFFFFFFFFFF)]",
+                    "[BinData(128, 61DB900000000000), BinData(128, 61DB93FFFFFFFFFF)]"
+                  ]
+                }
+              }
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 0,
+          "executionTimeMillis": 0,
+          "totalKeysExamined": 1,
+          "totalDocsExamined": 0,
+          "executionStages": {
+            "isCached": false,
+            "stage": "GEO_NEAR_2D",
+            "nReturned": 0,
+            "executionTimeMillisEstimate": 0,
+            "works": 21,
+            "advanced": 0,
+            "needTime": 20,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 1,
+            "isEOF": 1,
+            "keyPattern": {
+              "loc": "2d"
+            },
+            "indexName": "loc_2d_idx",
+            "indexVersion": 2,
+            "searchIntervals": [
+              {
+                "minDistance": 0.0,
+                "maxDistance": 0.5000000000000165,
+                "maxInclusive": true,
+                "nBuffered": 0,
+                "nReturned": 0
+              }
+            ],
+            "inputStage": {
+              "stage": "FETCH",
+              "filter": {
+                "$TwoDPtInAnnulusExpression": true
+              },
+              "nReturned": 0,
+              "executionTimeMillisEstimate": 0,
+              "works": 1,
+              "advanced": 0,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 0,
+              "restoreState": 0,
+              "isEOF": 1,
+              "docsExamined": 0,
+              "alreadyHasObj": 0,
+              "inputStage": {
+                "stage": "IXSCAN",
+                "nReturned": 0,
+                "executionTimeMillisEstimate": 0,
+                "works": 1,
+                "advanced": 0,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 0,
+                "restoreState": 0,
+                "isEOF": 1,
+                "keyPattern": {
+                  "loc": "2d"
+                },
+                "indexName": "loc_2d_idx",
+                "isMultiKey": false,
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "loc": [
+                    "[BinData(128, 61DA47F000000000), BinData(128, 61DA47FFFFFFFFFF)]",
+                    "[BinData(128, 61DA4C0000000000), BinData(128, 61DA4FFFFFFFFFFF)]",
+                    "[BinData(128, 61DA500000000000), BinData(128, 61DA5FFFFFFFFFFF)]",
+                    "[BinData(128, 61DA600000000000), BinData(128, 61DA6FFFFFFFFFFF)]",
+                    "[BinData(128, 61DA700000000000), BinData(128, 61DA7FFFFFFFFFFF)]",
+                    "[BinData(128, 61DAC40000000000), BinData(128, 61DAC7FFFFFFFFFF)]",
+                    "[BinData(128, 61DACD0000000000), BinData(128, 61DACDFFFFFFFFFF)]",
+                    "[BinData(128, 61DAD00000000000), BinData(128, 61DADFFFFFFFFFFF)]",
+                    "[BinData(128, 61DB000000000000), BinData(128, 61DB0FFFFFFFFFFF)]",
+                    "[BinData(128, 61DB188000000000), BinData(128, 61DB18BFFFFFFFFF)]",
+                    "[BinData(128, 61DB1A0000000000), BinData(128, 61DB1AFFFFFFFFFF)]",
+                    "[BinData(128, 61DB200000000000), BinData(128, 61DB2FFFFFFFFFFF)]",
+                    "[BinData(128, 61DB300000000000), BinData(128, 61DB33FFFFFFFFFF)]",
+                    "[BinData(128, 61DB380000000000), BinData(128, 61DB3BFFFFFFFFFF)]",
+                    "[BinData(128, 61DB800000000000), BinData(128, 61DB8FFFFFFFFFFF)]",
+                    "[BinData(128, 61DB900000000000), BinData(128, 61DB93FFFFFFFFFF)]"
+                  ]
+                },
+                "keysExamined": 1,
+                "seeks": 1,
+                "dupsTested": 0,
+                "dupsDropped": 0
+              }
+            }
+          },
+          "allPlansExecution": []
+        }
+      },
+      "nReturned": 0,
+      "executionTimeMillisEstimate": 0
+    },
+    {
+      "$limit": 10,
+      "nReturned": 0,
+      "executionTimeMillisEstimate": 0
+    }
+  ],
+  "queryShapeHash": "5A39E34EE9058760617BA6BB63AFF7578131C31BD6E04F782A40C2BD14AB1B8F",
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "zips",
+    "pipeline": [
+      {
+        "$geoNear": {
+          "near": [
+            -73.9857,
+            40.7484
+          ],
+          "distanceField": "distance",
+          "maxDistance": 0.5
+        }
+      },
+      {
+        "$limit": 10
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_training"
+  },
+  "ok": 1.0
+}

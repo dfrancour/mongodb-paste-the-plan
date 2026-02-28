@@ -1,0 +1,144 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_mflix.movies",
+          "indexFilterSet": false,
+          "parsedQuery": {},
+          "queryHash": "616EDFA0",
+          "planCacheKey": "C9BB882E",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "winningPlan": {
+            "stage": "PROJECTION_SIMPLE",
+            "transformBy": {
+              "genres": 1,
+              "_id": 0
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "direction": "forward"
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 21349,
+          "executionTimeMillis": 14,
+          "totalKeysExamined": 0,
+          "totalDocsExamined": 21349,
+          "executionStages": {
+            "stage": "PROJECTION_SIMPLE",
+            "nReturned": 21349,
+            "executionTimeMillisEstimate": 0,
+            "works": 21350,
+            "advanced": 21349,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 22,
+            "restoreState": 22,
+            "isEOF": 1,
+            "transformBy": {
+              "genres": 1,
+              "_id": 0
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "nReturned": 21349,
+              "executionTimeMillisEstimate": 0,
+              "works": 21350,
+              "advanced": 21349,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 22,
+              "restoreState": 22,
+              "isEOF": 1,
+              "direction": "forward",
+              "docsExamined": 21349
+            }
+          },
+          "allPlansExecution": []
+        }
+      },
+      "nReturned": 21349,
+      "executionTimeMillisEstimate": 8
+    },
+    {
+      "$unwind": {
+        "path": "$genres"
+      },
+      "nReturned": 45278,
+      "executionTimeMillisEstimate": 8
+    },
+    {
+      "$group": {
+        "_id": "$genres",
+        "count": {
+          "$sum": {
+            "$const": 1
+          }
+        }
+      },
+      "maxAccumulatorMemoryUsageBytes": {
+        "count": 2400
+      },
+      "totalOutputDataSizeBytes": 6125,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledDataStorageSize": 0,
+      "numBytesSpilledEstimate": 0,
+      "spilledRecords": 0,
+      "nReturned": 25,
+      "executionTimeMillisEstimate": 8
+    },
+    {
+      "$sort": {
+        "sortKey": {
+          "count": -1
+        }
+      },
+      "totalDataSizeSortedBytesEstimate": 6325,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledDataStorageSize": 0,
+      "nReturned": 25,
+      "executionTimeMillisEstimate": 8
+    }
+  ],
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "7.0.30",
+    "gitVersion": "67480f41dfa5802ce14af5c95bd0e9826d3b2131"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine"
+  },
+  "command": {
+    "aggregate": "movies",
+    "pipeline": [
+      {
+        "$unwind": "$genres"
+      },
+      {
+        "$sortByCount": "$genres"
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_mflix"
+  },
+  "ok": 1.0
+}

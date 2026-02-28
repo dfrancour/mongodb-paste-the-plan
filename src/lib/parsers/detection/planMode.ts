@@ -88,6 +88,18 @@ export function detectPlanMode(plan: ExplainPlan): "plan" | "execution" {
     }
   }
 
+  // Check bare aggregation pipeline (no cursor, e.g., $documents)
+  if (plan.stages && Array.isArray(plan.stages) && plan.stages.length > 0) {
+    const firstStage = plan.stages[0] as Record<string, unknown>;
+    if (
+      "nReturned" in firstStage ||
+      "executionTimeMillisEstimate" in firstStage
+    ) {
+      return "execution";
+    }
+    return "plan";
+  }
+
   // Validate that queryPlanner exists before defaulting to 'plan' mode
   if (plan.queryPlanner?.winningPlan) {
     return "plan";

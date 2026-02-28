@@ -1,0 +1,202 @@
+{
+  "explainVersion": "2",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_mflix.movies",
+          "parsedQuery": {
+            "year": {
+              "$gte": 2000
+            }
+          },
+          "indexFilterSet": false,
+          "queryHash": "FDB62CAD",
+          "planCacheShapeHash": "FDB62CAD",
+          "planCacheKey": "0AB14AE5",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "queryPlan": {
+              "stage": "GROUP",
+              "planNodeId": 3,
+              "inputStage": {
+                "stage": "IXSCAN",
+                "planNodeId": 1,
+                "keyPattern": {
+                  "year": 1,
+                  "imdb.rating": -1
+                },
+                "indexName": "year_rating_compound_idx",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "year": [],
+                  "imdb.rating": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "year": [
+                    "[2000, inf.0]"
+                  ],
+                  "imdb.rating": [
+                    "[MaxKey, MinKey]"
+                  ]
+                }
+              }
+            },
+            "slotBasedPlan": {
+              "slots": "$$RESULT=s16 env: {  }",
+              "stages": "[3] project [s16 = newObj(\"_id\", s10, \"count\", s14, \"avg_rating\", s15)] \n[3] project [s14 = (convert ( s11, int32) ?: s11), s15 = \n    if (s13 == 0ll) \n    then null \n    else (doubleDoubleSumFinalize(s12) / s13) \n] \n[3] group [s10] [s11 = count(), s12 = aggDoubleDoubleSum(s6), s13 = sum(\n    if ((typeMatch(s6, 1088) ?: true) || !(isNumber(s6))) \n    then 0ll \n    else 1ll \n)] spillSlots[s7, s8, s9] mergingExprs[sum(s7), aggMergeDoubleDoubleSums(s8), sum(s9)] \n[3] project [s10 = (s1 ?: null)] \n[3] project [s6 = traverseP(s5, lambda(l2.0) { getField(move(l2.0), \"rating\") }, 1)] \n[1] project [s5 = getField(s4, \"imdb\")] \n[1] project [s4 = newObj(\"year\", s1, \"imdb\", newObj(\"rating\", s2))] \n[1] ixseek KS(2C0FA00F0104) KS(33FFFFFFFFFFFFFFFFF5FE04) none s3 none none [s1 = 0, s2 = 1] @\"3190a565-2d61-42a7-9b3c-6f84ae5e9580\" @\"year_rating_compound_idx\" true "
+            }
+          },
+          "rejectedPlans": [
+            {
+              "isCached": false,
+              "stage": "PROJECTION_DEFAULT",
+              "transformBy": {
+                "imdb.rating": 1,
+                "year": 1,
+                "_id": 0
+              },
+              "inputStage": {
+                "stage": "FETCH",
+                "inputStage": {
+                  "stage": "IXSCAN",
+                  "keyPattern": {
+                    "year": 1
+                  },
+                  "indexName": "year_idx",
+                  "isMultiKey": false,
+                  "multiKeyPaths": {
+                    "year": []
+                  },
+                  "isUnique": false,
+                  "isSparse": false,
+                  "isPartial": false,
+                  "indexVersion": 2,
+                  "direction": "forward",
+                  "indexBounds": {
+                    "year": [
+                      "[2000, inf.0]"
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "isCached": false,
+              "stage": "PROJECTION_DEFAULT",
+              "transformBy": {
+                "imdb.rating": 1,
+                "year": 1,
+                "_id": 0
+              },
+              "inputStage": {
+                "stage": "FETCH",
+                "inputStage": {
+                  "stage": "IXSCAN",
+                  "keyPattern": {
+                    "year": 1,
+                    "genres": 1
+                  },
+                  "indexName": "year_genres_compound_idx",
+                  "isMultiKey": true,
+                  "multiKeyPaths": {
+                    "year": [],
+                    "genres": [
+                      "genres"
+                    ]
+                  },
+                  "isUnique": false,
+                  "isSparse": false,
+                  "isPartial": false,
+                  "indexVersion": 2,
+                  "direction": "forward",
+                  "indexBounds": {
+                    "year": [
+                      "[2000, inf.0]"
+                    ],
+                    "genres": [
+                      "[MinKey, MaxKey]"
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "$merge": {
+        "into": {
+          "db": "sample_mflix",
+          "coll": "yearly_stats"
+        },
+        "on": "_id",
+        "whenMatched": "replace",
+        "whenNotMatched": "insert"
+      }
+    }
+  ],
+  "queryShapeHash": "19FB4ED5D1EB50E535E6BC5523EB624D7CF362CE28518ED9268835DB6543AC28",
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "year": {
+            "$gte": 2000
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "$year",
+          "count": {
+            "$sum": 1
+          },
+          "avg_rating": {
+            "$avg": "$imdb.rating"
+          }
+        }
+      },
+      {
+        "$merge": {
+          "into": "yearly_stats",
+          "whenMatched": "replace",
+          "whenNotMatched": "insert"
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_mflix"
+  },
+  "ok": 1.0
+}

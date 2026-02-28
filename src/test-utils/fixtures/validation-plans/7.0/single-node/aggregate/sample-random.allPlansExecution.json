@@ -1,0 +1,80 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_mflix.movies",
+          "indexFilterSet": false,
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "winningPlan": {
+            "stage": "MULTI_ITERATOR"
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 2426,
+          "executionTimeMillis": 1,
+          "totalKeysExamined": 0,
+          "totalDocsExamined": 0,
+          "executionStages": {
+            "stage": "MULTI_ITERATOR",
+            "nReturned": 2426,
+            "executionTimeMillisEstimate": 0,
+            "works": 2426,
+            "advanced": 2426,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 4,
+            "restoreState": 3,
+            "isEOF": 0
+          },
+          "allPlansExecution": []
+        }
+      },
+      "nReturned": 10,
+      "executionTimeMillisEstimate": 1
+    },
+    {
+      "$sampleFromRandomCursor": {
+        "size": 10
+      },
+      "nReturned": 10,
+      "executionTimeMillisEstimate": 1
+    }
+  ],
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "7.0.30",
+    "gitVersion": "67480f41dfa5802ce14af5c95bd0e9826d3b2131"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine"
+  },
+  "command": {
+    "aggregate": "movies",
+    "pipeline": [
+      {
+        "$sample": {
+          "size": 10
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_mflix"
+  },
+  "ok": 1.0
+}

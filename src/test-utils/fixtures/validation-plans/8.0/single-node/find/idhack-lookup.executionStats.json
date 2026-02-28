@@ -1,0 +1,73 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "parsedQuery": {
+      "_id": {
+        "$eq": {
+          "$oid": "573a1390f29313caabcd4135"
+        }
+      }
+    },
+    "indexFilterSet": false,
+    "queryHash": "9B5DE45B",
+    "planCacheShapeHash": "9B5DE45B",
+    "planCacheKey": "14A28471",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "EXPRESS_IXSCAN",
+      "keyPattern": "{ _id: 1 }",
+      "indexName": "_id_"
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 0,
+    "executionTimeMillis": 0,
+    "totalKeysExamined": 0,
+    "totalDocsExamined": 0,
+    "executionStages": {
+      "isCached": false,
+      "stage": "EXPRESS_IXSCAN",
+      "keyPattern": "{ _id: 1 }",
+      "indexName": "_id_",
+      "keysExamined": 0,
+      "docsExamined": 0,
+      "nReturned": 0
+    }
+  },
+  "command": {
+    "find": "movies",
+    "filter": {
+      "_id": {
+        "$oid": "573a1390f29313caabcd4135"
+      }
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

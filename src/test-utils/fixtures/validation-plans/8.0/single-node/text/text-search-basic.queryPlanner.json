@@ -1,0 +1,123 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "parsedQuery": {
+      "$text": {
+        "$search": "drama love story",
+        "$language": "english",
+        "$caseSensitive": false,
+        "$diacriticSensitive": false
+      }
+    },
+    "indexFilterSet": false,
+    "queryHash": "CF6F4CEE",
+    "planCacheShapeHash": "CF6F4CEE",
+    "planCacheKey": "6DCB9151",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "TEXT_MATCH",
+      "indexPrefix": {},
+      "indexName": "cast_text_fullplot_text_genres_text_title_text",
+      "parsedTextQuery": {
+        "terms": [
+          "drama",
+          "love",
+          "stori"
+        ],
+        "negatedTerms": [],
+        "phrases": [],
+        "negatedPhrases": []
+      },
+      "textIndexVersion": 3,
+      "inputStage": {
+        "stage": "FETCH",
+        "inputStage": {
+          "stage": "OR",
+          "inputStages": [
+            {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "_fts": "text",
+                "_ftsx": 1
+              },
+              "indexName": "cast_text_fullplot_text_genres_text_title_text",
+              "isMultiKey": true,
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "backward",
+              "indexBounds": {}
+            },
+            {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "_fts": "text",
+                "_ftsx": 1
+              },
+              "indexName": "cast_text_fullplot_text_genres_text_title_text",
+              "isMultiKey": true,
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "backward",
+              "indexBounds": {}
+            },
+            {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "_fts": "text",
+                "_ftsx": 1
+              },
+              "indexName": "cast_text_fullplot_text_genres_text_title_text",
+              "isMultiKey": true,
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "backward",
+              "indexBounds": {}
+            }
+          ]
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "queryShapeHash": "2C700CF48CB564C22FC678068EAB16D86EC1F00FE92B4E76E024C100849A1BD2",
+  "command": {
+    "find": "movies",
+    "filter": {
+      "$text": {
+        "$search": "drama love story"
+      }
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

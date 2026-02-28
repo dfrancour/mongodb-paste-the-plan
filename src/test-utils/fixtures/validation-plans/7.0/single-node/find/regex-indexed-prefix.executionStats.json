@@ -1,0 +1,131 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "indexFilterSet": false,
+    "parsedQuery": {
+      "cast": {
+        "$regex": "^Tom"
+      }
+    },
+    "queryHash": "88F92544",
+    "planCacheKey": "9AEDA3A9",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "winningPlan": {
+      "stage": "FETCH",
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "cast": 1
+        },
+        "indexName": "cast_idx",
+        "isMultiKey": true,
+        "multiKeyPaths": {
+          "cast": [
+            "cast"
+          ]
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "cast": [
+            "[\"Tom\", \"Ton\")",
+            "[/^Tom/, /^Tom/]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 592,
+    "executionTimeMillis": 1,
+    "totalKeysExamined": 601,
+    "totalDocsExamined": 592,
+    "executionStages": {
+      "stage": "FETCH",
+      "nReturned": 592,
+      "executionTimeMillisEstimate": 0,
+      "works": 602,
+      "advanced": 592,
+      "needTime": 9,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "docsExamined": 592,
+      "alreadyHasObj": 0,
+      "inputStage": {
+        "stage": "IXSCAN",
+        "nReturned": 592,
+        "executionTimeMillisEstimate": 0,
+        "works": 602,
+        "advanced": 592,
+        "needTime": 9,
+        "needYield": 0,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 1,
+        "keyPattern": {
+          "cast": 1
+        },
+        "indexName": "cast_idx",
+        "isMultiKey": true,
+        "multiKeyPaths": {
+          "cast": [
+            "cast"
+          ]
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "cast": [
+            "[\"Tom\", \"Ton\")",
+            "[/^Tom/, /^Tom/]"
+          ]
+        },
+        "keysExamined": 601,
+        "seeks": 2,
+        "dupsTested": 600,
+        "dupsDropped": 8
+      }
+    }
+  },
+  "command": {
+    "find": "movies",
+    "filter": {
+      "cast": {
+        "$regex": "^Tom"
+      }
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "7.0.30",
+    "gitVersion": "67480f41dfa5802ce14af5c95bd0e9826d3b2131"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine"
+  },
+  "ok": 1.0
+}

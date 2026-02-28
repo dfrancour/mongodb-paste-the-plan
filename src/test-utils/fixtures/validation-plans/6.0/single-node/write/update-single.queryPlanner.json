@@ -1,0 +1,64 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "indexFilterSet": false,
+    "parsedQuery": {
+      "title": {
+        "$eq": "The Matrix"
+      }
+    },
+    "queryHash": "C5EDDC11",
+    "planCacheKey": "46643FD3",
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "winningPlan": {
+      "stage": "UPDATE",
+      "inputStage": {
+        "stage": "COLLSCAN",
+        "filter": {
+          "title": {
+            "$eq": "The Matrix"
+          }
+        },
+        "direction": "forward"
+      }
+    },
+    "rejectedPlans": []
+  },
+  "command": {
+    "update": "movies",
+    "updates": [
+      {
+        "q": {
+          "title": "The Matrix"
+        },
+        "u": {
+          "$set": {
+            "reviewed": true
+          }
+        },
+        "multi": false
+      }
+    ],
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "6.0.27",
+    "gitVersion": "fc88ca137231d7457aed6265d4f32a361ae71716"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+  },
+  "ok": 1.0
+}

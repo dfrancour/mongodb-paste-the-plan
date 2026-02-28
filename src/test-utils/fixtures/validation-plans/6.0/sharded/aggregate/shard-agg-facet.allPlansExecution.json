@@ -1,0 +1,454 @@
+{
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "6.0.27",
+    "gitVersion": "fc88ca137231d7457aed6265d4f32a361ae71716"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+  },
+  "splitPipeline": null,
+  "shards": {
+    "shard2RS": {
+      "host": "validation-shard2:27017",
+      "stages": [
+        {
+          "$cursor": {
+            "queryPlanner": {
+              "namespace": "sample_mflix.movies",
+              "indexFilterSet": false,
+              "parsedQuery": {},
+              "queryHash": "5385BAC0",
+              "planCacheKey": "B2B6528D",
+              "maxIndexedOrSolutionsReached": false,
+              "maxIndexedAndSolutionsReached": false,
+              "maxScansToExplodeReached": false,
+              "winningPlan": {
+                "stage": "PROJECTION_DEFAULT",
+                "transformBy": {
+                  "imdb.rating": 1,
+                  "year": 1,
+                  "_id": 0
+                },
+                "inputStage": {
+                  "stage": "SHARDING_FILTER",
+                  "inputStage": {
+                    "stage": "COLLSCAN",
+                    "direction": "forward"
+                  }
+                }
+              },
+              "rejectedPlans": []
+            },
+            "executionStats": {
+              "executionSuccess": true,
+              "nReturned": 21349,
+              "executionTimeMillis": 43,
+              "totalKeysExamined": 0,
+              "totalDocsExamined": 21349,
+              "executionStages": {
+                "stage": "PROJECTION_DEFAULT",
+                "nReturned": 21349,
+                "executionTimeMillisEstimate": 1,
+                "works": 21350,
+                "advanced": 21349,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 22,
+                "restoreState": 22,
+                "isEOF": 1,
+                "transformBy": {
+                  "imdb.rating": 1,
+                  "year": 1,
+                  "_id": 0
+                },
+                "inputStage": {
+                  "stage": "SHARDING_FILTER",
+                  "nReturned": 21349,
+                  "executionTimeMillisEstimate": 1,
+                  "works": 21350,
+                  "advanced": 21349,
+                  "needTime": 0,
+                  "needYield": 0,
+                  "saveState": 22,
+                  "restoreState": 22,
+                  "isEOF": 1,
+                  "chunkSkips": 0,
+                  "inputStage": {
+                    "stage": "COLLSCAN",
+                    "nReturned": 21349,
+                    "executionTimeMillisEstimate": 0,
+                    "works": 21350,
+                    "advanced": 21349,
+                    "needTime": 0,
+                    "needYield": 0,
+                    "saveState": 22,
+                    "restoreState": 22,
+                    "isEOF": 1,
+                    "direction": "forward",
+                    "docsExamined": 21349
+                  }
+                }
+              },
+              "allPlansExecution": []
+            }
+          },
+          "nReturned": 21349,
+          "executionTimeMillisEstimate": 18
+        },
+        {
+          "$facet": {
+            "rating_buckets": [
+              {
+                "$internalFacetTeeConsumer": {},
+                "nReturned": 21349,
+                "executionTimeMillisEstimate": 18
+              },
+              {
+                "$match": {
+                  "$and": [
+                    {
+                      "imdb.rating": {
+                        "$exists": true
+                      }
+                    },
+                    {
+                      "imdb.rating": {
+                        "$gt": 0
+                      }
+                    }
+                  ]
+                },
+                "nReturned": 21288,
+                "executionTimeMillisEstimate": 30
+              },
+              {
+                "$group": {
+                  "_id": {
+                    "$switch": {
+                      "branches": [
+                        {
+                          "case": {
+                            "$and": [
+                              {
+                                "$gte": [
+                                  "$imdb.rating",
+                                  {
+                                    "$const": 0
+                                  }
+                                ]
+                              },
+                              {
+                                "$lt": [
+                                  "$imdb.rating",
+                                  {
+                                    "$const": 3
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          "then": {
+                            "$const": 0
+                          }
+                        },
+                        {
+                          "case": {
+                            "$and": [
+                              {
+                                "$gte": [
+                                  "$imdb.rating",
+                                  {
+                                    "$const": 3
+                                  }
+                                ]
+                              },
+                              {
+                                "$lt": [
+                                  "$imdb.rating",
+                                  {
+                                    "$const": 5
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          "then": {
+                            "$const": 3
+                          }
+                        },
+                        {
+                          "case": {
+                            "$and": [
+                              {
+                                "$gte": [
+                                  "$imdb.rating",
+                                  {
+                                    "$const": 5
+                                  }
+                                ]
+                              },
+                              {
+                                "$lt": [
+                                  "$imdb.rating",
+                                  {
+                                    "$const": 7
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          "then": {
+                            "$const": 5
+                          }
+                        },
+                        {
+                          "case": {
+                            "$and": [
+                              {
+                                "$gte": [
+                                  "$imdb.rating",
+                                  {
+                                    "$const": 7
+                                  }
+                                ]
+                              },
+                              {
+                                "$lt": [
+                                  "$imdb.rating",
+                                  {
+                                    "$const": 9
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          "then": {
+                            "$const": 7
+                          }
+                        },
+                        {
+                          "case": {
+                            "$and": [
+                              {
+                                "$gte": [
+                                  "$imdb.rating",
+                                  {
+                                    "$const": 9
+                                  }
+                                ]
+                              },
+                              {
+                                "$lt": [
+                                  "$imdb.rating",
+                                  {
+                                    "$const": 10
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          "then": {
+                            "$const": 9
+                          }
+                        }
+                      ],
+                      "default": {
+                        "$const": "Other"
+                      }
+                    }
+                  },
+                  "count": {
+                    "$sum": {
+                      "$const": 1
+                    }
+                  }
+                },
+                "maxAccumulatorMemoryUsageBytes": {
+                  "count": 400
+                },
+                "totalOutputDataSizeBytes": 1225,
+                "usedDisk": false,
+                "spills": 0,
+                "nReturned": 5,
+                "executionTimeMillisEstimate": 35
+              },
+              {
+                "$sort": {
+                  "sortKey": {
+                    "_id": 1
+                  }
+                },
+                "totalDataSizeSortedBytesEstimate": 1265,
+                "usedDisk": false,
+                "spills": 0,
+                "nReturned": 5,
+                "executionTimeMillisEstimate": 35
+              }
+            ],
+            "by_decade": [
+              {
+                "$internalFacetTeeConsumer": {},
+                "nReturned": 21349,
+                "executionTimeMillisEstimate": 0
+              },
+              {
+                "$match": {
+                  "year": {
+                    "$gte": 1900
+                  }
+                },
+                "nReturned": 21312,
+                "executionTimeMillisEstimate": 0
+              },
+              {
+                "$group": {
+                  "_id": {
+                    "$subtract": [
+                      "$year",
+                      {
+                        "$mod": [
+                          "$year",
+                          {
+                            "$const": 10
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "count": {
+                    "$sum": {
+                      "$const": 1
+                    }
+                  }
+                },
+                "maxAccumulatorMemoryUsageBytes": {
+                  "count": 960
+                },
+                "totalOutputDataSizeBytes": 2940,
+                "usedDisk": false,
+                "spills": 0,
+                "nReturned": 12,
+                "executionTimeMillisEstimate": 0
+              },
+              {
+                "$sort": {
+                  "sortKey": {
+                    "_id": 1
+                  }
+                },
+                "totalDataSizeSortedBytesEstimate": 3036,
+                "usedDisk": false,
+                "spills": 0,
+                "nReturned": 12,
+                "executionTimeMillisEstimate": 0
+              }
+            ]
+          },
+          "nReturned": 1,
+          "executionTimeMillisEstimate": 35
+        }
+      ]
+    }
+  },
+  "command": {
+    "aggregate": "movies",
+    "pipeline": [
+      {
+        "$facet": {
+          "rating_buckets": [
+            {
+              "$match": {
+                "imdb.rating": {
+                  "$exists": true,
+                  "$gt": 0
+                }
+              }
+            },
+            {
+              "$bucket": {
+                "groupBy": "$imdb.rating",
+                "boundaries": [
+                  0,
+                  3,
+                  5,
+                  7,
+                  9,
+                  10
+                ],
+                "default": "Other",
+                "output": {
+                  "count": {
+                    "$sum": 1
+                  }
+                }
+              }
+            }
+          ],
+          "by_decade": [
+            {
+              "$match": {
+                "year": {
+                  "$gte": 1900
+                }
+              }
+            },
+            {
+              "$group": {
+                "_id": {
+                  "$subtract": [
+                    "$year",
+                    {
+                      "$mod": [
+                        "$year",
+                        10
+                      ]
+                    }
+                  ]
+                },
+                "count": {
+                  "$sum": 1
+                }
+              }
+            },
+            {
+              "$sort": {
+                "_id": 1
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "cursor": {}
+  },
+  "ok": 1.0,
+  "$clusterTime": {
+    "clusterTime": {
+      "$timestamp": {
+        "t": 1772248867,
+        "i": 2
+      }
+    },
+    "signature": {
+      "hash": {
+        "$binary": "0000000000000000000000000000000000000000"
+      },
+      "keyId": 0
+    }
+  },
+  "operationTime": {
+    "$timestamp": {
+      "t": 1772248867,
+      "i": 2
+    }
+  }
+}

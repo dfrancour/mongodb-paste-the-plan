@@ -1,0 +1,194 @@
+{
+  "queryPlanner": {
+    "mongosPlannerVersion": 1,
+    "winningPlan": {
+      "stage": "SINGLE_SHARD",
+      "shards": [
+        {
+          "shardName": "shard1RS",
+          "connectionString": "shard1RS/validation-shard1:27017",
+          "serverInfo": {
+            "host": "23c2b1ce7d2b",
+            "port": 27017,
+            "version": "7.0.30",
+            "gitVersion": "67480f41dfa5802ce14af5c95bd0e9826d3b2131"
+          },
+          "namespace": "sample_geospatial.shipwrecks",
+          "indexFilterSet": false,
+          "parsedQuery": {
+            "chart": {
+              "$eq": "US"
+            }
+          },
+          "queryHash": "D143FB4F",
+          "planCacheKey": "4595FAEB",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "winningPlan": {
+            "stage": "FETCH",
+            "inputStage": {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "chart": 1
+              },
+              "indexName": "chart_idx",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "chart": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "chart": [
+                  "[\"US\", \"US\"]"
+                ]
+              }
+            }
+          },
+          "rejectedPlans": []
+        }
+      ]
+    }
+  },
+  "executionStats": {
+    "nReturned": 0,
+    "executionTimeMillis": 0,
+    "totalKeysExamined": 0,
+    "totalDocsExamined": 0,
+    "executionStages": {
+      "stage": "SINGLE_SHARD",
+      "nReturned": 0,
+      "executionTimeMillis": 0,
+      "totalKeysExamined": 0,
+      "totalDocsExamined": 0,
+      "totalChildMillis": 0,
+      "shards": [
+        {
+          "shardName": "shard1RS",
+          "executionSuccess": true,
+          "nReturned": 0,
+          "executionTimeMillis": 0,
+          "totalKeysExamined": 0,
+          "totalDocsExamined": 0,
+          "executionStages": {
+            "stage": "FETCH",
+            "nReturned": 0,
+            "executionTimeMillisEstimate": 0,
+            "works": 1,
+            "advanced": 0,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 0,
+            "restoreState": 0,
+            "isEOF": 1,
+            "docsExamined": 0,
+            "alreadyHasObj": 0,
+            "inputStage": {
+              "stage": "IXSCAN",
+              "nReturned": 0,
+              "executionTimeMillisEstimate": 0,
+              "works": 1,
+              "advanced": 0,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 0,
+              "restoreState": 0,
+              "isEOF": 1,
+              "keyPattern": {
+                "chart": 1
+              },
+              "indexName": "chart_idx",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "chart": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "chart": [
+                  "[\"US\", \"US\"]"
+                ]
+              },
+              "keysExamined": 0,
+              "seeks": 1,
+              "dupsTested": 0,
+              "dupsDropped": 0
+            }
+          }
+        }
+      ]
+    }
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "7.0.30",
+    "gitVersion": "67480f41dfa5802ce14af5c95bd0e9826d3b2131"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine"
+  },
+  "command": {
+    "find": "shipwrecks",
+    "filter": {
+      "chart": "US"
+    },
+    "lsid": {
+      "id": {
+        "$binary": "b137b18f5d52484ba89b2e4472922799"
+      }
+    },
+    "$clusterTime": {
+      "clusterTime": {
+        "$timestamp": {
+          "t": 1772248910,
+          "i": 1
+        }
+      },
+      "signature": {
+        "hash": {
+          "$binary": "0000000000000000000000000000000000000000"
+        },
+        "keyId": 0
+      }
+    },
+    "$db": "sample_geospatial"
+  },
+  "ok": 1.0,
+  "$clusterTime": {
+    "clusterTime": {
+      "$timestamp": {
+        "t": 1772248910,
+        "i": 1
+      }
+    },
+    "signature": {
+      "hash": {
+        "$binary": "0000000000000000000000000000000000000000"
+      },
+      "keyId": 0
+    }
+  },
+  "operationTime": {
+    "$timestamp": {
+      "t": 1772248908,
+      "i": 66
+    }
+  }
+}

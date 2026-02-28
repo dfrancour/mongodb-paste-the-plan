@@ -1,0 +1,77 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.theaters",
+    "parsedQuery": {
+      "location.geo": {
+        "$near": {
+          "$geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9857,
+              40.7484
+            ]
+          },
+          "$maxDistance": 50000
+        }
+      }
+    },
+    "indexFilterSet": false,
+    "queryHash": "3EA241D6",
+    "planCacheShapeHash": "3EA241D6",
+    "planCacheKey": "D18AD298",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "GEO_NEAR_2DSPHERE",
+      "keyPattern": {
+        "location.geo": "2dsphere"
+      },
+      "indexName": "geo index",
+      "indexVersion": 2
+    },
+    "rejectedPlans": []
+  },
+  "queryShapeHash": "1D2DF580BB23FBAF4D412F9922FABFAE79492FB7AD812D66B4DE8DF8A315E9CC",
+  "command": {
+    "find": "theaters",
+    "filter": {
+      "location.geo": {
+        "$near": {
+          "$geometry": {
+            "type": "Point",
+            "coordinates": [
+              -73.9857,
+              40.7484
+            ]
+          },
+          "$maxDistance": 50000
+        }
+      }
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

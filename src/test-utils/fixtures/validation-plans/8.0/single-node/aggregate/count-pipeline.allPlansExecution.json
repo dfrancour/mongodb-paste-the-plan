@@ -1,0 +1,194 @@
+{
+  "explainVersion": "2",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_mflix.movies",
+          "parsedQuery": {
+            "year": {
+              "$gte": 2000
+            }
+          },
+          "indexFilterSet": false,
+          "queryHash": "E55ECD8D",
+          "planCacheShapeHash": "E55ECD8D",
+          "planCacheKey": "E95498F9",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "queryPlan": {
+              "stage": "GROUP",
+              "planNodeId": 2,
+              "inputStage": {
+                "stage": "COUNT_SCAN",
+                "planNodeId": 1,
+                "keyPattern": {
+                  "year": 1
+                },
+                "indexName": "year_idx",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "year": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "indexBounds": {
+                  "startKey": {
+                    "year": 2000
+                  },
+                  "startKeyInclusive": true,
+                  "endKey": {
+                    "year": Infinity
+                  },
+                  "endKeyInclusive": true
+                }
+              }
+            },
+            "slotBasedPlan": {
+              "slots": "$$RESULT=s6 env: {  }",
+              "stages": "[2] project [s6 = newObj(\"_id\", s4, \"total\", s5)] \n[2] project [s4 = null, s5 = (convert ( s3, int32) ?: s3)] \n[2] group [] [s3 = count()] spillSlots[s2] mergingExprs[sum(s2)] \n[1] ixseek KS(2C0FA00104) KS(33FFFFFFFFFFFFFFFFFE04) none s1 none none [] @\"3190a565-2d61-42a7-9b3c-6f84ae5e9580\" @\"year_idx\" true "
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 1,
+          "executionTimeMillis": 1,
+          "totalKeysExamined": 12569,
+          "totalDocsExamined": 0,
+          "executionStages": {
+            "stage": "project",
+            "planNodeId": 2,
+            "nReturned": 1,
+            "executionTimeMillisEstimate": 1,
+            "opens": 1,
+            "closes": 1,
+            "saveState": 1,
+            "restoreState": 1,
+            "isEOF": 1,
+            "projections": {
+              "6": "newObj(\"_id\", s4, \"total\", s5) "
+            },
+            "inputStage": {
+              "stage": "project",
+              "planNodeId": 2,
+              "nReturned": 1,
+              "executionTimeMillisEstimate": 1,
+              "opens": 1,
+              "closes": 1,
+              "saveState": 1,
+              "restoreState": 1,
+              "isEOF": 1,
+              "projections": {
+                "4": "null ",
+                "5": "(convert ( s3, int32) ?: s3) "
+              },
+              "inputStage": {
+                "stage": "group",
+                "planNodeId": 2,
+                "nReturned": 1,
+                "executionTimeMillisEstimate": 1,
+                "opens": 1,
+                "closes": 1,
+                "saveState": 1,
+                "restoreState": 1,
+                "isEOF": 1,
+                "groupBySlots": [],
+                "expressions": {
+                  "3": "count() ",
+                  "initExprs": {
+                    "3": null
+                  }
+                },
+                "mergingExprs": {
+                  "2": "sum(s2) "
+                },
+                "usedDisk": false,
+                "spills": 0,
+                "spilledBytes": 0,
+                "spilledRecords": 0,
+                "spilledDataStorageSize": 0,
+                "inputStage": {
+                  "stage": "ixseek",
+                  "planNodeId": 1,
+                  "nReturned": 12569,
+                  "executionTimeMillisEstimate": 1,
+                  "opens": 1,
+                  "closes": 1,
+                  "saveState": 1,
+                  "restoreState": 1,
+                  "isEOF": 1,
+                  "indexName": "year_idx",
+                  "keysExamined": 12569,
+                  "seeks": 1,
+                  "numReads": 12570,
+                  "recordIdSlot": 1,
+                  "outputSlots": [],
+                  "indexKeysToInclude": "00000000000000000000000000000000",
+                  "seekKeyLow": "KS(2C0FA00104) ",
+                  "seekKeyHigh": "KS(33FFFFFFFFFFFFFFFFFE04) "
+                }
+              }
+            }
+          },
+          "allPlansExecution": []
+        }
+      },
+      "nReturned": 1,
+      "executionTimeMillisEstimate": 1
+    },
+    {
+      "$project": {
+        "total": true,
+        "_id": false
+      },
+      "nReturned": 1,
+      "executionTimeMillisEstimate": 1
+    }
+  ],
+  "queryShapeHash": "D87C04EC386023F9AEA4C4F3C94DEAA976028589F8393A1663C5AEB2266B9378",
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "year": {
+            "$gte": 2000
+          }
+        }
+      },
+      {
+        "$count": "total"
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_mflix"
+  },
+  "ok": 1.0
+}

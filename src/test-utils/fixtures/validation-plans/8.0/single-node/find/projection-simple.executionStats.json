@@ -1,0 +1,93 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "parsedQuery": {},
+    "indexFilterSet": false,
+    "queryHash": "FA716560",
+    "planCacheShapeHash": "FA716560",
+    "planCacheKey": "C88630CB",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "PROJECTION_SIMPLE",
+      "transformBy": {
+        "title": 1
+      },
+      "inputStage": {
+        "stage": "COLLSCAN",
+        "direction": "forward"
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 21349,
+    "executionTimeMillis": 6,
+    "totalKeysExamined": 0,
+    "totalDocsExamined": 21349,
+    "executionStages": {
+      "isCached": false,
+      "stage": "PROJECTION_SIMPLE",
+      "nReturned": 21349,
+      "executionTimeMillisEstimate": 2,
+      "works": 21350,
+      "advanced": 21349,
+      "needTime": 0,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "transformBy": {
+        "title": 1
+      },
+      "inputStage": {
+        "stage": "COLLSCAN",
+        "nReturned": 21349,
+        "executionTimeMillisEstimate": 0,
+        "works": 21350,
+        "advanced": 21349,
+        "needTime": 0,
+        "needYield": 0,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 1,
+        "direction": "forward",
+        "docsExamined": 21349
+      }
+    }
+  },
+  "queryShapeHash": "B142523CEDDB831E7EB08C15701829369696B81E2FEA386C895B1FD414D46375",
+  "command": {
+    "find": "movies",
+    "filter": {},
+    "projection": {
+      "title": 1
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

@@ -1,0 +1,164 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "parsedQuery": {
+      "$and": [
+        {
+          "year": {
+            "$lte": 2010
+          }
+        },
+        {
+          "year": {
+            "$gte": 2000
+          }
+        }
+      ]
+    },
+    "indexFilterSet": false,
+    "queryHash": "CFE6C18A",
+    "planCacheShapeHash": "CFE6C18A",
+    "planCacheKey": "EC5FEFA1",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "PROJECTION_COVERED",
+      "transformBy": {
+        "_id": 0,
+        "year": 1
+      },
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "year": 1
+        },
+        "indexName": "year_idx",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "year": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "year": [
+            "[2000, 2010]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": [
+      {
+        "isCached": false,
+        "stage": "PROJECTION_COVERED",
+        "transformBy": {
+          "_id": 0,
+          "year": 1
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "year": 1,
+            "imdb.rating": -1
+          },
+          "indexName": "year_rating_compound_idx",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "year": [],
+            "imdb.rating": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "year": [
+              "[2000, 2010]"
+            ],
+            "imdb.rating": [
+              "[MaxKey, MinKey]"
+            ]
+          }
+        }
+      },
+      {
+        "isCached": false,
+        "stage": "PROJECTION_COVERED",
+        "transformBy": {
+          "_id": 0,
+          "year": 1
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "year": 1,
+            "genres": 1
+          },
+          "indexName": "year_genres_compound_idx",
+          "isMultiKey": true,
+          "multiKeyPaths": {
+            "year": [],
+            "genres": [
+              "genres"
+            ]
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "year": [
+              "[2000, 2010]"
+            ],
+            "genres": [
+              "[MinKey, MaxKey]"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "queryShapeHash": "94C550EC359EA515121DA0741FE92E62EBA26C7F07A84115294B20742CF301BE",
+  "command": {
+    "find": "movies",
+    "filter": {
+      "year": {
+        "$gte": 2000,
+        "$lte": 2010
+      }
+    },
+    "projection": {
+      "_id": 0,
+      "year": 1
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

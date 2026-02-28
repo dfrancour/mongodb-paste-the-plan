@@ -1,0 +1,295 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_training.zips",
+    "indexFilterSet": false,
+    "parsedQuery": {
+      "$or": [
+        {
+          "city": {
+            "$eq": "CHICAGO"
+          }
+        },
+        {
+          "state": {
+            "$eq": "NY"
+          }
+        },
+        {
+          "pop": {
+            "$gt": 50000
+          }
+        }
+      ]
+    },
+    "queryHash": "2FB528F0",
+    "planCacheKey": "D3C5A468",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "winningPlan": {
+      "stage": "SUBPLAN",
+      "inputStage": {
+        "stage": "FETCH",
+        "inputStage": {
+          "stage": "OR",
+          "inputStages": [
+            {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "state": 1
+              },
+              "indexName": "state_idx",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "state": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "state": [
+                  "[\"NY\", \"NY\"]"
+                ]
+              }
+            },
+            {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "pop": 1
+              },
+              "indexName": "pop_idx",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "pop": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "pop": [
+                  "(50000, inf.0]"
+                ]
+              }
+            },
+            {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "city": 1
+              },
+              "indexName": "city_idx",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "city": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "city": [
+                  "[\"CHICAGO\", \"CHICAGO\"]"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 1990,
+    "executionTimeMillis": 1,
+    "totalKeysExamined": 2092,
+    "totalDocsExamined": 1990,
+    "executionStages": {
+      "stage": "SUBPLAN",
+      "nReturned": 1990,
+      "executionTimeMillisEstimate": 0,
+      "works": 2095,
+      "advanced": 1990,
+      "needTime": 104,
+      "needYield": 0,
+      "saveState": 2,
+      "restoreState": 2,
+      "isEOF": 1,
+      "inputStage": {
+        "stage": "FETCH",
+        "nReturned": 1990,
+        "executionTimeMillisEstimate": 0,
+        "works": 2095,
+        "advanced": 1990,
+        "needTime": 104,
+        "needYield": 0,
+        "saveState": 2,
+        "restoreState": 2,
+        "isEOF": 1,
+        "docsExamined": 1990,
+        "alreadyHasObj": 0,
+        "inputStage": {
+          "stage": "OR",
+          "nReturned": 1990,
+          "executionTimeMillisEstimate": 0,
+          "works": 2095,
+          "advanced": 1990,
+          "needTime": 104,
+          "needYield": 0,
+          "saveState": 2,
+          "restoreState": 2,
+          "isEOF": 1,
+          "dupsTested": 2092,
+          "dupsDropped": 102,
+          "inputStages": [
+            {
+              "stage": "IXSCAN",
+              "nReturned": 1596,
+              "executionTimeMillisEstimate": 0,
+              "works": 1597,
+              "advanced": 1596,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 2,
+              "restoreState": 2,
+              "isEOF": 1,
+              "keyPattern": {
+                "state": 1
+              },
+              "indexName": "state_idx",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "state": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "state": [
+                  "[\"NY\", \"NY\"]"
+                ]
+              },
+              "keysExamined": 1596,
+              "seeks": 1,
+              "dupsTested": 0,
+              "dupsDropped": 0
+            },
+            {
+              "stage": "IXSCAN",
+              "nReturned": 449,
+              "executionTimeMillisEstimate": 0,
+              "works": 450,
+              "advanced": 449,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 2,
+              "restoreState": 2,
+              "isEOF": 1,
+              "keyPattern": {
+                "pop": 1
+              },
+              "indexName": "pop_idx",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "pop": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "pop": [
+                  "(50000, inf.0]"
+                ]
+              },
+              "keysExamined": 449,
+              "seeks": 1,
+              "dupsTested": 0,
+              "dupsDropped": 0
+            },
+            {
+              "stage": "IXSCAN",
+              "nReturned": 47,
+              "executionTimeMillisEstimate": 0,
+              "works": 48,
+              "advanced": 47,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 2,
+              "restoreState": 2,
+              "isEOF": 1,
+              "keyPattern": {
+                "city": 1
+              },
+              "indexName": "city_idx",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "city": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "city": [
+                  "[\"CHICAGO\", \"CHICAGO\"]"
+                ]
+              },
+              "keysExamined": 47,
+              "seeks": 1,
+              "dupsTested": 0,
+              "dupsDropped": 0
+            }
+          ]
+        }
+      }
+    }
+  },
+  "command": {
+    "find": "zips",
+    "filter": {
+      "$or": [
+        {
+          "state": "NY"
+        },
+        {
+          "pop": {
+            "$gt": 50000
+          }
+        },
+        {
+          "city": "CHICAGO"
+        }
+      ]
+    },
+    "$db": "sample_training"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "7.0.30",
+    "gitVersion": "67480f41dfa5802ce14af5c95bd0e9826d3b2131"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine"
+  },
+  "ok": 1.0
+}

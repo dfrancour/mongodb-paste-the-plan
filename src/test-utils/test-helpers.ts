@@ -2,6 +2,15 @@ import fs from "fs";
 import path from "path";
 import type { NormalizedStage, ExplainPlan } from "#types/explain-plan";
 import { fixtures, getFixtureKeys } from "#data/fixtures/index";
+import { parseExplainPlanText } from "#lib/utils/sanitizeJson";
+
+const VALIDATION_PLANS_DIR = path.join(
+  process.cwd(),
+  "src",
+  "test-utils",
+  "fixtures",
+  "validation-plans",
+);
 
 /**
  * Load a test plan from the fixtures
@@ -107,6 +116,67 @@ export function hasOverlappingPositions(
     }
   }
   return false;
+}
+
+/**
+ * Recursively discover all validation plan JSON files.
+ * Returns paths relative to the validation-plans directory.
+ */
+export function loadAllValidationPlanPaths(): string[] {
+  function walk(dir: string): string[] {
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+    const files: string[] = [];
+    for (const entry of entries) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        files.push(...walk(full));
+      } else if (
+        entry.name.endsWith(".json") &&
+        entry.name !== "manifest.json"
+      ) {
+        files.push(path.relative(VALIDATION_PLANS_DIR, full));
+      }
+    }
+    return files;
+  }
+  return walk(VALIDATION_PLANS_DIR).sort();
+}
+
+/**
+ * Load a single validation plan by its relative path within validation-plans/
+ */
+export function loadValidationPlan(relativePath: string): unknown {
+  const fullPath = path.join(VALIDATION_PLANS_DIR, relativePath);
+  const content = fs.readFileSync(fullPath, "utf-8");
+  return parseExplainPlanText(content);
+}
+
+/**
+ * Parse a validation plan path into its components for test grouping.
+ * Example: "8.0/single-node/find/collscan-no-index.queryPlanner.json"
+ * → { version: "8.0", topology: "single-node", queryType: "find", name: "collscan-no-index", variant: "queryPlanner" }
+ */
+export function parseValidationPlanPath(relativePath: string): {
+  version: string;
+  topology: string;
+  queryType: string;
+  name: string;
+  variant: string;
+} {
+  const parts = relativePath.split("/");
+  const fileName = parts[parts.length - 1]!;
+  const nameWithoutJson = fileName.replace(".json", "");
+  const lastDot = nameWithoutJson.lastIndexOf(".");
+  const name = nameWithoutJson.slice(0, lastDot);
+  const variant = nameWithoutJson.slice(lastDot + 1);
+
+  return {
+    version: parts[0]!,
+    topology: parts[1]!,
+    queryType: parts[2]!,
+    name,
+    variant,
+  };
 }
 
 /**

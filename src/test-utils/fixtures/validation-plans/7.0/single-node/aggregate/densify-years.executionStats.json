@@ -1,0 +1,297 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_mflix.movies",
+          "indexFilterSet": false,
+          "parsedQuery": {
+            "$and": [
+              {
+                "year": {
+                  "$lte": 2020
+                }
+              },
+              {
+                "year": {
+                  "$gte": 2000
+                }
+              }
+            ]
+          },
+          "queryHash": "36772883",
+          "planCacheKey": "C610B8FD",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "winningPlan": {
+            "stage": "PROJECTION_COVERED",
+            "transformBy": {
+              "year": 1,
+              "_id": 0
+            },
+            "inputStage": {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "year": 1
+              },
+              "indexName": "year_idx",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "year": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "year": [
+                  "[2000, 2020]"
+                ]
+              }
+            }
+          },
+          "rejectedPlans": [
+            {
+              "stage": "PROJECTION_COVERED",
+              "transformBy": {
+                "year": 1,
+                "_id": 0
+              },
+              "inputStage": {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "year": 1,
+                  "imdb.rating": -1
+                },
+                "indexName": "year_rating_compound_idx",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "year": [],
+                  "imdb.rating": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "year": [
+                    "[2000, 2020]"
+                  ],
+                  "imdb.rating": [
+                    "[MaxKey, MinKey]"
+                  ]
+                }
+              }
+            },
+            {
+              "stage": "PROJECTION_COVERED",
+              "transformBy": {
+                "year": 1,
+                "_id": 0
+              },
+              "inputStage": {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "year": 1,
+                  "genres": 1
+                },
+                "indexName": "year_genres_compound_idx",
+                "isMultiKey": true,
+                "multiKeyPaths": {
+                  "year": [],
+                  "genres": [
+                    "genres"
+                  ]
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "year": [
+                    "[2000, 2020]"
+                  ],
+                  "genres": [
+                    "[MinKey, MaxKey]"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 12569,
+          "executionTimeMillis": 5,
+          "totalKeysExamined": 12569,
+          "totalDocsExamined": 0,
+          "executionStages": {
+            "stage": "PROJECTION_COVERED",
+            "nReturned": 12569,
+            "executionTimeMillisEstimate": 0,
+            "works": 12570,
+            "advanced": 12569,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 13,
+            "restoreState": 13,
+            "isEOF": 1,
+            "transformBy": {
+              "year": 1,
+              "_id": 0
+            },
+            "inputStage": {
+              "stage": "IXSCAN",
+              "nReturned": 12569,
+              "executionTimeMillisEstimate": 0,
+              "works": 12570,
+              "advanced": 12569,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 13,
+              "restoreState": 13,
+              "isEOF": 1,
+              "keyPattern": {
+                "year": 1
+              },
+              "indexName": "year_idx",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "year": []
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "year": [
+                  "[2000, 2020]"
+                ]
+              },
+              "keysExamined": 12569,
+              "seeks": 1,
+              "dupsTested": 0,
+              "dupsDropped": 0
+            }
+          }
+        }
+      },
+      "nReturned": 12569,
+      "executionTimeMillisEstimate": 3
+    },
+    {
+      "$group": {
+        "_id": "$year",
+        "count": {
+          "$sum": {
+            "$const": 1
+          }
+        }
+      },
+      "maxAccumulatorMemoryUsageBytes": {
+        "count": 1632
+      },
+      "totalOutputDataSizeBytes": 4165,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledDataStorageSize": 0,
+      "numBytesSpilledEstimate": 0,
+      "spilledRecords": 0,
+      "nReturned": 17,
+      "executionTimeMillisEstimate": 3
+    },
+    {
+      "$sort": {
+        "sortKey": {
+          "_id": 1
+        }
+      },
+      "totalDataSizeSortedBytesEstimate": 4301,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledDataStorageSize": 0,
+      "nReturned": 17,
+      "executionTimeMillisEstimate": 3
+    },
+    {
+      "$_internalDensify": {
+        "field": "_id",
+        "partitionByFields": [],
+        "range": {
+          "step": 1,
+          "bounds": [
+            2000,
+            2020
+          ]
+        }
+      },
+      "nReturned": 20,
+      "executionTimeMillisEstimate": 3
+    }
+  ],
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "7.0.30",
+    "gitVersion": "67480f41dfa5802ce14af5c95bd0e9826d3b2131"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine"
+  },
+  "command": {
+    "aggregate": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "year": {
+            "$gte": 2000,
+            "$lte": 2020
+          }
+        }
+      },
+      {
+        "$group": {
+          "_id": "$year",
+          "count": {
+            "$sum": 1
+          }
+        }
+      },
+      {
+        "$densify": {
+          "field": "_id",
+          "range": {
+            "step": 1,
+            "bounds": [
+              2000,
+              2020
+            ]
+          }
+        }
+      },
+      {
+        "$sort": {
+          "_id": 1
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_mflix"
+  },
+  "ok": 1.0
+}

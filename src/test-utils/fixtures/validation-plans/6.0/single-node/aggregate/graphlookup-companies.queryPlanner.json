@@ -1,0 +1,127 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_training.companies",
+          "indexFilterSet": false,
+          "parsedQuery": {
+            "name": {
+              "$eq": "Facebook"
+            }
+          },
+          "queryHash": "DE9A335A",
+          "planCacheKey": "A883CA75",
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "winningPlan": {
+            "stage": "PROJECTION_DEFAULT",
+            "transformBy": {
+              "_id": 1,
+              "name": 1,
+              "network": 1,
+              "relationships.person.permalink": 1
+            },
+            "inputStage": {
+              "stage": "FETCH",
+              "inputStage": {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "name": 1
+                },
+                "indexName": "name_idx",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "name": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "name": [
+                    "[\"Facebook\", \"Facebook\"]"
+                  ]
+                }
+              }
+            }
+          },
+          "rejectedPlans": []
+        }
+      }
+    },
+    {
+      "$graphLookup": {
+        "from": "companies",
+        "as": "network",
+        "connectToField": "permalink",
+        "connectFromField": "relationships.person.permalink",
+        "startWith": "$relationships.person.permalink",
+        "depthField": "depth",
+        "maxDepth": 1
+      }
+    },
+    {
+      "$project": {
+        "_id": true,
+        "name": true,
+        "network_size": {
+          "$size": [
+            "$network"
+          ]
+        }
+      }
+    }
+  ],
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "6.0.27",
+    "gitVersion": "fc88ca137231d7457aed6265d4f32a361ae71716"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+  },
+  "command": {
+    "aggregate": "companies",
+    "pipeline": [
+      {
+        "$match": {
+          "name": "Facebook"
+        }
+      },
+      {
+        "$graphLookup": {
+          "from": "companies",
+          "startWith": "$relationships.person.permalink",
+          "connectFromField": "relationships.person.permalink",
+          "connectToField": "permalink",
+          "as": "network",
+          "maxDepth": 1,
+          "depthField": "depth"
+        }
+      },
+      {
+        "$project": {
+          "name": 1,
+          "network_size": {
+            "$size": "$network"
+          }
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_training"
+  },
+  "ok": 1.0
+}

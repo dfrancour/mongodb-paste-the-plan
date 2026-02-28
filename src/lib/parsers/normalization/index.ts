@@ -72,11 +72,17 @@ export function normalizeFromResolution(
   plan: NormalizedPlanStage;
   execution: NormalizedExecutionStage | null;
 } {
-  if (!resolution.planRoot) {
+  // Bare pipelines (e.g., $documents) may only have an execution root.
+  // Synthesize a plan stage from the execution root when needed.
+  const planRoot =
+    resolution.planRoot ??
+    (resolution.executionRoot as unknown as PlanStage | null);
+
+  if (!planRoot) {
     throw new PlanParseError("No query plan found in explain plan");
   }
 
-  const normalizedPlan = normalizePlanStage(resolution.planRoot, 0, "root");
+  const normalizedPlan = normalizePlanStage(planRoot, 0, "root");
 
   let normalizedExecution: NormalizedExecutionStage | null = null;
   if (resolution.executionRoot) {

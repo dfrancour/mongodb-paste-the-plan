@@ -1,0 +1,249 @@
+{
+  "queryPlanner": {
+    "mongosPlannerVersion": 1,
+    "winningPlan": {
+      "stage": "SINGLE_SHARD",
+      "shards": [
+        {
+          "shardName": "shard2RS",
+          "connectionString": "shard2RS/validation-shard2:27017",
+          "serverInfo": {
+            "host": "fa42e6c9461e",
+            "port": 27017,
+            "version": "7.0.30",
+            "gitVersion": "67480f41dfa5802ce14af5c95bd0e9826d3b2131"
+          },
+          "namespace": "sample_mflix.movies",
+          "indexFilterSet": false,
+          "parsedQuery": {
+            "genres": {
+              "$eq": "Drama"
+            }
+          },
+          "queryHash": "C3C7EB47",
+          "planCacheKey": "7A017E26",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "winningPlan": {
+            "stage": "SHARDING_FILTER",
+            "inputStage": {
+              "stage": "FETCH",
+              "inputStage": {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "genres": 1
+                },
+                "indexName": "genres_idx",
+                "isMultiKey": true,
+                "multiKeyPaths": {
+                  "genres": [
+                    "genres"
+                  ]
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "genres": [
+                    "[\"Drama\", \"Drama\"]"
+                  ]
+                }
+              }
+            }
+          },
+          "rejectedPlans": [
+            {
+              "stage": "FETCH",
+              "inputStage": {
+                "stage": "SHARDING_FILTER",
+                "inputStage": {
+                  "stage": "IXSCAN",
+                  "keyPattern": {
+                    "genres": 1,
+                    "year": 1
+                  },
+                  "indexName": "genres_year_compound_idx",
+                  "isMultiKey": true,
+                  "multiKeyPaths": {
+                    "genres": [
+                      "genres"
+                    ],
+                    "year": []
+                  },
+                  "isUnique": false,
+                  "isSparse": false,
+                  "isPartial": false,
+                  "indexVersion": 2,
+                  "direction": "forward",
+                  "indexBounds": {
+                    "genres": [
+                      "[\"Drama\", \"Drama\"]"
+                    ],
+                    "year": [
+                      "[MinKey, MaxKey]"
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "executionStats": {
+    "nReturned": 12385,
+    "executionTimeMillis": 11,
+    "totalKeysExamined": 12385,
+    "totalDocsExamined": 12385,
+    "executionStages": {
+      "stage": "SINGLE_SHARD",
+      "nReturned": 12385,
+      "executionTimeMillis": 11,
+      "totalKeysExamined": 12385,
+      "totalDocsExamined": 12385,
+      "totalChildMillis": 10,
+      "shards": [
+        {
+          "shardName": "shard2RS",
+          "executionSuccess": true,
+          "nReturned": 12385,
+          "executionTimeMillis": 10,
+          "totalKeysExamined": 12385,
+          "totalDocsExamined": 12385,
+          "executionStages": {
+            "stage": "SHARDING_FILTER",
+            "nReturned": 12385,
+            "executionTimeMillisEstimate": 0,
+            "works": 12386,
+            "advanced": 12385,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 12,
+            "restoreState": 12,
+            "isEOF": 1,
+            "chunkSkips": 0,
+            "inputStage": {
+              "stage": "FETCH",
+              "nReturned": 12385,
+              "executionTimeMillisEstimate": 0,
+              "works": 12386,
+              "advanced": 12385,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 12,
+              "restoreState": 12,
+              "isEOF": 1,
+              "docsExamined": 12385,
+              "alreadyHasObj": 0,
+              "inputStage": {
+                "stage": "IXSCAN",
+                "nReturned": 12385,
+                "executionTimeMillisEstimate": 0,
+                "works": 12386,
+                "advanced": 12385,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 12,
+                "restoreState": 12,
+                "isEOF": 1,
+                "keyPattern": {
+                  "genres": 1
+                },
+                "indexName": "genres_idx",
+                "isMultiKey": true,
+                "multiKeyPaths": {
+                  "genres": [
+                    "genres"
+                  ]
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "genres": [
+                    "[\"Drama\", \"Drama\"]"
+                  ]
+                },
+                "keysExamined": 12385,
+                "seeks": 1,
+                "dupsTested": 12385,
+                "dupsDropped": 0
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "7.0.30",
+    "gitVersion": "67480f41dfa5802ce14af5c95bd0e9826d3b2131"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine"
+  },
+  "command": {
+    "find": "movies",
+    "filter": {
+      "genres": "Drama"
+    },
+    "lsid": {
+      "id": {
+        "$binary": "b137b18f5d52484ba89b2e4472922799"
+      }
+    },
+    "$clusterTime": {
+      "clusterTime": {
+        "$timestamp": {
+          "t": 1772248910,
+          "i": 1
+        }
+      },
+      "signature": {
+        "hash": {
+          "$binary": "0000000000000000000000000000000000000000"
+        },
+        "keyId": 0
+      }
+    },
+    "$db": "sample_mflix"
+  },
+  "ok": 1.0,
+  "$clusterTime": {
+    "clusterTime": {
+      "$timestamp": {
+        "t": 1772248910,
+        "i": 1
+      }
+    },
+    "signature": {
+      "hash": {
+        "$binary": "0000000000000000000000000000000000000000"
+      },
+      "keyId": 0
+    }
+  },
+  "operationTime": {
+    "$timestamp": {
+      "t": 1772248908,
+      "i": 31
+    }
+  }
+}

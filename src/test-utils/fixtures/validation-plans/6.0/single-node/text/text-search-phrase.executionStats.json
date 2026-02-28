@@ -1,0 +1,222 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "indexFilterSet": false,
+    "parsedQuery": {
+      "$text": {
+        "$search": "\"world war\"",
+        "$language": "english",
+        "$caseSensitive": false,
+        "$diacriticSensitive": false
+      }
+    },
+    "queryHash": "07C96184",
+    "planCacheKey": "B0024AD9",
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "winningPlan": {
+      "stage": "TEXT_MATCH",
+      "indexPrefix": {},
+      "indexName": "cast_text_fullplot_text_genres_text_title_text",
+      "parsedTextQuery": {
+        "terms": [
+          "war",
+          "world"
+        ],
+        "negatedTerms": [],
+        "phrases": [
+          "world war"
+        ],
+        "negatedPhrases": []
+      },
+      "textIndexVersion": 3,
+      "inputStage": {
+        "stage": "FETCH",
+        "inputStage": {
+          "stage": "OR",
+          "inputStages": [
+            {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "_fts": "text",
+                "_ftsx": 1
+              },
+              "indexName": "cast_text_fullplot_text_genres_text_title_text",
+              "isMultiKey": true,
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "backward",
+              "indexBounds": {}
+            },
+            {
+              "stage": "IXSCAN",
+              "keyPattern": {
+                "_fts": "text",
+                "_ftsx": 1
+              },
+              "indexName": "cast_text_fullplot_text_genres_text_title_text",
+              "isMultiKey": true,
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "backward",
+              "indexBounds": {}
+            }
+          ]
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 336,
+    "executionTimeMillis": 18,
+    "totalKeysExamined": 4409,
+    "totalDocsExamined": 3901,
+    "executionStages": {
+      "stage": "TEXT_MATCH",
+      "nReturned": 336,
+      "executionTimeMillisEstimate": 3,
+      "works": 4411,
+      "advanced": 336,
+      "needTime": 4074,
+      "needYield": 0,
+      "saveState": 4,
+      "restoreState": 4,
+      "isEOF": 1,
+      "indexPrefix": {},
+      "indexName": "cast_text_fullplot_text_genres_text_title_text",
+      "parsedTextQuery": {
+        "terms": [
+          "war",
+          "world"
+        ],
+        "negatedTerms": [],
+        "phrases": [
+          "world war"
+        ],
+        "negatedPhrases": []
+      },
+      "textIndexVersion": 3,
+      "docsRejected": 3565,
+      "inputStage": {
+        "stage": "FETCH",
+        "nReturned": 3901,
+        "executionTimeMillisEstimate": 0,
+        "works": 4411,
+        "advanced": 3901,
+        "needTime": 509,
+        "needYield": 0,
+        "saveState": 4,
+        "restoreState": 4,
+        "isEOF": 1,
+        "docsExamined": 3901,
+        "alreadyHasObj": 0,
+        "inputStage": {
+          "stage": "OR",
+          "nReturned": 3901,
+          "executionTimeMillisEstimate": 0,
+          "works": 4411,
+          "advanced": 3901,
+          "needTime": 509,
+          "needYield": 0,
+          "saveState": 4,
+          "restoreState": 4,
+          "isEOF": 1,
+          "dupsTested": 4409,
+          "dupsDropped": 508,
+          "inputStages": [
+            {
+              "stage": "IXSCAN",
+              "nReturned": 1816,
+              "executionTimeMillisEstimate": 0,
+              "works": 1817,
+              "advanced": 1816,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 4,
+              "restoreState": 4,
+              "isEOF": 1,
+              "keyPattern": {
+                "_fts": "text",
+                "_ftsx": 1
+              },
+              "indexName": "cast_text_fullplot_text_genres_text_title_text",
+              "isMultiKey": true,
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "backward",
+              "indexBounds": {},
+              "keysExamined": 1816,
+              "seeks": 1,
+              "dupsTested": 1816,
+              "dupsDropped": 0
+            },
+            {
+              "stage": "IXSCAN",
+              "nReturned": 2593,
+              "executionTimeMillisEstimate": 0,
+              "works": 2594,
+              "advanced": 2593,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 4,
+              "restoreState": 4,
+              "isEOF": 1,
+              "keyPattern": {
+                "_fts": "text",
+                "_ftsx": 1
+              },
+              "indexName": "cast_text_fullplot_text_genres_text_title_text",
+              "isMultiKey": true,
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "backward",
+              "indexBounds": {},
+              "keysExamined": 2593,
+              "seeks": 1,
+              "dupsTested": 2593,
+              "dupsDropped": 0
+            }
+          ]
+        }
+      }
+    }
+  },
+  "command": {
+    "find": "movies",
+    "filter": {
+      "$text": {
+        "$search": "\"world war\""
+      }
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "6.0.27",
+    "gitVersion": "fc88ca137231d7457aed6265d4f32a361ae71716"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+  },
+  "ok": 1.0
+}

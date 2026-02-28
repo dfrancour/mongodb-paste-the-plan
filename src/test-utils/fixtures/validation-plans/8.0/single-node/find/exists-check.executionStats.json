@@ -1,0 +1,167 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "parsedQuery": {
+      "$and": [
+        {
+          "tomatoes.viewer.rating": {
+            "$exists": true
+          }
+        },
+        {
+          "tomatoes.viewer.rating": {
+            "$type": [
+              1
+            ]
+          }
+        }
+      ]
+    },
+    "indexFilterSet": false,
+    "queryHash": "E3F637D9",
+    "planCacheShapeHash": "E3F637D9",
+    "planCacheKey": "1DEA840E",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "FETCH",
+      "filter": {
+        "tomatoes.viewer.rating": {
+          "$exists": true
+        }
+      },
+      "inputStage": {
+        "stage": "IXSCAN",
+        "filter": {
+          "tomatoes.viewer.rating": {
+            "$type": [
+              1
+            ]
+          }
+        },
+        "keyPattern": {
+          "tomatoes.viewer.rating": 1
+        },
+        "indexName": "tomatoes_rating_idx",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "tomatoes.viewer.rating": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "tomatoes.viewer.rating": [
+            "[nan.0, inf.0]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 18566,
+    "executionTimeMillis": 18,
+    "totalKeysExamined": 18566,
+    "totalDocsExamined": 18566,
+    "executionStages": {
+      "isCached": false,
+      "stage": "FETCH",
+      "filter": {
+        "tomatoes.viewer.rating": {
+          "$exists": true
+        }
+      },
+      "nReturned": 18566,
+      "executionTimeMillisEstimate": 7,
+      "works": 18567,
+      "advanced": 18566,
+      "needTime": 0,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "docsExamined": 18566,
+      "alreadyHasObj": 0,
+      "inputStage": {
+        "stage": "IXSCAN",
+        "filter": {
+          "tomatoes.viewer.rating": {
+            "$type": [
+              1
+            ]
+          }
+        },
+        "nReturned": 18566,
+        "executionTimeMillisEstimate": 7,
+        "works": 18567,
+        "advanced": 18566,
+        "needTime": 0,
+        "needYield": 0,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 1,
+        "keyPattern": {
+          "tomatoes.viewer.rating": 1
+        },
+        "indexName": "tomatoes_rating_idx",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "tomatoes.viewer.rating": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "tomatoes.viewer.rating": [
+            "[nan.0, inf.0]"
+          ]
+        },
+        "keysExamined": 18566,
+        "seeks": 1,
+        "dupsTested": 0,
+        "dupsDropped": 0
+      }
+    }
+  },
+  "queryShapeHash": "5AF917D33B694F1619A10F650F17BE245F0E1945B221A4908664BDFB53252D4E",
+  "command": {
+    "find": "movies",
+    "filter": {
+      "tomatoes.viewer.rating": {
+        "$exists": true,
+        "$type": "double"
+      }
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

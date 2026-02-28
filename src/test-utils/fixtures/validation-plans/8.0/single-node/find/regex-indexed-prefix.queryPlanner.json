@@ -1,0 +1,78 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "parsedQuery": {
+      "cast": {
+        "$regex": "^Tom"
+      }
+    },
+    "indexFilterSet": false,
+    "queryHash": "EA247BBC",
+    "planCacheShapeHash": "EA247BBC",
+    "planCacheKey": "1586CF2A",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "FETCH",
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "cast": 1
+        },
+        "indexName": "cast_idx",
+        "isMultiKey": true,
+        "multiKeyPaths": {
+          "cast": [
+            "cast"
+          ]
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "cast": [
+            "[\"Tom\", \"Ton\")",
+            "[/^Tom/, /^Tom/]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "queryShapeHash": "9C05B506942046418027F59BD6FA327FDE8B84A9436091E263844E7BE7CA2B49",
+  "command": {
+    "find": "movies",
+    "filter": {
+      "cast": {
+        "$regex": "^Tom"
+      }
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

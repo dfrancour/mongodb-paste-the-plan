@@ -1,0 +1,164 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "parsedQuery": {
+      "$text": {
+        "$search": "adventure -horror",
+        "$language": "english",
+        "$caseSensitive": false,
+        "$diacriticSensitive": false
+      }
+    },
+    "indexFilterSet": false,
+    "queryHash": "CF6F4CEE",
+    "planCacheShapeHash": "CF6F4CEE",
+    "planCacheKey": "6DCB9151",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "TEXT_MATCH",
+      "indexPrefix": {},
+      "indexName": "cast_text_fullplot_text_genres_text_title_text",
+      "parsedTextQuery": {
+        "terms": [
+          "adventur"
+        ],
+        "negatedTerms": [
+          "horror"
+        ],
+        "phrases": [],
+        "negatedPhrases": []
+      },
+      "textIndexVersion": 3,
+      "inputStage": {
+        "stage": "FETCH",
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "_fts": "text",
+            "_ftsx": 1
+          },
+          "indexName": "cast_text_fullplot_text_genres_text_title_text",
+          "isMultiKey": true,
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "backward",
+          "indexBounds": {}
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 2166,
+    "executionTimeMillis": 41,
+    "totalKeysExamined": 2231,
+    "totalDocsExamined": 2231,
+    "executionStages": {
+      "isCached": false,
+      "stage": "TEXT_MATCH",
+      "nReturned": 2166,
+      "executionTimeMillisEstimate": 40,
+      "works": 2232,
+      "advanced": 2166,
+      "needTime": 65,
+      "needYield": 0,
+      "saveState": 3,
+      "restoreState": 3,
+      "isEOF": 1,
+      "indexPrefix": {},
+      "indexName": "cast_text_fullplot_text_genres_text_title_text",
+      "parsedTextQuery": {
+        "terms": [
+          "adventur"
+        ],
+        "negatedTerms": [
+          "horror"
+        ],
+        "phrases": [],
+        "negatedPhrases": []
+      },
+      "textIndexVersion": 3,
+      "docsRejected": 65,
+      "inputStage": {
+        "stage": "FETCH",
+        "nReturned": 2231,
+        "executionTimeMillisEstimate": 0,
+        "works": 2232,
+        "advanced": 2231,
+        "needTime": 0,
+        "needYield": 0,
+        "saveState": 3,
+        "restoreState": 3,
+        "isEOF": 1,
+        "docsExamined": 2231,
+        "alreadyHasObj": 0,
+        "inputStage": {
+          "stage": "IXSCAN",
+          "nReturned": 2231,
+          "executionTimeMillisEstimate": 0,
+          "works": 2232,
+          "advanced": 2231,
+          "needTime": 0,
+          "needYield": 0,
+          "saveState": 3,
+          "restoreState": 3,
+          "isEOF": 1,
+          "keyPattern": {
+            "_fts": "text",
+            "_ftsx": 1
+          },
+          "indexName": "cast_text_fullplot_text_genres_text_title_text",
+          "isMultiKey": true,
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "backward",
+          "indexBounds": {},
+          "keysExamined": 2231,
+          "seeks": 1,
+          "dupsTested": 2231,
+          "dupsDropped": 0
+        }
+      }
+    }
+  },
+  "queryShapeHash": "2C700CF48CB564C22FC678068EAB16D86EC1F00FE92B4E76E024C100849A1BD2",
+  "command": {
+    "find": "movies",
+    "filter": {
+      "$text": {
+        "$search": "adventure -horror"
+      }
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

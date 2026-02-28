@@ -1,0 +1,149 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_mflix.movies",
+          "parsedQuery": {},
+          "indexFilterSet": false,
+          "queryHash": "138B9CBC",
+          "planCacheShapeHash": "138B9CBC",
+          "planCacheKey": "4B7DB43E",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "stage": "PROJECTION_SIMPLE",
+            "transformBy": {
+              "genres": 1,
+              "_id": 0
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "direction": "forward"
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 21349,
+          "executionTimeMillis": 17,
+          "totalKeysExamined": 0,
+          "totalDocsExamined": 21349,
+          "executionStages": {
+            "isCached": false,
+            "stage": "PROJECTION_SIMPLE",
+            "nReturned": 21349,
+            "executionTimeMillisEstimate": 0,
+            "works": 21350,
+            "advanced": 21349,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 10,
+            "restoreState": 10,
+            "isEOF": 1,
+            "transformBy": {
+              "genres": 1,
+              "_id": 0
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "nReturned": 21349,
+              "executionTimeMillisEstimate": 0,
+              "works": 21350,
+              "advanced": 21349,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 10,
+              "restoreState": 10,
+              "isEOF": 1,
+              "direction": "forward",
+              "docsExamined": 21349
+            }
+          }
+        }
+      },
+      "nReturned": 21349,
+      "executionTimeMillisEstimate": 7
+    },
+    {
+      "$unwind": {
+        "path": "$genres"
+      },
+      "nReturned": 45278,
+      "executionTimeMillisEstimate": 7
+    },
+    {
+      "$group": {
+        "_id": "$genres",
+        "count": {
+          "$sum": {
+            "$const": 1
+          }
+        }
+      },
+      "maxAccumulatorMemoryUsageBytes": {
+        "count": 3200
+      },
+      "totalOutputDataSizeBytes": 6125,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledDataStorageSize": 0,
+      "numBytesSpilledEstimate": 0,
+      "spilledRecords": 0,
+      "nReturned": 25,
+      "executionTimeMillisEstimate": 13
+    },
+    {
+      "$sort": {
+        "sortKey": {
+          "count": -1
+        }
+      },
+      "totalDataSizeSortedBytesEstimate": 6325,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledDataStorageSize": 0,
+      "nReturned": 25,
+      "executionTimeMillisEstimate": 13
+    }
+  ],
+  "queryShapeHash": "FBE9AEA45CACDF22E0FA93F5D1D55E6655A934A8F64DC1C8C13095F31FCBD04A",
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "movies",
+    "pipeline": [
+      {
+        "$unwind": "$genres"
+      },
+      {
+        "$sortByCount": "$genres"
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_mflix"
+  },
+  "ok": 1.0
+}

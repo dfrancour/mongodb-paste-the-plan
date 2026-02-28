@@ -1,0 +1,208 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "indexFilterSet": false,
+    "parsedQuery": {
+      "genres": {
+        "$in": [
+          "Action",
+          "Animation",
+          "Comedy",
+          "Crime",
+          "Documentary",
+          "Drama",
+          "Horror",
+          "Romance",
+          "Sci-Fi",
+          "Thriller"
+        ]
+      }
+    },
+    "queryHash": "13BD0FF8",
+    "planCacheKey": "90F069B2",
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "winningPlan": {
+      "stage": "FETCH",
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "genres": 1
+        },
+        "indexName": "genres_idx",
+        "isMultiKey": true,
+        "multiKeyPaths": {
+          "genres": [
+            "genres"
+          ]
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "genres": [
+            "[\"Action\", \"Action\"]",
+            "[\"Animation\", \"Animation\"]",
+            "[\"Comedy\", \"Comedy\"]",
+            "[\"Crime\", \"Crime\"]",
+            "[\"Documentary\", \"Documentary\"]",
+            "[\"Drama\", \"Drama\"]",
+            "[\"Horror\", \"Horror\"]",
+            "[\"Romance\", \"Romance\"]",
+            "[\"Sci-Fi\", \"Sci-Fi\"]",
+            "[\"Thriller\", \"Thriller\"]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": [
+      {
+        "stage": "FETCH",
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "genres": 1,
+            "year": 1
+          },
+          "indexName": "genres_year_compound_idx",
+          "isMultiKey": true,
+          "multiKeyPaths": {
+            "genres": [
+              "genres"
+            ],
+            "year": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "genres": [
+              "[\"Action\", \"Action\"]",
+              "[\"Animation\", \"Animation\"]",
+              "[\"Comedy\", \"Comedy\"]",
+              "[\"Crime\", \"Crime\"]",
+              "[\"Documentary\", \"Documentary\"]",
+              "[\"Drama\", \"Drama\"]",
+              "[\"Horror\", \"Horror\"]",
+              "[\"Romance\", \"Romance\"]",
+              "[\"Sci-Fi\", \"Sci-Fi\"]",
+              "[\"Thriller\", \"Thriller\"]"
+            ],
+            "year": [
+              "[MinKey, MaxKey]"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 20797,
+    "executionTimeMillis": 13,
+    "totalKeysExamined": 34707,
+    "totalDocsExamined": 20797,
+    "executionStages": {
+      "stage": "FETCH",
+      "nReturned": 20797,
+      "executionTimeMillisEstimate": 0,
+      "works": 34707,
+      "advanced": 20797,
+      "needTime": 13909,
+      "needYield": 0,
+      "saveState": 34,
+      "restoreState": 34,
+      "isEOF": 1,
+      "docsExamined": 20797,
+      "alreadyHasObj": 0,
+      "inputStage": {
+        "stage": "IXSCAN",
+        "nReturned": 20797,
+        "executionTimeMillisEstimate": 0,
+        "works": 34707,
+        "advanced": 20797,
+        "needTime": 13909,
+        "needYield": 0,
+        "saveState": 34,
+        "restoreState": 34,
+        "isEOF": 1,
+        "keyPattern": {
+          "genres": 1
+        },
+        "indexName": "genres_idx",
+        "isMultiKey": true,
+        "multiKeyPaths": {
+          "genres": [
+            "genres"
+          ]
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "genres": [
+            "[\"Action\", \"Action\"]",
+            "[\"Animation\", \"Animation\"]",
+            "[\"Comedy\", \"Comedy\"]",
+            "[\"Crime\", \"Crime\"]",
+            "[\"Documentary\", \"Documentary\"]",
+            "[\"Drama\", \"Drama\"]",
+            "[\"Horror\", \"Horror\"]",
+            "[\"Romance\", \"Romance\"]",
+            "[\"Sci-Fi\", \"Sci-Fi\"]",
+            "[\"Thriller\", \"Thriller\"]"
+          ]
+        },
+        "keysExamined": 34707,
+        "seeks": 6,
+        "dupsTested": 34701,
+        "dupsDropped": 13904
+      }
+    }
+  },
+  "command": {
+    "find": "movies",
+    "filter": {
+      "genres": {
+        "$in": [
+          "Drama",
+          "Comedy",
+          "Action",
+          "Thriller",
+          "Romance",
+          "Horror",
+          "Documentary",
+          "Animation",
+          "Sci-Fi",
+          "Crime"
+        ]
+      }
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "6.0.27",
+    "gitVersion": "fc88ca137231d7457aed6265d4f32a361ae71716"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+  },
+  "ok": 1.0
+}

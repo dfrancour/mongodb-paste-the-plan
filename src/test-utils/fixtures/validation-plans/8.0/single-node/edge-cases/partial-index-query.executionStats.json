@@ -1,0 +1,132 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "parsedQuery": {
+      "imdb.rating": {
+        "$gte": 8.0
+      }
+    },
+    "indexFilterSet": false,
+    "queryHash": "96CEDC47",
+    "planCacheShapeHash": "96CEDC47",
+    "planCacheKey": "C1998145",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "FETCH",
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "imdb.rating": 1
+        },
+        "indexName": "rating_partial_idx",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "imdb.rating": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": true,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "imdb.rating": [
+            "[8.0, inf.0]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 1302,
+    "executionTimeMillis": 0,
+    "totalKeysExamined": 1302,
+    "totalDocsExamined": 1302,
+    "executionStages": {
+      "isCached": false,
+      "stage": "FETCH",
+      "nReturned": 1302,
+      "executionTimeMillisEstimate": 0,
+      "works": 1303,
+      "advanced": 1302,
+      "needTime": 0,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "docsExamined": 1302,
+      "alreadyHasObj": 0,
+      "inputStage": {
+        "stage": "IXSCAN",
+        "nReturned": 1302,
+        "executionTimeMillisEstimate": 0,
+        "works": 1303,
+        "advanced": 1302,
+        "needTime": 0,
+        "needYield": 0,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 1,
+        "keyPattern": {
+          "imdb.rating": 1
+        },
+        "indexName": "rating_partial_idx",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "imdb.rating": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": true,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "imdb.rating": [
+            "[8.0, inf.0]"
+          ]
+        },
+        "keysExamined": 1302,
+        "seeks": 1,
+        "dupsTested": 0,
+        "dupsDropped": 0
+      }
+    }
+  },
+  "queryShapeHash": "10526126DA1AE666055C03A400B35EB1DF5F138F14CE1AEA03E8CE528F16614F",
+  "command": {
+    "find": "movies",
+    "filter": {
+      "imdb.rating": {
+        "$gte": 8.0
+      }
+    },
+    "hint": "rating_partial_idx",
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

@@ -1,0 +1,165 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_analytics.accounts",
+          "indexFilterSet": false,
+          "parsedQuery": {},
+          "queryHash": "46BDAEAF",
+          "planCacheKey": "46BDAEAF",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "winningPlan": {
+            "stage": "LIMIT",
+            "limitAmount": 20,
+            "inputStage": {
+              "stage": "PROJECTION_SIMPLE",
+              "transformBy": {
+                "_id": 1,
+                "account_id": 1,
+                "limit": 1
+              },
+              "inputStage": {
+                "stage": "COLLSCAN",
+                "direction": "forward"
+              }
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 20,
+          "executionTimeMillis": 0,
+          "totalKeysExamined": 0,
+          "totalDocsExamined": 20,
+          "executionStages": {
+            "stage": "LIMIT",
+            "nReturned": 20,
+            "executionTimeMillisEstimate": 0,
+            "works": 21,
+            "advanced": 20,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 1,
+            "isEOF": 1,
+            "limitAmount": 20,
+            "inputStage": {
+              "stage": "PROJECTION_SIMPLE",
+              "nReturned": 20,
+              "executionTimeMillisEstimate": 0,
+              "works": 20,
+              "advanced": 20,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 1,
+              "restoreState": 1,
+              "isEOF": 0,
+              "transformBy": {
+                "_id": 1,
+                "account_id": 1,
+                "limit": 1
+              },
+              "inputStage": {
+                "stage": "COLLSCAN",
+                "nReturned": 20,
+                "executionTimeMillisEstimate": 0,
+                "works": 20,
+                "advanced": 20,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 1,
+                "restoreState": 1,
+                "isEOF": 0,
+                "direction": "forward",
+                "docsExamined": 20
+              }
+            }
+          }
+        }
+      },
+      "nReturned": 20,
+      "executionTimeMillisEstimate": 0
+    },
+    {
+      "$lookup": {
+        "from": "customers",
+        "as": "customer_info",
+        "localField": "account_id",
+        "foreignField": "accounts"
+      },
+      "totalDocsExamined": 20,
+      "totalKeysExamined": 20,
+      "collectionScans": 0,
+      "indexesUsed": [
+        "accounts_idx"
+      ],
+      "nReturned": 20,
+      "executionTimeMillisEstimate": 1
+    },
+    {
+      "$project": {
+        "_id": true,
+        "account_id": true,
+        "limit": true,
+        "customer_count": {
+          "$size": [
+            "$customer_info"
+          ]
+        }
+      },
+      "nReturned": 20,
+      "executionTimeMillisEstimate": 1
+    }
+  ],
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "7.0.30",
+    "gitVersion": "67480f41dfa5802ce14af5c95bd0e9826d3b2131"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine"
+  },
+  "command": {
+    "aggregate": "accounts",
+    "pipeline": [
+      {
+        "$limit": 20
+      },
+      {
+        "$lookup": {
+          "from": "customers",
+          "localField": "account_id",
+          "foreignField": "accounts",
+          "as": "customer_info"
+        }
+      },
+      {
+        "$project": {
+          "account_id": 1,
+          "limit": 1,
+          "customer_count": {
+            "$size": "$customer_info"
+          }
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_analytics"
+  },
+  "ok": 1.0
+}

@@ -1,0 +1,106 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$queue": [],
+      "nReturned": 1,
+      "executionTimeMillisEstimate": 0
+    },
+    {
+      "$project": {
+        "_id": true,
+        "_tempDocumentsField": {
+          "$const": [
+            {
+              "name": "Test 1",
+              "value": 10
+            },
+            {
+              "name": "Test 2",
+              "value": 20
+            },
+            {
+              "name": "Test 3",
+              "value": 30
+            }
+          ]
+        }
+      },
+      "nReturned": 1,
+      "executionTimeMillisEstimate": 0
+    },
+    {
+      "$unwind": {
+        "path": "$_tempDocumentsField"
+      },
+      "nReturned": 3,
+      "executionTimeMillisEstimate": 0
+    },
+    {
+      "$replaceRoot": {
+        "newRoot": "$_tempDocumentsField"
+      },
+      "nReturned": 3,
+      "executionTimeMillisEstimate": 0
+    },
+    {
+      "$match": {
+        "value": {
+          "$gt": 15
+        }
+      },
+      "nReturned": 2,
+      "executionTimeMillisEstimate": 0
+    }
+  ],
+  "queryShapeHash": "3CFDF0FB62551B9221CC6618FD75E984BDB10D2E8365E135720BB9E21A874FA2",
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": 1,
+    "pipeline": [
+      {
+        "$documents": [
+          {
+            "name": "Test 1",
+            "value": 10
+          },
+          {
+            "name": "Test 2",
+            "value": 20
+          },
+          {
+            "name": "Test 3",
+            "value": 30
+          }
+        ]
+      },
+      {
+        "$match": {
+          "value": {
+            "$gt": 15
+          }
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_mflix"
+  },
+  "ok": 1.0
+}

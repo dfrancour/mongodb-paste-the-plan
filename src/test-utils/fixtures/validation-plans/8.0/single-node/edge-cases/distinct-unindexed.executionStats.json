@@ -1,0 +1,69 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "parsedQuery": {},
+    "indexFilterSet": false,
+    "queryHash": "8F2383EE",
+    "planCacheShapeHash": "8F2383EE",
+    "planCacheKey": "5E39E760",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "COLLSCAN",
+      "direction": "forward"
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 21349,
+    "executionTimeMillis": 4,
+    "totalKeysExamined": 0,
+    "totalDocsExamined": 21349,
+    "executionStages": {
+      "isCached": false,
+      "stage": "COLLSCAN",
+      "nReturned": 21349,
+      "executionTimeMillisEstimate": 3,
+      "works": 21350,
+      "advanced": 21349,
+      "needTime": 0,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "direction": "forward",
+      "docsExamined": 21349
+    }
+  },
+  "queryShapeHash": "E3A2F9AB477D37F3ADB2CDDFCBAAD03D5724ACAEB7CAD12BD393EE5BB5A026D1",
+  "command": {
+    "distinct": "movies",
+    "key": "fullplot",
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

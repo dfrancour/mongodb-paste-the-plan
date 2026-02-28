@@ -1,0 +1,124 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "indexFilterSet": false,
+    "parsedQuery": {
+      "tomatoes.viewer.rating": {
+        "$gte": 4.0
+      }
+    },
+    "queryHash": "BD63FA88",
+    "planCacheKey": "0DC8AF16",
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "winningPlan": {
+      "stage": "FETCH",
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "tomatoes.viewer.rating": 1
+        },
+        "indexName": "tomatoes_rating_idx",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "tomatoes.viewer.rating": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "tomatoes.viewer.rating": [
+            "[4.0, inf.0]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 2555,
+    "executionTimeMillis": 1,
+    "totalKeysExamined": 2555,
+    "totalDocsExamined": 2555,
+    "executionStages": {
+      "stage": "FETCH",
+      "nReturned": 2555,
+      "executionTimeMillisEstimate": 0,
+      "works": 2556,
+      "advanced": 2555,
+      "needTime": 0,
+      "needYield": 0,
+      "saveState": 2,
+      "restoreState": 2,
+      "isEOF": 1,
+      "docsExamined": 2555,
+      "alreadyHasObj": 0,
+      "inputStage": {
+        "stage": "IXSCAN",
+        "nReturned": 2555,
+        "executionTimeMillisEstimate": 0,
+        "works": 2556,
+        "advanced": 2555,
+        "needTime": 0,
+        "needYield": 0,
+        "saveState": 2,
+        "restoreState": 2,
+        "isEOF": 1,
+        "keyPattern": {
+          "tomatoes.viewer.rating": 1
+        },
+        "indexName": "tomatoes_rating_idx",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "tomatoes.viewer.rating": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "tomatoes.viewer.rating": [
+            "[4.0, inf.0]"
+          ]
+        },
+        "keysExamined": 2555,
+        "seeks": 1,
+        "dupsTested": 0,
+        "dupsDropped": 0
+      }
+    }
+  },
+  "command": {
+    "find": "movies",
+    "filter": {
+      "tomatoes.viewer.rating": {
+        "$gte": 4.0
+      }
+    },
+    "hint": "tomatoes_rating_idx",
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "6.0.27",
+    "gitVersion": "fc88ca137231d7457aed6265d4f32a361ae71716"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+  },
+  "ok": 1.0
+}

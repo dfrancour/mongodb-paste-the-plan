@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Icon } from "#components/common/Icon";
 import { parsePlan, PlanParseError } from "#lib/parsers";
+import { parseExplainPlanText } from "#lib/utils/sanitizeJson";
 import type { ParsedPlan } from "#lib/parsers";
 import { HowToUse } from "./HowToUse";
 import { ContributeLink } from "#components/common/ContributeLink";
@@ -135,7 +136,7 @@ export function ExplainPlanInput({
     }
 
     try {
-      JSON.parse(jsonString);
+      parseExplainPlanText(jsonString);
       setValidationStatus("valid");
       setValidationError(null);
     } catch {
@@ -147,7 +148,7 @@ export function ExplainPlanInput({
   const onSubmit = async (data: ExplainPlanForm) => {
     setIsProcessing(true);
     try {
-      const raw: unknown = JSON.parse(data.planJson);
+      const raw: unknown = parseExplainPlanText(data.planJson);
       const result = parsePlan(raw);
       setRawInput(raw);
       setLastAnalyzedPlan(result);

@@ -1,0 +1,107 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "indexFilterSet": false,
+    "parsedQuery": {
+      "title": {
+        "$eq": "The Matrix"
+      }
+    },
+    "queryHash": "553F28EB",
+    "planCacheKey": "F3643701",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "winningPlan": {
+      "stage": "UPDATE",
+      "inputStage": {
+        "stage": "COLLSCAN",
+        "filter": {
+          "title": {
+            "$eq": "The Matrix"
+          }
+        },
+        "direction": "forward"
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 0,
+    "executionTimeMillis": 2,
+    "totalKeysExamined": 0,
+    "totalDocsExamined": 7675,
+    "executionStages": {
+      "stage": "UPDATE",
+      "nReturned": 0,
+      "executionTimeMillisEstimate": 0,
+      "works": 7676,
+      "advanced": 0,
+      "needTime": 7675,
+      "needYield": 0,
+      "saveState": 7,
+      "restoreState": 7,
+      "isEOF": 1,
+      "nMatched": 1,
+      "nWouldModify": 1,
+      "nWouldUpsert": 0,
+      "inputStage": {
+        "stage": "COLLSCAN",
+        "filter": {
+          "title": {
+            "$eq": "The Matrix"
+          }
+        },
+        "nReturned": 1,
+        "executionTimeMillisEstimate": 0,
+        "works": 7675,
+        "advanced": 1,
+        "needTime": 7674,
+        "needYield": 0,
+        "saveState": 8,
+        "restoreState": 8,
+        "isEOF": 0,
+        "direction": "forward",
+        "docsExamined": 7675
+      }
+    }
+  },
+  "command": {
+    "update": "movies",
+    "updates": [
+      {
+        "q": {
+          "title": "The Matrix"
+        },
+        "u": {
+          "$set": {
+            "reviewed": true
+          }
+        },
+        "multi": false
+      }
+    ],
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "7.0.30",
+    "gitVersion": "67480f41dfa5802ce14af5c95bd0e9826d3b2131"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine"
+  },
+  "ok": 1.0
+}

@@ -1,0 +1,436 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_mflix.movies",
+          "indexFilterSet": false,
+          "parsedQuery": {
+            "year": {
+              "$eq": 2000
+            }
+          },
+          "queryHash": "637286A8",
+          "planCacheKey": "E1D80110",
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "winningPlan": {
+            "stage": "LIMIT",
+            "limitAmount": 5,
+            "inputStage": {
+              "stage": "PROJECTION_SIMPLE",
+              "transformBy": {
+                "_id": 1,
+                "title": 1
+              },
+              "inputStage": {
+                "stage": "FETCH",
+                "inputStage": {
+                  "stage": "IXSCAN",
+                  "keyPattern": {
+                    "year": 1
+                  },
+                  "indexName": "year_idx",
+                  "isMultiKey": false,
+                  "multiKeyPaths": {
+                    "year": []
+                  },
+                  "isUnique": false,
+                  "isSparse": false,
+                  "isPartial": false,
+                  "indexVersion": 2,
+                  "direction": "forward",
+                  "indexBounds": {
+                    "year": [
+                      "[2000, 2000]"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "rejectedPlans": [
+            {
+              "stage": "LIMIT",
+              "limitAmount": 5,
+              "inputStage": {
+                "stage": "PROJECTION_SIMPLE",
+                "transformBy": {
+                  "_id": 1,
+                  "title": 1
+                },
+                "inputStage": {
+                  "stage": "FETCH",
+                  "inputStage": {
+                    "stage": "IXSCAN",
+                    "keyPattern": {
+                      "year": 1,
+                      "imdb.rating": -1
+                    },
+                    "indexName": "year_rating_compound_idx",
+                    "isMultiKey": false,
+                    "multiKeyPaths": {
+                      "year": [],
+                      "imdb.rating": []
+                    },
+                    "isUnique": false,
+                    "isSparse": false,
+                    "isPartial": false,
+                    "indexVersion": 2,
+                    "direction": "forward",
+                    "indexBounds": {
+                      "year": [
+                        "[2000, 2000]"
+                      ],
+                      "imdb.rating": [
+                        "[MaxKey, MinKey]"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "stage": "LIMIT",
+              "limitAmount": 5,
+              "inputStage": {
+                "stage": "PROJECTION_SIMPLE",
+                "transformBy": {
+                  "_id": 1,
+                  "title": 1
+                },
+                "inputStage": {
+                  "stage": "FETCH",
+                  "filter": {
+                    "year": {
+                      "$eq": 2000
+                    }
+                  },
+                  "inputStage": {
+                    "stage": "IXSCAN",
+                    "keyPattern": {
+                      "year": "hashed"
+                    },
+                    "indexName": "year_hashed_idx",
+                    "isMultiKey": false,
+                    "isUnique": false,
+                    "isSparse": false,
+                    "isPartial": false,
+                    "indexVersion": 2,
+                    "direction": "forward",
+                    "indexBounds": {
+                      "year": [
+                        "[8612218595614068147, 8612218595614068147]"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "stage": "LIMIT",
+              "limitAmount": 5,
+              "inputStage": {
+                "stage": "PROJECTION_SIMPLE",
+                "transformBy": {
+                  "_id": 1,
+                  "title": 1
+                },
+                "inputStage": {
+                  "stage": "FETCH",
+                  "inputStage": {
+                    "stage": "IXSCAN",
+                    "keyPattern": {
+                      "year": 1,
+                      "genres": 1
+                    },
+                    "indexName": "year_genres_compound_idx",
+                    "isMultiKey": true,
+                    "multiKeyPaths": {
+                      "year": [],
+                      "genres": [
+                        "genres"
+                      ]
+                    },
+                    "isUnique": false,
+                    "isSparse": false,
+                    "isPartial": false,
+                    "indexVersion": 2,
+                    "direction": "forward",
+                    "indexBounds": {
+                      "year": [
+                        "[2000, 2000]"
+                      ],
+                      "genres": [
+                        "[MinKey, MaxKey]"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 5,
+          "executionTimeMillis": 0,
+          "totalKeysExamined": 5,
+          "totalDocsExamined": 5,
+          "executionStages": {
+            "stage": "LIMIT",
+            "nReturned": 5,
+            "executionTimeMillisEstimate": 0,
+            "works": 6,
+            "advanced": 5,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 1,
+            "isEOF": 1,
+            "limitAmount": 5,
+            "inputStage": {
+              "stage": "PROJECTION_SIMPLE",
+              "nReturned": 5,
+              "executionTimeMillisEstimate": 0,
+              "works": 5,
+              "advanced": 5,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 1,
+              "restoreState": 1,
+              "isEOF": 0,
+              "transformBy": {
+                "_id": 1,
+                "title": 1
+              },
+              "inputStage": {
+                "stage": "FETCH",
+                "nReturned": 5,
+                "executionTimeMillisEstimate": 0,
+                "works": 5,
+                "advanced": 5,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 1,
+                "restoreState": 1,
+                "isEOF": 0,
+                "docsExamined": 5,
+                "alreadyHasObj": 0,
+                "inputStage": {
+                  "stage": "IXSCAN",
+                  "nReturned": 5,
+                  "executionTimeMillisEstimate": 0,
+                  "works": 5,
+                  "advanced": 5,
+                  "needTime": 0,
+                  "needYield": 0,
+                  "saveState": 1,
+                  "restoreState": 1,
+                  "isEOF": 0,
+                  "keyPattern": {
+                    "year": 1
+                  },
+                  "indexName": "year_idx",
+                  "isMultiKey": false,
+                  "multiKeyPaths": {
+                    "year": []
+                  },
+                  "isUnique": false,
+                  "isSparse": false,
+                  "isPartial": false,
+                  "indexVersion": 2,
+                  "direction": "forward",
+                  "indexBounds": {
+                    "year": [
+                      "[2000, 2000]"
+                    ]
+                  },
+                  "keysExamined": 5,
+                  "seeks": 1,
+                  "dupsTested": 0,
+                  "dupsDropped": 0
+                }
+              }
+            }
+          }
+        }
+      },
+      "nReturned": 5,
+      "executionTimeMillisEstimate": 0
+    },
+    {
+      "$project": {
+        "_id": true,
+        "title": true,
+        "source": {
+          "$const": "movies"
+        }
+      },
+      "nReturned": 5,
+      "executionTimeMillisEstimate": 0
+    },
+    {
+      "$unionWith": {
+        "coll": "comments",
+        "pipeline": [
+          {
+            "$cursor": {
+              "queryPlanner": {
+                "namespace": "sample_mflix.comments",
+                "indexFilterSet": false,
+                "parsedQuery": {},
+                "queryHash": "31CCBF90",
+                "planCacheKey": "31CCBF90",
+                "maxIndexedOrSolutionsReached": false,
+                "maxIndexedAndSolutionsReached": false,
+                "maxScansToExplodeReached": false,
+                "winningPlan": {
+                  "stage": "LIMIT",
+                  "limitAmount": 5,
+                  "inputStage": {
+                    "stage": "PROJECTION_SIMPLE",
+                    "transformBy": {
+                      "_id": 1,
+                      "text": 1
+                    },
+                    "inputStage": {
+                      "stage": "COLLSCAN",
+                      "direction": "forward"
+                    }
+                  }
+                },
+                "rejectedPlans": []
+              },
+              "executionStats": {
+                "executionSuccess": true,
+                "nReturned": 5,
+                "executionTimeMillis": 0,
+                "totalKeysExamined": 0,
+                "totalDocsExamined": 5,
+                "executionStages": {
+                  "stage": "LIMIT",
+                  "nReturned": 5,
+                  "executionTimeMillisEstimate": 0,
+                  "works": 6,
+                  "advanced": 5,
+                  "needTime": 0,
+                  "needYield": 0,
+                  "saveState": 1,
+                  "restoreState": 1,
+                  "isEOF": 1,
+                  "limitAmount": 5,
+                  "inputStage": {
+                    "stage": "PROJECTION_SIMPLE",
+                    "nReturned": 5,
+                    "executionTimeMillisEstimate": 0,
+                    "works": 5,
+                    "advanced": 5,
+                    "needTime": 0,
+                    "needYield": 0,
+                    "saveState": 1,
+                    "restoreState": 1,
+                    "isEOF": 0,
+                    "transformBy": {
+                      "_id": 1,
+                      "text": 1
+                    },
+                    "inputStage": {
+                      "stage": "COLLSCAN",
+                      "nReturned": 5,
+                      "executionTimeMillisEstimate": 0,
+                      "works": 5,
+                      "advanced": 5,
+                      "needTime": 0,
+                      "needYield": 0,
+                      "saveState": 1,
+                      "restoreState": 1,
+                      "isEOF": 0,
+                      "direction": "forward",
+                      "docsExamined": 5
+                    }
+                  }
+                }
+              }
+            },
+            "nReturned": 5,
+            "executionTimeMillisEstimate": 0
+          },
+          {
+            "$project": {
+              "_id": true,
+              "text": true,
+              "source": {
+                "$const": "comments"
+              }
+            },
+            "nReturned": 5,
+            "executionTimeMillisEstimate": 0
+          }
+        ]
+      },
+      "nReturned": 10,
+      "executionTimeMillisEstimate": 0
+    }
+  ],
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "6.0.27",
+    "gitVersion": "fc88ca137231d7457aed6265d4f32a361ae71716"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+  },
+  "command": {
+    "aggregate": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "year": 2000
+        }
+      },
+      {
+        "$project": {
+          "title": 1,
+          "source": {
+            "$literal": "movies"
+          }
+        }
+      },
+      {
+        "$limit": 5
+      },
+      {
+        "$unionWith": {
+          "coll": "comments",
+          "pipeline": [
+            {
+              "$project": {
+                "text": 1,
+                "source": {
+                  "$literal": "comments"
+                }
+              }
+            },
+            {
+              "$limit": 5
+            }
+          ]
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_mflix"
+  },
+  "ok": 1.0
+}

@@ -1,0 +1,113 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_analytics.transactions",
+          "parsedQuery": {},
+          "indexFilterSet": false,
+          "queryHash": "340E82E2",
+          "planCacheShapeHash": "340E82E2",
+          "planCacheKey": "FA12D8EA",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "stage": "LIMIT",
+            "limitAmount": 100,
+            "inputStage": {
+              "stage": "PROJECTION_SIMPLE",
+              "transformBy": {
+                "transactions": 1,
+                "_id": 0
+              },
+              "inputStage": {
+                "stage": "COLLSCAN",
+                "direction": "forward"
+              }
+            }
+          },
+          "rejectedPlans": []
+        }
+      }
+    },
+    {
+      "$unwind": {
+        "path": "$transactions"
+      }
+    },
+    {
+      "$group": {
+        "_id": "$transactions.transaction_code",
+        "total_amount": {
+          "$sum": "$transactions.amount"
+        },
+        "count": {
+          "$sum": {
+            "$const": 1
+          }
+        }
+      }
+    },
+    {
+      "$sort": {
+        "sortKey": {
+          "total_amount": -1
+        }
+      }
+    }
+  ],
+  "queryShapeHash": "0B88F068ECD9B6DCEDC85FC1956C4C4C4A64F8B2330F36E11E2A58A78564E41B",
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "transactions",
+    "pipeline": [
+      {
+        "$limit": 100
+      },
+      {
+        "$unwind": "$transactions"
+      },
+      {
+        "$group": {
+          "_id": "$transactions.transaction_code",
+          "total_amount": {
+            "$sum": "$transactions.amount"
+          },
+          "count": {
+            "$sum": 1
+          }
+        }
+      },
+      {
+        "$sort": {
+          "total_amount": -1
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_analytics"
+  },
+  "ok": 1.0
+}

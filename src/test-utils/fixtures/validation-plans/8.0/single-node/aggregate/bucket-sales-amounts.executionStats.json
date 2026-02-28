@@ -1,0 +1,220 @@
+{
+  "explainVersion": "2",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_supplies.sales",
+          "parsedQuery": {},
+          "indexFilterSet": false,
+          "queryHash": "98F32ECA",
+          "planCacheShapeHash": "98F32ECA",
+          "planCacheKey": "216D35A2",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "queryPlan": {
+              "stage": "GROUP",
+              "planNodeId": 3,
+              "inputStage": {
+                "stage": "COLLSCAN",
+                "planNodeId": 1,
+                "filter": {},
+                "direction": "forward"
+              }
+            },
+            "slotBasedPlan": {
+              "slots": "$$RESULT=s13 env: {  }",
+              "stages": "[3] project [s13 = newObj(\"_id\", s8, \"count\", s11, \"stores\", s12)] \n[3] project [s11 = (convert ( s9, int32) ?: s9), s12 = getElement(s10, 0)] \n[3] group [s8] [s9 = count(), s10 = addToSetCapped(s2, 104857600)] spillSlots[s6, s7] mergingExprs[sum(s6), aggSetUnionCapped(s7, 104857600)] \n[3] project [s8 = \n    if ((((s5 <=> 1) >= 0) ?: ((exists(s5) && typeMatch(s5, -65)) >= true)) && (((s5 <=> 2) < 0) ?: ((exists(s5) && typeMatch(s5, -65)) < true))) \n    then 1 \n    else \n        if ((((s5 <=> 2) >= 0) ?: ((exists(s5) && typeMatch(s5, -65)) >= true)) && (((s5 <=> 3) < 0) ?: ((exists(s5) && typeMatch(s5, -65)) < true))) \n        then 2 \n        else \n            if ((((s5 <=> 3) >= 0) ?: ((exists(s5) && typeMatch(s5, -65)) >= true)) && (((s5 <=> 4) < 0) ?: ((exists(s5) && typeMatch(s5, -65)) < true))) \n            then 3 \n            else \n                if ((((s5 <=> 4) >= 0) ?: ((exists(s5) && typeMatch(s5, -65)) >= true)) && (((s5 <=> 5) < 0) ?: ((exists(s5) && typeMatch(s5, -65)) < true))) \n                then 4 \n                else \"Other\" \n] \n[3] project [s5 = traverseP(s1, lambda(l2.0) { getField(move(l2.0), \"satisfaction\") }, 1)] \n[1] scan s3 s4 none none none none none none lowPriority [s1 = customer, s2 = storeLocation] @\"31f96a03-5ae1-4c32-861c-c9d05c07fd4a\" true false "
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 5,
+          "executionTimeMillis": 3,
+          "totalKeysExamined": 0,
+          "totalDocsExamined": 5000,
+          "executionStages": {
+            "stage": "project",
+            "planNodeId": 3,
+            "nReturned": 5,
+            "executionTimeMillisEstimate": 0,
+            "opens": 1,
+            "closes": 1,
+            "saveState": 1,
+            "restoreState": 1,
+            "isEOF": 1,
+            "projections": {
+              "13": "newObj(\"_id\", s8, \"count\", s11, \"stores\", s12) "
+            },
+            "inputStage": {
+              "stage": "project",
+              "planNodeId": 3,
+              "nReturned": 5,
+              "executionTimeMillisEstimate": 0,
+              "opens": 1,
+              "closes": 1,
+              "saveState": 1,
+              "restoreState": 1,
+              "isEOF": 1,
+              "projections": {
+                "11": "(convert ( s9, int32) ?: s9) ",
+                "12": "getElement(s10, 0) "
+              },
+              "inputStage": {
+                "stage": "group",
+                "planNodeId": 3,
+                "nReturned": 5,
+                "executionTimeMillisEstimate": 0,
+                "opens": 1,
+                "closes": 1,
+                "saveState": 1,
+                "restoreState": 1,
+                "isEOF": 1,
+                "groupBySlots": [
+                  8
+                ],
+                "expressions": {
+                  "9": "count() ",
+                  "10": "addToSetCapped(s2, 104857600) ",
+                  "initExprs": {
+                    "9": null,
+                    "10": null
+                  }
+                },
+                "mergingExprs": {
+                  "6": "sum(s6) ",
+                  "7": "aggSetUnionCapped(s7, 104857600) "
+                },
+                "usedDisk": false,
+                "spills": 0,
+                "spilledBytes": 0,
+                "spilledRecords": 0,
+                "spilledDataStorageSize": 0,
+                "inputStage": {
+                  "stage": "project",
+                  "planNodeId": 3,
+                  "nReturned": 5000,
+                  "executionTimeMillisEstimate": 0,
+                  "opens": 1,
+                  "closes": 1,
+                  "saveState": 1,
+                  "restoreState": 1,
+                  "isEOF": 1,
+                  "projections": {
+                    "8": "\n    if ((((s5 <=> 1) >= 0) ?: ((exists(s5) && typeMatch(s5, -65)) >= true)) && (((s5 <=> 2) < 0) ?: ((exists(s5) && typeMatch(s5, -65)) < true))) \n    then 1 \n    else \n        if ((((s5 <=> 2) >= 0) ?: ((exists(s5) && typeMatch(s5, -65)) >= true)) && (((s5 <=> 3) < 0) ?: ((exists(s5) && typeMatch(s5, -65)) < true))) \n        then 2 \n        else \n            if ((((s5 <=> 3) >= 0) ?: ((exists(s5) && typeMatch(s5, -65)) >= true)) && (((s5 <=> 4) < 0) ?: ((exists(s5) && typeMatch(s5, -65)) < true))) \n            then 3 \n            else \n                if ((((s5 <=> 4) >= 0) ?: ((exists(s5) && typeMatch(s5, -65)) >= true)) && (((s5 <=> 5) < 0) ?: ((exists(s5) && typeMatch(s5, -65)) < true))) \n                then 4 \n                else \"Other\" \n"
+                  },
+                  "inputStage": {
+                    "stage": "project",
+                    "planNodeId": 3,
+                    "nReturned": 5000,
+                    "executionTimeMillisEstimate": 0,
+                    "opens": 1,
+                    "closes": 1,
+                    "saveState": 1,
+                    "restoreState": 1,
+                    "isEOF": 1,
+                    "projections": {
+                      "5": "traverseP(s1, lambda(l2.0) { getField(move(l2.0), \"satisfaction\") }, 1) "
+                    },
+                    "inputStage": {
+                      "stage": "scan",
+                      "planNodeId": 1,
+                      "nReturned": 5000,
+                      "executionTimeMillisEstimate": 0,
+                      "opens": 1,
+                      "closes": 1,
+                      "saveState": 1,
+                      "restoreState": 1,
+                      "isEOF": 1,
+                      "numReads": 5000,
+                      "recordSlot": 3,
+                      "recordIdSlot": 4,
+                      "scanFieldNames": [
+                        "customer",
+                        "storeLocation"
+                      ],
+                      "scanFieldSlots": [
+                        1,
+                        2
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "nReturned": 5,
+      "executionTimeMillisEstimate": 1
+    },
+    {
+      "$sort": {
+        "sortKey": {
+          "_id": 1
+        }
+      },
+      "totalDataSizeSortedBytesEstimate": 1945,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledDataStorageSize": 0,
+      "nReturned": 5,
+      "executionTimeMillisEstimate": 1
+    }
+  ],
+  "queryShapeHash": "9C4A404BCE8C322DD049C824D7C1606EAA1315C87FC47082490507B8188C8294",
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "sales",
+    "pipeline": [
+      {
+        "$bucket": {
+          "groupBy": "$customer.satisfaction",
+          "boundaries": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "default": "Other",
+          "output": {
+            "count": {
+              "$sum": 1
+            },
+            "stores": {
+              "$addToSet": "$storeLocation"
+            }
+          }
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_supplies"
+  },
+  "ok": 1.0
+}

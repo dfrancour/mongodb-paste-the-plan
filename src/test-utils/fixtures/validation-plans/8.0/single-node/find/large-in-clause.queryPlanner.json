@@ -1,0 +1,150 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "parsedQuery": {
+      "genres": {
+        "$in": [
+          "Action",
+          "Animation",
+          "Comedy",
+          "Crime",
+          "Documentary",
+          "Drama",
+          "Horror",
+          "Romance",
+          "Sci-Fi",
+          "Thriller"
+        ]
+      }
+    },
+    "indexFilterSet": false,
+    "queryHash": "66DF1D03",
+    "planCacheShapeHash": "66DF1D03",
+    "planCacheKey": "95BCB734",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "FETCH",
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "genres": 1
+        },
+        "indexName": "genres_idx",
+        "isMultiKey": true,
+        "multiKeyPaths": {
+          "genres": [
+            "genres"
+          ]
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "genres": [
+            "[\"Action\", \"Action\"]",
+            "[\"Animation\", \"Animation\"]",
+            "[\"Comedy\", \"Comedy\"]",
+            "[\"Crime\", \"Crime\"]",
+            "[\"Documentary\", \"Documentary\"]",
+            "[\"Drama\", \"Drama\"]",
+            "[\"Horror\", \"Horror\"]",
+            "[\"Romance\", \"Romance\"]",
+            "[\"Sci-Fi\", \"Sci-Fi\"]",
+            "[\"Thriller\", \"Thriller\"]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": [
+      {
+        "isCached": false,
+        "stage": "FETCH",
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "genres": 1,
+            "year": 1
+          },
+          "indexName": "genres_year_compound_idx",
+          "isMultiKey": true,
+          "multiKeyPaths": {
+            "genres": [
+              "genres"
+            ],
+            "year": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "genres": [
+              "[\"Action\", \"Action\"]",
+              "[\"Animation\", \"Animation\"]",
+              "[\"Comedy\", \"Comedy\"]",
+              "[\"Crime\", \"Crime\"]",
+              "[\"Documentary\", \"Documentary\"]",
+              "[\"Drama\", \"Drama\"]",
+              "[\"Horror\", \"Horror\"]",
+              "[\"Romance\", \"Romance\"]",
+              "[\"Sci-Fi\", \"Sci-Fi\"]",
+              "[\"Thriller\", \"Thriller\"]"
+            ],
+            "year": [
+              "[MinKey, MaxKey]"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "queryShapeHash": "192451FD05C6B1BCB6E2EC932F3E69B5381A05B1F2650AFE51DE52F24A881FDB",
+  "command": {
+    "find": "movies",
+    "filter": {
+      "genres": {
+        "$in": [
+          "Drama",
+          "Comedy",
+          "Action",
+          "Thriller",
+          "Romance",
+          "Horror",
+          "Documentary",
+          "Animation",
+          "Sci-Fi",
+          "Crime"
+        ]
+      }
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

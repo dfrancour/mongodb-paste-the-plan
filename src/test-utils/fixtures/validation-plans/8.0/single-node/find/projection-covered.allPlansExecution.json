@@ -1,0 +1,506 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "parsedQuery": {
+      "year": {
+        "$eq": 2000
+      }
+    },
+    "indexFilterSet": false,
+    "queryHash": "5A07AA54",
+    "planCacheShapeHash": "5A07AA54",
+    "planCacheKey": "06F20D3A",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "PROJECTION_COVERED",
+      "transformBy": {
+        "_id": 0,
+        "year": 1
+      },
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "year": 1
+        },
+        "indexName": "year_idx",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "year": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "year": [
+            "[2000, 2000]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": [
+      {
+        "isCached": false,
+        "stage": "PROJECTION_COVERED",
+        "transformBy": {
+          "_id": 0,
+          "year": 1
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "year": 1,
+            "imdb.rating": -1
+          },
+          "indexName": "year_rating_compound_idx",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "year": [],
+            "imdb.rating": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "year": [
+              "[2000, 2000]"
+            ],
+            "imdb.rating": [
+              "[MaxKey, MinKey]"
+            ]
+          }
+        }
+      },
+      {
+        "isCached": false,
+        "stage": "PROJECTION_SIMPLE",
+        "transformBy": {
+          "_id": 0,
+          "year": 1
+        },
+        "inputStage": {
+          "stage": "FETCH",
+          "filter": {
+            "year": {
+              "$eq": 2000
+            }
+          },
+          "inputStage": {
+            "stage": "IXSCAN",
+            "keyPattern": {
+              "year": "hashed"
+            },
+            "indexName": "year_hashed_idx",
+            "isMultiKey": false,
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "year": [
+                "[8612218595614068147, 8612218595614068147]"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "isCached": false,
+        "stage": "PROJECTION_COVERED",
+        "transformBy": {
+          "_id": 0,
+          "year": 1
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "year": 1,
+            "genres": 1
+          },
+          "indexName": "year_genres_compound_idx",
+          "isMultiKey": true,
+          "multiKeyPaths": {
+            "year": [],
+            "genres": [
+              "genres"
+            ]
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "year": [
+              "[2000, 2000]"
+            ],
+            "genres": [
+              "[MinKey, MaxKey]"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 581,
+    "executionTimeMillis": 0,
+    "totalKeysExamined": 581,
+    "totalDocsExamined": 0,
+    "executionStages": {
+      "isCached": false,
+      "stage": "PROJECTION_COVERED",
+      "nReturned": 581,
+      "executionTimeMillisEstimate": 0,
+      "works": 582,
+      "advanced": 581,
+      "needTime": 0,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "transformBy": {
+        "_id": 0,
+        "year": 1
+      },
+      "inputStage": {
+        "stage": "IXSCAN",
+        "nReturned": 581,
+        "executionTimeMillisEstimate": 0,
+        "works": 582,
+        "advanced": 581,
+        "needTime": 0,
+        "needYield": 0,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 1,
+        "keyPattern": {
+          "year": 1
+        },
+        "indexName": "year_idx",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "year": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "year": [
+            "[2000, 2000]"
+          ]
+        },
+        "keysExamined": 581,
+        "seeks": 1,
+        "dupsTested": 0,
+        "dupsDropped": 0
+      }
+    },
+    "allPlansExecution": [
+      {
+        "nReturned": 101,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 101,
+        "totalDocsExamined": 0,
+        "score": 2.0003,
+        "executionStages": {
+          "isCached": false,
+          "stage": "PROJECTION_COVERED",
+          "nReturned": 101,
+          "executionTimeMillisEstimate": 0,
+          "works": 101,
+          "advanced": 101,
+          "needTime": 0,
+          "needYield": 0,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 0,
+          "transformBy": {
+            "_id": 0,
+            "year": 1
+          },
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nReturned": 101,
+            "executionTimeMillisEstimate": 0,
+            "works": 101,
+            "advanced": 101,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 0,
+            "restoreState": 0,
+            "isEOF": 0,
+            "keyPattern": {
+              "year": 1
+            },
+            "indexName": "year_idx",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "year": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "year": [
+                "[2000, 2000]"
+              ]
+            },
+            "keysExamined": 101,
+            "seeks": 1,
+            "dupsTested": 0,
+            "dupsDropped": 0
+          }
+        }
+      },
+      {
+        "nReturned": 101,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 101,
+        "totalDocsExamined": 0,
+        "score": 2.0003,
+        "executionStages": {
+          "isCached": false,
+          "stage": "PROJECTION_COVERED",
+          "nReturned": 101,
+          "executionTimeMillisEstimate": 0,
+          "works": 101,
+          "advanced": 101,
+          "needTime": 0,
+          "needYield": 0,
+          "saveState": 1,
+          "restoreState": 0,
+          "isEOF": 0,
+          "transformBy": {
+            "_id": 0,
+            "year": 1
+          },
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nReturned": 101,
+            "executionTimeMillisEstimate": 0,
+            "works": 101,
+            "advanced": 101,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 0,
+            "isEOF": 0,
+            "keyPattern": {
+              "year": 1,
+              "imdb.rating": -1
+            },
+            "indexName": "year_rating_compound_idx",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "year": [],
+              "imdb.rating": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "year": [
+                "[2000, 2000]"
+              ],
+              "imdb.rating": [
+                "[MaxKey, MinKey]"
+              ]
+            },
+            "keysExamined": 101,
+            "seeks": 1,
+            "dupsTested": 0,
+            "dupsDropped": 0
+          }
+        }
+      },
+      {
+        "nReturned": 101,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 101,
+        "totalDocsExamined": 101,
+        "score": 2.0002,
+        "executionStages": {
+          "isCached": false,
+          "stage": "PROJECTION_SIMPLE",
+          "nReturned": 101,
+          "executionTimeMillisEstimate": 0,
+          "works": 101,
+          "advanced": 101,
+          "needTime": 0,
+          "needYield": 0,
+          "saveState": 1,
+          "restoreState": 0,
+          "isEOF": 0,
+          "transformBy": {
+            "_id": 0,
+            "year": 1
+          },
+          "inputStage": {
+            "stage": "FETCH",
+            "filter": {
+              "year": {
+                "$eq": 2000
+              }
+            },
+            "nReturned": 101,
+            "executionTimeMillisEstimate": 0,
+            "works": 101,
+            "advanced": 101,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 0,
+            "isEOF": 0,
+            "docsExamined": 101,
+            "alreadyHasObj": 0,
+            "inputStage": {
+              "stage": "IXSCAN",
+              "nReturned": 101,
+              "executionTimeMillisEstimate": 0,
+              "works": 101,
+              "advanced": 101,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 1,
+              "restoreState": 0,
+              "isEOF": 0,
+              "keyPattern": {
+                "year": "hashed"
+              },
+              "indexName": "year_hashed_idx",
+              "isMultiKey": false,
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "year": [
+                  "[8612218595614068147, 8612218595614068147]"
+                ]
+              },
+              "keysExamined": 101,
+              "seeks": 1,
+              "dupsTested": 0,
+              "dupsDropped": 0
+            }
+          }
+        }
+      },
+      {
+        "nReturned": 88,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 101,
+        "totalDocsExamined": 0,
+        "score": 1.8715871287128711,
+        "executionStages": {
+          "isCached": false,
+          "stage": "PROJECTION_COVERED",
+          "nReturned": 88,
+          "executionTimeMillisEstimate": 0,
+          "works": 101,
+          "advanced": 88,
+          "needTime": 13,
+          "needYield": 0,
+          "saveState": 1,
+          "restoreState": 0,
+          "isEOF": 0,
+          "transformBy": {
+            "_id": 0,
+            "year": 1
+          },
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nReturned": 88,
+            "executionTimeMillisEstimate": 0,
+            "works": 101,
+            "advanced": 88,
+            "needTime": 13,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 0,
+            "isEOF": 0,
+            "keyPattern": {
+              "year": 1,
+              "genres": 1
+            },
+            "indexName": "year_genres_compound_idx",
+            "isMultiKey": true,
+            "multiKeyPaths": {
+              "year": [],
+              "genres": [
+                "genres"
+              ]
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "year": [
+                "[2000, 2000]"
+              ],
+              "genres": [
+                "[MinKey, MaxKey]"
+              ]
+            },
+            "keysExamined": 101,
+            "seeks": 1,
+            "dupsTested": 101,
+            "dupsDropped": 13
+          }
+        }
+      }
+    ]
+  },
+  "queryShapeHash": "3E211676DB1A72FF08A3D6E9705B8C1FAECCBA32FDBD7205D2C817C774822E6E",
+  "command": {
+    "find": "movies",
+    "filter": {
+      "year": 2000
+    },
+    "projection": {
+      "_id": 0,
+      "year": 1
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

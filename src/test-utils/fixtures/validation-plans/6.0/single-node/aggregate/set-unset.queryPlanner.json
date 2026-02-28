@@ -1,0 +1,196 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_mflix.movies",
+          "indexFilterSet": false,
+          "parsedQuery": {
+            "year": {
+              "$gte": 2010
+            }
+          },
+          "queryHash": "34A15C1B",
+          "planCacheKey": "42D767C8",
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "winningPlan": {
+            "stage": "LIMIT",
+            "limitAmount": 10,
+            "inputStage": {
+              "stage": "FETCH",
+              "inputStage": {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "year": 1
+                },
+                "indexName": "year_idx",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "year": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "year": [
+                    "[2010, inf.0]"
+                  ]
+                }
+              }
+            }
+          },
+          "rejectedPlans": [
+            {
+              "stage": "LIMIT",
+              "limitAmount": 10,
+              "inputStage": {
+                "stage": "FETCH",
+                "inputStage": {
+                  "stage": "IXSCAN",
+                  "keyPattern": {
+                    "year": 1,
+                    "imdb.rating": -1
+                  },
+                  "indexName": "year_rating_compound_idx",
+                  "isMultiKey": false,
+                  "multiKeyPaths": {
+                    "year": [],
+                    "imdb.rating": []
+                  },
+                  "isUnique": false,
+                  "isSparse": false,
+                  "isPartial": false,
+                  "indexVersion": 2,
+                  "direction": "forward",
+                  "indexBounds": {
+                    "year": [
+                      "[2010, inf.0]"
+                    ],
+                    "imdb.rating": [
+                      "[MaxKey, MinKey]"
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "stage": "LIMIT",
+              "limitAmount": 10,
+              "inputStage": {
+                "stage": "FETCH",
+                "inputStage": {
+                  "stage": "IXSCAN",
+                  "keyPattern": {
+                    "year": 1,
+                    "genres": 1
+                  },
+                  "indexName": "year_genres_compound_idx",
+                  "isMultiKey": true,
+                  "multiKeyPaths": {
+                    "year": [],
+                    "genres": [
+                      "genres"
+                    ]
+                  },
+                  "isUnique": false,
+                  "isSparse": false,
+                  "isPartial": false,
+                  "indexVersion": 2,
+                  "direction": "forward",
+                  "indexBounds": {
+                    "year": [
+                      "[2010, inf.0]"
+                    ],
+                    "genres": [
+                      "[MinKey, MaxKey]"
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "$set": {
+        "decade": {
+          "$const": "2010s"
+        },
+        "has_rating": {
+          "$gt": [
+            "$imdb.rating",
+            {
+              "$const": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "$project": {
+        "fullplot": false,
+        "plot": false,
+        "poster": false,
+        "_id": true
+      }
+    }
+  ],
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "6.0.27",
+    "gitVersion": "fc88ca137231d7457aed6265d4f32a361ae71716"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+  },
+  "command": {
+    "aggregate": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "year": {
+            "$gte": 2010
+          }
+        }
+      },
+      {
+        "$set": {
+          "decade": "2010s",
+          "has_rating": {
+            "$gt": [
+              "$imdb.rating",
+              0
+            ]
+          }
+        }
+      },
+      {
+        "$unset": [
+          "fullplot",
+          "plot",
+          "poster"
+        ]
+      },
+      {
+        "$limit": 10
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_mflix"
+  },
+  "ok": 1.0
+}

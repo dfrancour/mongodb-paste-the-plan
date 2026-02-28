@@ -1,0 +1,586 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "indexFilterSet": false,
+    "parsedQuery": {
+      "$and": [
+        {
+          "genres": {
+            "$eq": "Drama"
+          }
+        },
+        {
+          "year": {
+            "$gte": 2000
+          }
+        }
+      ]
+    },
+    "queryHash": "E2111EF6",
+    "planCacheKey": "7D5B831A",
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "winningPlan": {
+      "stage": "FETCH",
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "genres": 1,
+          "year": 1
+        },
+        "indexName": "genres_year_compound_idx",
+        "isMultiKey": true,
+        "multiKeyPaths": {
+          "genres": [
+            "genres"
+          ],
+          "year": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "genres": [
+            "[\"Drama\", \"Drama\"]"
+          ],
+          "year": [
+            "[2000, inf.0]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": [
+      {
+        "stage": "FETCH",
+        "filter": {
+          "year": {
+            "$gte": 2000
+          }
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "genres": 1
+          },
+          "indexName": "genres_idx",
+          "isMultiKey": true,
+          "multiKeyPaths": {
+            "genres": [
+              "genres"
+            ]
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "genres": [
+              "[\"Drama\", \"Drama\"]"
+            ]
+          }
+        }
+      },
+      {
+        "stage": "FETCH",
+        "filter": {
+          "genres": {
+            "$eq": "Drama"
+          }
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "year": 1,
+            "imdb.rating": -1
+          },
+          "indexName": "year_rating_compound_idx",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "year": [],
+            "imdb.rating": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "year": [
+              "[2000, inf.0]"
+            ],
+            "imdb.rating": [
+              "[MaxKey, MinKey]"
+            ]
+          }
+        }
+      },
+      {
+        "stage": "FETCH",
+        "filter": {
+          "genres": {
+            "$eq": "Drama"
+          }
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "year": 1
+          },
+          "indexName": "year_idx",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "year": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "year": [
+              "[2000, inf.0]"
+            ]
+          }
+        }
+      },
+      {
+        "stage": "FETCH",
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "year": 1,
+            "genres": 1
+          },
+          "indexName": "year_genres_compound_idx",
+          "isMultiKey": true,
+          "multiKeyPaths": {
+            "year": [],
+            "genres": [
+              "genres"
+            ]
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "year": [
+              "[2000, inf.0]"
+            ],
+            "genres": [
+              "[\"Drama\", \"Drama\"]"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 7079,
+    "executionTimeMillis": 4,
+    "totalKeysExamined": 7079,
+    "totalDocsExamined": 7079,
+    "executionStages": {
+      "stage": "FETCH",
+      "nReturned": 7079,
+      "executionTimeMillisEstimate": 3,
+      "works": 7080,
+      "advanced": 7079,
+      "needTime": 0,
+      "needYield": 0,
+      "saveState": 7,
+      "restoreState": 7,
+      "isEOF": 1,
+      "docsExamined": 7079,
+      "alreadyHasObj": 0,
+      "inputStage": {
+        "stage": "IXSCAN",
+        "nReturned": 7079,
+        "executionTimeMillisEstimate": 2,
+        "works": 7080,
+        "advanced": 7079,
+        "needTime": 0,
+        "needYield": 0,
+        "saveState": 7,
+        "restoreState": 7,
+        "isEOF": 1,
+        "keyPattern": {
+          "genres": 1,
+          "year": 1
+        },
+        "indexName": "genres_year_compound_idx",
+        "isMultiKey": true,
+        "multiKeyPaths": {
+          "genres": [
+            "genres"
+          ],
+          "year": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "genres": [
+            "[\"Drama\", \"Drama\"]"
+          ],
+          "year": [
+            "[2000, inf.0]"
+          ]
+        },
+        "keysExamined": 7079,
+        "seeks": 1,
+        "dupsTested": 7079,
+        "dupsDropped": 0
+      }
+    },
+    "allPlansExecution": [
+      {
+        "nReturned": 101,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 101,
+        "totalDocsExamined": 101,
+        "score": 2.0002,
+        "executionStages": {
+          "stage": "FETCH",
+          "nReturned": 101,
+          "executionTimeMillisEstimate": 0,
+          "works": 101,
+          "advanced": 101,
+          "needTime": 0,
+          "needYield": 0,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 0,
+          "docsExamined": 101,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nReturned": 101,
+            "executionTimeMillisEstimate": 0,
+            "works": 101,
+            "advanced": 101,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 0,
+            "restoreState": 0,
+            "isEOF": 0,
+            "keyPattern": {
+              "genres": 1,
+              "year": 1
+            },
+            "indexName": "genres_year_compound_idx",
+            "isMultiKey": true,
+            "multiKeyPaths": {
+              "genres": [
+                "genres"
+              ],
+              "year": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "genres": [
+                "[\"Drama\", \"Drama\"]"
+              ],
+              "year": [
+                "[2000, inf.0]"
+              ]
+            },
+            "keysExamined": 101,
+            "seeks": 1,
+            "dupsTested": 101,
+            "dupsDropped": 0
+          }
+        }
+      },
+      {
+        "nReturned": 0,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 101,
+        "totalDocsExamined": 101,
+        "score": 1.0002,
+        "executionStages": {
+          "stage": "FETCH",
+          "filter": {
+            "year": {
+              "$gte": 2000
+            }
+          },
+          "nReturned": 0,
+          "executionTimeMillisEstimate": 0,
+          "works": 101,
+          "advanced": 0,
+          "needTime": 101,
+          "needYield": 0,
+          "saveState": 1,
+          "restoreState": 0,
+          "isEOF": 0,
+          "docsExamined": 101,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nReturned": 101,
+            "executionTimeMillisEstimate": 0,
+            "works": 101,
+            "advanced": 101,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 0,
+            "isEOF": 0,
+            "keyPattern": {
+              "genres": 1
+            },
+            "indexName": "genres_idx",
+            "isMultiKey": true,
+            "multiKeyPaths": {
+              "genres": [
+                "genres"
+              ]
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "genres": [
+                "[\"Drama\", \"Drama\"]"
+              ]
+            },
+            "keysExamined": 101,
+            "seeks": 1,
+            "dupsTested": 101,
+            "dupsDropped": 0
+          }
+        }
+      },
+      {
+        "nReturned": 60,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 101,
+        "totalDocsExamined": 101,
+        "score": 1.5942594059405941,
+        "executionStages": {
+          "stage": "FETCH",
+          "filter": {
+            "genres": {
+              "$eq": "Drama"
+            }
+          },
+          "nReturned": 60,
+          "executionTimeMillisEstimate": 0,
+          "works": 101,
+          "advanced": 60,
+          "needTime": 41,
+          "needYield": 0,
+          "saveState": 1,
+          "restoreState": 0,
+          "isEOF": 0,
+          "docsExamined": 101,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nReturned": 101,
+            "executionTimeMillisEstimate": 0,
+            "works": 101,
+            "advanced": 101,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 0,
+            "isEOF": 0,
+            "keyPattern": {
+              "year": 1,
+              "imdb.rating": -1
+            },
+            "indexName": "year_rating_compound_idx",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "year": [],
+              "imdb.rating": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "year": [
+                "[2000, inf.0]"
+              ],
+              "imdb.rating": [
+                "[MaxKey, MinKey]"
+              ]
+            },
+            "keysExamined": 101,
+            "seeks": 1,
+            "dupsTested": 0,
+            "dupsDropped": 0
+          }
+        }
+      },
+      {
+        "nReturned": 62,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 101,
+        "totalDocsExamined": 101,
+        "score": 1.614061386138614,
+        "executionStages": {
+          "stage": "FETCH",
+          "filter": {
+            "genres": {
+              "$eq": "Drama"
+            }
+          },
+          "nReturned": 62,
+          "executionTimeMillisEstimate": 0,
+          "works": 101,
+          "advanced": 62,
+          "needTime": 39,
+          "needYield": 0,
+          "saveState": 1,
+          "restoreState": 0,
+          "isEOF": 0,
+          "docsExamined": 101,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nReturned": 101,
+            "executionTimeMillisEstimate": 0,
+            "works": 101,
+            "advanced": 101,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 0,
+            "isEOF": 0,
+            "keyPattern": {
+              "year": 1
+            },
+            "indexName": "year_idx",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "year": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "year": [
+                "[2000, inf.0]"
+              ]
+            },
+            "keysExamined": 101,
+            "seeks": 1,
+            "dupsTested": 0,
+            "dupsDropped": 0
+          }
+        }
+      },
+      {
+        "nReturned": 101,
+        "executionTimeMillisEstimate": 0,
+        "totalKeysExamined": 101,
+        "totalDocsExamined": 101,
+        "score": 2.0002,
+        "executionStages": {
+          "stage": "FETCH",
+          "nReturned": 101,
+          "executionTimeMillisEstimate": 0,
+          "works": 101,
+          "advanced": 101,
+          "needTime": 0,
+          "needYield": 0,
+          "saveState": 1,
+          "restoreState": 0,
+          "isEOF": 0,
+          "docsExamined": 101,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nReturned": 101,
+            "executionTimeMillisEstimate": 0,
+            "works": 101,
+            "advanced": 101,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 0,
+            "isEOF": 0,
+            "keyPattern": {
+              "year": 1,
+              "genres": 1
+            },
+            "indexName": "year_genres_compound_idx",
+            "isMultiKey": true,
+            "multiKeyPaths": {
+              "year": [],
+              "genres": [
+                "genres"
+              ]
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "year": [
+                "[2000, inf.0]"
+              ],
+              "genres": [
+                "[\"Drama\", \"Drama\"]"
+              ]
+            },
+            "keysExamined": 101,
+            "seeks": 1,
+            "dupsTested": 101,
+            "dupsDropped": 0
+          }
+        }
+      }
+    ]
+  },
+  "command": {
+    "find": "movies",
+    "filter": {
+      "year": {
+        "$gte": 2000
+      },
+      "genres": "Drama"
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "6.0.27",
+    "gitVersion": "fc88ca137231d7457aed6265d4f32a361ae71716"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+  },
+  "ok": 1.0
+}

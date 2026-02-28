@@ -1,0 +1,207 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_training.companies",
+          "indexFilterSet": false,
+          "parsedQuery": {
+            "name": {
+              "$eq": "Facebook"
+            }
+          },
+          "queryHash": "5C9DE830",
+          "planCacheKey": "66168249",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "winningPlan": {
+            "stage": "PROJECTION_DEFAULT",
+            "transformBy": {
+              "_id": 1,
+              "name": 1,
+              "relationships.person.permalink": 1
+            },
+            "inputStage": {
+              "stage": "FETCH",
+              "inputStage": {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "name": 1
+                },
+                "indexName": "name_idx",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "name": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "name": [
+                    "[\"Facebook\", \"Facebook\"]"
+                  ]
+                }
+              }
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 1,
+          "executionTimeMillis": 3,
+          "totalKeysExamined": 1,
+          "totalDocsExamined": 1,
+          "executionStages": {
+            "stage": "PROJECTION_DEFAULT",
+            "nReturned": 1,
+            "executionTimeMillisEstimate": 0,
+            "works": 2,
+            "advanced": 1,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 1,
+            "isEOF": 1,
+            "transformBy": {
+              "_id": 1,
+              "name": 1,
+              "relationships.person.permalink": 1
+            },
+            "inputStage": {
+              "stage": "FETCH",
+              "nReturned": 1,
+              "executionTimeMillisEstimate": 0,
+              "works": 2,
+              "advanced": 1,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 1,
+              "restoreState": 1,
+              "isEOF": 1,
+              "docsExamined": 1,
+              "alreadyHasObj": 0,
+              "inputStage": {
+                "stage": "IXSCAN",
+                "nReturned": 1,
+                "executionTimeMillisEstimate": 0,
+                "works": 2,
+                "advanced": 1,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 1,
+                "restoreState": 1,
+                "isEOF": 1,
+                "keyPattern": {
+                  "name": 1
+                },
+                "indexName": "name_idx",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "name": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "name": [
+                    "[\"Facebook\", \"Facebook\"]"
+                  ]
+                },
+                "keysExamined": 1,
+                "seeks": 1,
+                "dupsTested": 0,
+                "dupsDropped": 0
+              }
+            }
+          },
+          "allPlansExecution": []
+        }
+      },
+      "nReturned": 1,
+      "executionTimeMillisEstimate": 0
+    },
+    {
+      "$graphLookup": {
+        "from": "companies",
+        "as": "network",
+        "connectToField": "permalink",
+        "connectFromField": "relationships.person.permalink",
+        "startWith": "$relationships.person.permalink",
+        "depthField": "depth",
+        "maxDepth": 1
+      },
+      "nReturned": 1,
+      "executionTimeMillisEstimate": 3
+    },
+    {
+      "$project": {
+        "_id": true,
+        "name": true,
+        "network_size": {
+          "$size": [
+            "$network"
+          ]
+        }
+      },
+      "nReturned": 1,
+      "executionTimeMillisEstimate": 3
+    }
+  ],
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "7.0.30",
+    "gitVersion": "67480f41dfa5802ce14af5c95bd0e9826d3b2131"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine"
+  },
+  "command": {
+    "aggregate": "companies",
+    "pipeline": [
+      {
+        "$match": {
+          "name": "Facebook"
+        }
+      },
+      {
+        "$graphLookup": {
+          "from": "companies",
+          "startWith": "$relationships.person.permalink",
+          "connectFromField": "relationships.person.permalink",
+          "connectToField": "permalink",
+          "as": "network",
+          "maxDepth": 1,
+          "depthField": "depth"
+        }
+      },
+      {
+        "$project": {
+          "name": 1,
+          "network_size": {
+            "$size": "$network"
+          }
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_training"
+  },
+  "ok": 1.0
+}

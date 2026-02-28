@@ -1,0 +1,76 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$geoNearCursor": {
+        "queryPlanner": {
+          "namespace": "sample_training.zips",
+          "indexFilterSet": false,
+          "parsedQuery": {
+            "loc": {
+              "$near": [
+                -73.9857,
+                40.7484
+              ],
+              "$maxDistance": 0.5
+            }
+          },
+          "queryHash": "C63B1ABB",
+          "planCacheKey": "E646A801",
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "winningPlan": {
+            "stage": "GEO_NEAR_2D",
+            "keyPattern": {
+              "loc": "2d"
+            },
+            "indexName": "loc_2d_idx",
+            "indexVersion": 2
+          },
+          "rejectedPlans": []
+        }
+      }
+    },
+    {
+      "$limit": 10
+    }
+  ],
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "6.0.27",
+    "gitVersion": "fc88ca137231d7457aed6265d4f32a361ae71716"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600
+  },
+  "command": {
+    "aggregate": "zips",
+    "pipeline": [
+      {
+        "$geoNear": {
+          "near": [
+            -73.9857,
+            40.7484
+          ],
+          "distanceField": "distance",
+          "maxDistance": 0.5
+        }
+      },
+      {
+        "$limit": 10
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_training"
+  },
+  "ok": 1.0
+}

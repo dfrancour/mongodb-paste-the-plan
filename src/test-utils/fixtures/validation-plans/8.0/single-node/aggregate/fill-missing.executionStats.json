@@ -1,0 +1,247 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_weatherdata.data",
+          "parsedQuery": {
+            "st": {
+              "$eq": "x]47.9x2"
+            }
+          },
+          "indexFilterSet": false,
+          "queryHash": "54F7FDCA",
+          "planCacheShapeHash": "54F7FDCA",
+          "planCacheKey": "E6AB4E57",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "stage": "SORT",
+            "sortPattern": {
+              "ts": 1
+            },
+            "memLimit": 104857600,
+            "limitAmount": 50,
+            "type": "simple",
+            "inputStage": {
+              "stage": "FETCH",
+              "inputStage": {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "st": 1
+                },
+                "indexName": "station_idx",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "st": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "st": [
+                    "[\"x]47.9x2\", \"x]47.9x2\"]"
+                  ]
+                }
+              }
+            }
+          },
+          "rejectedPlans": [
+            {
+              "isCached": false,
+              "stage": "LIMIT",
+              "limitAmount": 50,
+              "inputStage": {
+                "stage": "FETCH",
+                "filter": {
+                  "st": {
+                    "$eq": "x]47.9x2"
+                  }
+                },
+                "inputStage": {
+                  "stage": "IXSCAN",
+                  "keyPattern": {
+                    "ts": 1
+                  },
+                  "indexName": "timestamp_idx",
+                  "isMultiKey": false,
+                  "multiKeyPaths": {
+                    "ts": []
+                  },
+                  "isUnique": false,
+                  "isSparse": false,
+                  "isPartial": false,
+                  "indexVersion": 2,
+                  "direction": "forward",
+                  "indexBounds": {
+                    "ts": [
+                      "[MinKey, MaxKey]"
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 0,
+          "executionTimeMillis": 0,
+          "totalKeysExamined": 0,
+          "totalDocsExamined": 0,
+          "executionStages": {
+            "isCached": false,
+            "stage": "SORT",
+            "nReturned": 0,
+            "executionTimeMillisEstimate": 0,
+            "works": 3,
+            "advanced": 0,
+            "needTime": 1,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 1,
+            "isEOF": 1,
+            "sortPattern": {
+              "ts": 1
+            },
+            "memLimit": 104857600,
+            "limitAmount": 50,
+            "type": "simple",
+            "totalDataSizeSorted": 0,
+            "usedDisk": false,
+            "spills": 0,
+            "spilledDataStorageSize": 0,
+            "inputStage": {
+              "stage": "FETCH",
+              "nReturned": 0,
+              "executionTimeMillisEstimate": 0,
+              "works": 1,
+              "advanced": 0,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 1,
+              "restoreState": 1,
+              "isEOF": 1,
+              "docsExamined": 0,
+              "alreadyHasObj": 0,
+              "inputStage": {
+                "stage": "IXSCAN",
+                "nReturned": 0,
+                "executionTimeMillisEstimate": 0,
+                "works": 1,
+                "advanced": 0,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 1,
+                "restoreState": 1,
+                "isEOF": 1,
+                "keyPattern": {
+                  "st": 1
+                },
+                "indexName": "station_idx",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "st": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "st": [
+                    "[\"x]47.9x2\", \"x]47.9x2\"]"
+                  ]
+                },
+                "keysExamined": 0,
+                "seeks": 1,
+                "dupsTested": 0,
+                "dupsDropped": 0
+              }
+            }
+          }
+        }
+      },
+      "nReturned": 0,
+      "executionTimeMillisEstimate": 0
+    },
+    {
+      "$_internalSetWindowFields": {
+        "sortBy": {
+          "ts": 1
+        },
+        "output": {
+          "airTemperature.value": {
+            "$linearFill": "$airTemperature.value"
+          }
+        }
+      },
+      "maxFunctionMemoryUsageBytes": {
+        "airTemperature.value": 0
+      },
+      "maxTotalMemoryUsageBytes": 0,
+      "usedDisk": false,
+      "nReturned": 0,
+      "executionTimeMillisEstimate": 0
+    }
+  ],
+  "queryShapeHash": "44C10448876989AC26D4CC97A59CBF59EF20DA6AF11F7516A2113732C708A0CF",
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "data",
+    "pipeline": [
+      {
+        "$match": {
+          "st": "x]47.9x2"
+        }
+      },
+      {
+        "$sort": {
+          "ts": 1
+        }
+      },
+      {
+        "$limit": 50
+      },
+      {
+        "$fill": {
+          "sortBy": {
+            "ts": 1
+          },
+          "output": {
+            "airTemperature.value": {
+              "method": "linear"
+            }
+          }
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_weatherdata"
+  },
+  "ok": 1.0
+}

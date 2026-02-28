@@ -1,0 +1,252 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_mflix.movies",
+          "parsedQuery": {
+            "year": {
+              "$eq": 2000
+            }
+          },
+          "indexFilterSet": false,
+          "queryHash": "29C34556",
+          "planCacheShapeHash": "29C34556",
+          "planCacheKey": "5EC5B66E",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "stage": "PROJECTION_SIMPLE",
+            "transformBy": {
+              "_id": 1,
+              "title": 1,
+              "year": 1
+            },
+            "inputStage": {
+              "stage": "FETCH",
+              "inputStage": {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "year": 1
+                },
+                "indexName": "year_idx",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "year": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "year": [
+                    "[2000, 2000]"
+                  ]
+                }
+              }
+            }
+          },
+          "rejectedPlans": [
+            {
+              "isCached": false,
+              "stage": "PROJECTION_SIMPLE",
+              "transformBy": {
+                "_id": 1,
+                "title": 1,
+                "year": 1
+              },
+              "inputStage": {
+                "stage": "FETCH",
+                "inputStage": {
+                  "stage": "IXSCAN",
+                  "keyPattern": {
+                    "year": 1,
+                    "imdb.rating": -1
+                  },
+                  "indexName": "year_rating_compound_idx",
+                  "isMultiKey": false,
+                  "multiKeyPaths": {
+                    "year": [],
+                    "imdb.rating": []
+                  },
+                  "isUnique": false,
+                  "isSparse": false,
+                  "isPartial": false,
+                  "indexVersion": 2,
+                  "direction": "forward",
+                  "indexBounds": {
+                    "year": [
+                      "[2000, 2000]"
+                    ],
+                    "imdb.rating": [
+                      "[MaxKey, MinKey]"
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "isCached": false,
+              "stage": "PROJECTION_SIMPLE",
+              "transformBy": {
+                "_id": 1,
+                "title": 1,
+                "year": 1
+              },
+              "inputStage": {
+                "stage": "FETCH",
+                "filter": {
+                  "year": {
+                    "$eq": 2000
+                  }
+                },
+                "inputStage": {
+                  "stage": "IXSCAN",
+                  "keyPattern": {
+                    "year": "hashed"
+                  },
+                  "indexName": "year_hashed_idx",
+                  "isMultiKey": false,
+                  "isUnique": false,
+                  "isSparse": false,
+                  "isPartial": false,
+                  "indexVersion": 2,
+                  "direction": "forward",
+                  "indexBounds": {
+                    "year": [
+                      "[8612218595614068147, 8612218595614068147]"
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "isCached": false,
+              "stage": "PROJECTION_SIMPLE",
+              "transformBy": {
+                "_id": 1,
+                "title": 1,
+                "year": 1
+              },
+              "inputStage": {
+                "stage": "FETCH",
+                "inputStage": {
+                  "stage": "IXSCAN",
+                  "keyPattern": {
+                    "year": 1,
+                    "genres": 1
+                  },
+                  "indexName": "year_genres_compound_idx",
+                  "isMultiKey": true,
+                  "multiKeyPaths": {
+                    "year": [],
+                    "genres": [
+                      "genres"
+                    ]
+                  },
+                  "isUnique": false,
+                  "isSparse": false,
+                  "isPartial": false,
+                  "indexVersion": 2,
+                  "direction": "forward",
+                  "indexBounds": {
+                    "year": [
+                      "[2000, 2000]"
+                    ],
+                    "genres": [
+                      "[MinKey, MaxKey]"
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "$lookup": {
+        "from": "comments",
+        "as": "movie_comments",
+        "localField": "_id",
+        "foreignField": "movie_id",
+        "unwinding": {
+          "preserveNullAndEmptyArrays": true
+        }
+      }
+    },
+    {
+      "$project": {
+        "_id": true,
+        "title": true,
+        "year": true,
+        "comment_text": "$movie_comments.text"
+      }
+    },
+    {
+      "$limit": 10
+    }
+  ],
+  "queryShapeHash": "0104017EA981E475535253C6402BCE8659FD3E57A0082496D0623D728E6E3D6E",
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "movies",
+    "pipeline": [
+      {
+        "$match": {
+          "year": 2000
+        }
+      },
+      {
+        "$lookup": {
+          "from": "comments",
+          "localField": "_id",
+          "foreignField": "movie_id",
+          "as": "movie_comments"
+        }
+      },
+      {
+        "$unwind": {
+          "path": "$movie_comments",
+          "preserveNullAndEmptyArrays": true
+        }
+      },
+      {
+        "$project": {
+          "title": 1,
+          "year": 1,
+          "comment_text": "$movie_comments.text"
+        }
+      },
+      {
+        "$limit": 10
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_mflix"
+  },
+  "ok": 1.0
+}

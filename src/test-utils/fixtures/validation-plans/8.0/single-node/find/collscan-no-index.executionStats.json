@@ -1,0 +1,91 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "parsedQuery": {
+      "fullplot": {
+        "$regex": "mysterious.*treasure",
+        "$options": "i"
+      }
+    },
+    "indexFilterSet": false,
+    "queryHash": "8EC85B98",
+    "planCacheShapeHash": "8EC85B98",
+    "planCacheKey": "8D8A3657",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "COLLSCAN",
+      "filter": {
+        "fullplot": {
+          "$regex": "mysterious.*treasure",
+          "$options": "i"
+        }
+      },
+      "direction": "forward"
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 0,
+    "executionTimeMillis": 19,
+    "totalKeysExamined": 0,
+    "totalDocsExamined": 21349,
+    "executionStages": {
+      "isCached": false,
+      "stage": "COLLSCAN",
+      "filter": {
+        "fullplot": {
+          "$regex": "mysterious.*treasure",
+          "$options": "i"
+        }
+      },
+      "nReturned": 0,
+      "executionTimeMillisEstimate": 16,
+      "works": 21350,
+      "advanced": 0,
+      "needTime": 21349,
+      "needYield": 0,
+      "saveState": 1,
+      "restoreState": 1,
+      "isEOF": 1,
+      "direction": "forward",
+      "docsExamined": 21349
+    }
+  },
+  "queryShapeHash": "B4E18C0DDAF48048791DEF37A835C81EF95F097F66C5226C8EA102059FF77A22",
+  "command": {
+    "find": "movies",
+    "filter": {
+      "fullplot": {
+        "$regex": "mysterious.*treasure",
+        "$options": "i"
+      }
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

@@ -1,0 +1,108 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_training.grades",
+    "indexFilterSet": false,
+    "parsedQuery": {
+      "scores": {
+        "$elemMatch": {
+          "$and": [
+            {
+              "type": {
+                "$eq": "exam"
+              }
+            },
+            {
+              "score": {
+                "$gte": 90
+              }
+            }
+          ]
+        }
+      }
+    },
+    "queryHash": "C38CA9A3",
+    "planCacheKey": "B528A6F4",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "winningPlan": {
+      "stage": "FETCH",
+      "filter": {
+        "scores": {
+          "$elemMatch": {
+            "$and": [
+              {
+                "type": {
+                  "$eq": "exam"
+                }
+              },
+              {
+                "score": {
+                  "$gte": 90
+                }
+              }
+            ]
+          }
+        }
+      },
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "scores.type": 1
+        },
+        "indexName": "scores_type_idx",
+        "isMultiKey": true,
+        "multiKeyPaths": {
+          "scores.type": [
+            "scores"
+          ]
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "scores.type": [
+            "[\"exam\", \"exam\"]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "command": {
+    "find": "grades",
+    "filter": {
+      "scores": {
+        "$elemMatch": {
+          "type": "exam",
+          "score": {
+            "$gte": 90
+          }
+        }
+      }
+    },
+    "$db": "sample_training"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "7.0.30",
+    "gitVersion": "67480f41dfa5802ce14af5c95bd0e9826d3b2131"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine"
+  },
+  "ok": 1.0
+}

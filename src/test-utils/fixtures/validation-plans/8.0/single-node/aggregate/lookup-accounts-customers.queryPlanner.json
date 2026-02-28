@@ -1,0 +1,123 @@
+{
+  "explainVersion": "2",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "sample_analytics.accounts",
+          "parsedQuery": {},
+          "indexFilterSet": false,
+          "queryHash": "356126D4",
+          "planCacheShapeHash": "356126D4",
+          "planCacheKey": "98E8FA1C",
+          "optimizationTimeMillis": 0,
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "queryPlan": {
+              "stage": "EQ_LOOKUP",
+              "planNodeId": 4,
+              "foreignCollection": "sample_analytics.customers",
+              "localField": "account_id",
+              "foreignField": "accounts",
+              "asField": "customer_info",
+              "strategy": "IndexedLoopJoin",
+              "indexName": "accounts_idx",
+              "indexKeyPattern": {
+                "accounts": 1
+              },
+              "scanDirection": "forward",
+              "inputStage": {
+                "stage": "LIMIT",
+                "planNodeId": 3,
+                "limitAmount": 20,
+                "inputStage": {
+                  "stage": "PROJECTION_SIMPLE",
+                  "planNodeId": 2,
+                  "transformBy": {
+                    "_id": true,
+                    "account_id": true,
+                    "limit": true
+                  },
+                  "inputStage": {
+                    "stage": "COLLSCAN",
+                    "planNodeId": 1,
+                    "filter": {},
+                    "direction": "forward"
+                  }
+                }
+              }
+            },
+            "slotBasedPlan": {
+              "slots": "$$RESULT=s30 env: { s4 = 20 }",
+              "stages": "[4] mkobj s30 s3 [] drop [customer_info = s29] true false \n[4] nlj inner [s3] [s10] \n    left \n        [4] nlj inner [s3] [s3] \n            left \n                [3] limit s4 \n                [2] project [s3 = makeBsonObj(MakeObjSpec([_id, account_id, limit], Closed, RetNothing), s1, false)] \n                [1] scan s1 s2 none none none none none none [] @\"47990214-57d5-408d-b2bb-e5d756b2769c\" true false \n            right \n                [4] project [s10 = \n                    if isArrayEmpty(s8) \n                    then [null] \n                    else s8 \n               ] \n                [4] group [] [s8 = addToSet(s6)] spillSlots[s9] mergingExprs[aggSetUnion(s9)] \n                [4] unwind s6 s7 s5 true \n                [4] project [s5 = getField(s3, \"account_id\")] \n                [4] limit 1ll \n                [4] coscan \n    right \n        [4] limit 1ll \n        [4] union [s29] \n            branch0 [s27] \n                [4] project [s27 = getElement(s25, 0)] \n                [4] group [] [s25 = addToArrayCapped(s23, 104857600)] spillSlots[s26] mergingExprs[aggConcatArraysCapped(s26, 104857600)] \n                [4] filter {traverseF((getField(s23, \"accounts\") ?: null), lambda(l1.0) { isMember(l1.0, s10) }, true)} \n                [4] nlj inner [] [s19, s21, s22, s20, s18] \n                    left \n                        [4] unique [s19] \n                        [4] nlj inner [s18] [s16, s17] \n                            left \n                                [4] nlj inner [] [s11] \n                                    left \n                                        [4] unwind s11 s12 s10 true \n                                        [4] limit 1ll \n                                        [4] coscan \n                                    right \n                                        [4] project [s16 = ks(1ll, 0, s15, 1ll), s17 = ks(1ll, 0, s15, 2ll), s18 = {\"accounts\" : 1}] \n                                        [4] union [s15] \n                                            branch0 [s13] \n                                                [4] filter {(isArray(s11) && !(isMember(s13, s10)))} \n                                                [4] project [s13 = (getElement(s11, 0) ?: undefined)] \n                                                [4] limit 1ll \n                                                [4] coscan \n                                            branch1 [s14] \n                                                [4] project [s14 = s11] \n                                                [4] limit 1ll \n                                                [4] coscan \n                            right \n                                [4] ixseek s16 s17 s20 s19 s21 s22 [] @\"630ea814-1a54-4f8c-bb11-9a1d508897f0\" @\"accounts_idx\" true \n                    right \n                        [4] limit 1ll \n                        [4] seek s19 s23 s24 s21 s22 s20 s18 none none [] @\"630ea814-1a54-4f8c-bb11-9a1d508897f0\" true false \n            branch1 [s28] \n                [4] project [s28 = []] \n                [4] limit 1ll \n                [4] coscan \n"
+            }
+          },
+          "rejectedPlans": []
+        }
+      }
+    },
+    {
+      "$project": {
+        "_id": true,
+        "account_id": true,
+        "limit": true,
+        "customer_count": {
+          "$size": [
+            "$customer_info"
+          ]
+        }
+      }
+    }
+  ],
+  "queryShapeHash": "81EA98A32EEB14C496E64F256EEE0A011EF8B2A4B74F7C10EA2425DFACED1413",
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "accounts",
+    "pipeline": [
+      {
+        "$limit": 20
+      },
+      {
+        "$lookup": {
+          "from": "customers",
+          "localField": "account_id",
+          "foreignField": "accounts",
+          "as": "customer_info"
+        }
+      },
+      {
+        "$project": {
+          "account_id": 1,
+          "limit": 1,
+          "customer_count": {
+            "$size": "$customer_info"
+          }
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "sample_analytics"
+  },
+  "ok": 1.0
+}

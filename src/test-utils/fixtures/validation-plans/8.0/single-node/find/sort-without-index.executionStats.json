@@ -1,0 +1,242 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "parsedQuery": {
+      "year": {
+        "$gte": 2010
+      }
+    },
+    "indexFilterSet": false,
+    "queryHash": "DD55FDFE",
+    "planCacheShapeHash": "DD55FDFE",
+    "planCacheKey": "CFEC6BC1",
+    "optimizationTimeMillis": 16,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "SORT",
+      "sortPattern": {
+        "fullplot": 1
+      },
+      "memLimit": 104857600,
+      "type": "simple",
+      "inputStage": {
+        "stage": "FETCH",
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "year": 1
+          },
+          "indexName": "year_idx",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "year": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "year": [
+              "[2010, inf.0]"
+            ]
+          }
+        }
+      }
+    },
+    "rejectedPlans": [
+      {
+        "isCached": false,
+        "stage": "SORT",
+        "sortPattern": {
+          "fullplot": 1
+        },
+        "memLimit": 104857600,
+        "type": "simple",
+        "inputStage": {
+          "stage": "FETCH",
+          "inputStage": {
+            "stage": "IXSCAN",
+            "keyPattern": {
+              "year": 1,
+              "imdb.rating": -1
+            },
+            "indexName": "year_rating_compound_idx",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "year": [],
+              "imdb.rating": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "year": [
+                "[2010, inf.0]"
+              ],
+              "imdb.rating": [
+                "[MaxKey, MinKey]"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "isCached": false,
+        "stage": "SORT",
+        "sortPattern": {
+          "fullplot": 1
+        },
+        "memLimit": 104857600,
+        "type": "simple",
+        "inputStage": {
+          "stage": "FETCH",
+          "inputStage": {
+            "stage": "IXSCAN",
+            "keyPattern": {
+              "year": 1,
+              "genres": 1
+            },
+            "indexName": "year_genres_compound_idx",
+            "isMultiKey": true,
+            "multiKeyPaths": {
+              "year": [],
+              "genres": [
+                "genres"
+              ]
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "year": [
+                "[2010, inf.0]"
+              ],
+              "genres": [
+                "[MinKey, MaxKey]"
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 5373,
+    "executionTimeMillis": 16,
+    "totalKeysExamined": 5373,
+    "totalDocsExamined": 5373,
+    "executionStages": {
+      "isCached": false,
+      "stage": "SORT",
+      "nReturned": 5373,
+      "executionTimeMillisEstimate": 10,
+      "works": 10748,
+      "advanced": 5373,
+      "needTime": 5374,
+      "needYield": 0,
+      "saveState": 1,
+      "restoreState": 1,
+      "isEOF": 1,
+      "sortPattern": {
+        "fullplot": 1
+      },
+      "memLimit": 104857600,
+      "type": "simple",
+      "totalDataSizeSorted": 10955574,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledDataStorageSize": 0,
+      "inputStage": {
+        "stage": "FETCH",
+        "nReturned": 5373,
+        "executionTimeMillisEstimate": 10,
+        "works": 5374,
+        "advanced": 5373,
+        "needTime": 0,
+        "needYield": 0,
+        "saveState": 1,
+        "restoreState": 1,
+        "isEOF": 1,
+        "docsExamined": 5373,
+        "alreadyHasObj": 0,
+        "inputStage": {
+          "stage": "IXSCAN",
+          "nReturned": 5373,
+          "executionTimeMillisEstimate": 0,
+          "works": 5374,
+          "advanced": 5373,
+          "needTime": 0,
+          "needYield": 0,
+          "saveState": 1,
+          "restoreState": 1,
+          "isEOF": 1,
+          "keyPattern": {
+            "year": 1
+          },
+          "indexName": "year_idx",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "year": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "year": [
+              "[2010, inf.0]"
+            ]
+          },
+          "keysExamined": 5373,
+          "seeks": 1,
+          "dupsTested": 0,
+          "dupsDropped": 0
+        }
+      }
+    }
+  },
+  "queryShapeHash": "E1102590F9A2D9E3CC26354C7B0C281508B4841EF9C0190FA8D94C8DC368ECE5",
+  "command": {
+    "find": "movies",
+    "filter": {
+      "year": {
+        "$gte": 2010
+      }
+    },
+    "sort": {
+      "fullplot": 1
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

@@ -1,0 +1,265 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "parsedQuery": {
+      "$and": [
+        {
+          "year": {
+            "$gte": 2000
+          }
+        },
+        {
+          "$text": {
+            "$search": "detective mystery",
+            "$language": "english",
+            "$caseSensitive": false,
+            "$diacriticSensitive": false
+          }
+        }
+      ]
+    },
+    "indexFilterSet": false,
+    "queryHash": "2CF90F66",
+    "planCacheShapeHash": "2CF90F66",
+    "planCacheKey": "CCEF7794",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "FETCH",
+      "filter": {
+        "year": {
+          "$gte": 2000
+        }
+      },
+      "inputStage": {
+        "stage": "TEXT_MATCH",
+        "indexPrefix": {},
+        "indexName": "cast_text_fullplot_text_genres_text_title_text",
+        "parsedTextQuery": {
+          "terms": [
+            "detect",
+            "mysteri"
+          ],
+          "negatedTerms": [],
+          "phrases": [],
+          "negatedPhrases": []
+        },
+        "textIndexVersion": 3,
+        "inputStage": {
+          "stage": "FETCH",
+          "inputStage": {
+            "stage": "OR",
+            "inputStages": [
+              {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "_fts": "text",
+                  "_ftsx": 1
+                },
+                "indexName": "cast_text_fullplot_text_genres_text_title_text",
+                "isMultiKey": true,
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "backward",
+                "indexBounds": {}
+              },
+              {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "_fts": "text",
+                  "_ftsx": 1
+                },
+                "indexName": "cast_text_fullplot_text_genres_text_title_text",
+                "isMultiKey": true,
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "backward",
+                "indexBounds": {}
+              }
+            ]
+          }
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 1331,
+    "executionTimeMillis": 3,
+    "totalKeysExamined": 2235,
+    "totalDocsExamined": 4188,
+    "executionStages": {
+      "isCached": false,
+      "stage": "FETCH",
+      "filter": {
+        "year": {
+          "$gte": 2000
+        }
+      },
+      "nReturned": 1331,
+      "executionTimeMillisEstimate": 0,
+      "works": 2237,
+      "advanced": 1331,
+      "needTime": 905,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "docsExamined": 2094,
+      "alreadyHasObj": 2094,
+      "inputStage": {
+        "stage": "TEXT_MATCH",
+        "nReturned": 2094,
+        "executionTimeMillisEstimate": 0,
+        "works": 2237,
+        "advanced": 2094,
+        "needTime": 142,
+        "needYield": 0,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 1,
+        "indexPrefix": {},
+        "indexName": "cast_text_fullplot_text_genres_text_title_text",
+        "parsedTextQuery": {
+          "terms": [
+            "detect",
+            "mysteri"
+          ],
+          "negatedTerms": [],
+          "phrases": [],
+          "negatedPhrases": []
+        },
+        "textIndexVersion": 3,
+        "docsRejected": 0,
+        "inputStage": {
+          "stage": "FETCH",
+          "nReturned": 2094,
+          "executionTimeMillisEstimate": 0,
+          "works": 2237,
+          "advanced": 2094,
+          "needTime": 142,
+          "needYield": 0,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 1,
+          "docsExamined": 2094,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "OR",
+            "nReturned": 2094,
+            "executionTimeMillisEstimate": 0,
+            "works": 2237,
+            "advanced": 2094,
+            "needTime": 142,
+            "needYield": 0,
+            "saveState": 0,
+            "restoreState": 0,
+            "isEOF": 1,
+            "dupsTested": 2235,
+            "dupsDropped": 141,
+            "inputStages": [
+              {
+                "stage": "IXSCAN",
+                "nReturned": 390,
+                "executionTimeMillisEstimate": 0,
+                "works": 391,
+                "advanced": 390,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 0,
+                "restoreState": 0,
+                "isEOF": 1,
+                "keyPattern": {
+                  "_fts": "text",
+                  "_ftsx": 1
+                },
+                "indexName": "cast_text_fullplot_text_genres_text_title_text",
+                "isMultiKey": true,
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "backward",
+                "indexBounds": {},
+                "keysExamined": 390,
+                "seeks": 1,
+                "dupsTested": 390,
+                "dupsDropped": 0
+              },
+              {
+                "stage": "IXSCAN",
+                "nReturned": 1845,
+                "executionTimeMillisEstimate": 0,
+                "works": 1846,
+                "advanced": 1845,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 0,
+                "restoreState": 0,
+                "isEOF": 1,
+                "keyPattern": {
+                  "_fts": "text",
+                  "_ftsx": 1
+                },
+                "indexName": "cast_text_fullplot_text_genres_text_title_text",
+                "isMultiKey": true,
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "backward",
+                "indexBounds": {},
+                "keysExamined": 1845,
+                "seeks": 1,
+                "dupsTested": 1845,
+                "dupsDropped": 0
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "queryShapeHash": "1122EA51600EFDEBD05584833F96C856ACEF6C54B97CB5F935E3E14712A75B29",
+  "command": {
+    "find": "movies",
+    "filter": {
+      "$text": {
+        "$search": "detective mystery"
+      },
+      "year": {
+        "$gte": 2000
+      }
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}

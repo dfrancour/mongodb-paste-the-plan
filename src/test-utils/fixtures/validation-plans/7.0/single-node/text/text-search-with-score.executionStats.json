@@ -1,0 +1,318 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_mflix.movies",
+    "indexFilterSet": false,
+    "parsedQuery": {
+      "$text": {
+        "$search": "space exploration alien",
+        "$language": "english",
+        "$caseSensitive": false,
+        "$diacriticSensitive": false
+      }
+    },
+    "queryHash": "600B0863",
+    "planCacheKey": "F4878392",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "winningPlan": {
+      "stage": "PROJECTION_DEFAULT",
+      "transformBy": {
+        "title": 1,
+        "score": {
+          "$meta": "textScore"
+        }
+      },
+      "inputStage": {
+        "stage": "SORT",
+        "sortPattern": {
+          "$computed0": {
+            "$meta": "textScore"
+          }
+        },
+        "memLimit": 104857600,
+        "type": "default",
+        "inputStage": {
+          "stage": "TEXT_MATCH",
+          "indexPrefix": {},
+          "indexName": "cast_text_fullplot_text_genres_text_title_text",
+          "parsedTextQuery": {
+            "terms": [
+              "alien",
+              "explor",
+              "space"
+            ],
+            "negatedTerms": [],
+            "phrases": [],
+            "negatedPhrases": []
+          },
+          "textIndexVersion": 3,
+          "inputStage": {
+            "stage": "TEXT_OR",
+            "inputStages": [
+              {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "_fts": "text",
+                  "_ftsx": 1
+                },
+                "indexName": "cast_text_fullplot_text_genres_text_title_text",
+                "isMultiKey": true,
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "backward",
+                "indexBounds": {}
+              },
+              {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "_fts": "text",
+                  "_ftsx": 1
+                },
+                "indexName": "cast_text_fullplot_text_genres_text_title_text",
+                "isMultiKey": true,
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "backward",
+                "indexBounds": {}
+              },
+              {
+                "stage": "IXSCAN",
+                "keyPattern": {
+                  "_fts": "text",
+                  "_ftsx": 1
+                },
+                "indexName": "cast_text_fullplot_text_genres_text_title_text",
+                "isMultiKey": true,
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "backward",
+                "indexBounds": {}
+              }
+            ]
+          }
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 800,
+    "executionTimeMillis": 2,
+    "totalKeysExamined": 849,
+    "totalDocsExamined": 800,
+    "executionStages": {
+      "stage": "PROJECTION_DEFAULT",
+      "nReturned": 800,
+      "executionTimeMillisEstimate": 0,
+      "works": 2455,
+      "advanced": 800,
+      "needTime": 1654,
+      "needYield": 0,
+      "saveState": 2,
+      "restoreState": 2,
+      "isEOF": 1,
+      "transformBy": {
+        "title": 1,
+        "score": {
+          "$meta": "textScore"
+        }
+      },
+      "inputStage": {
+        "stage": "SORT",
+        "nReturned": 800,
+        "executionTimeMillisEstimate": 0,
+        "works": 2455,
+        "advanced": 800,
+        "needTime": 1654,
+        "needYield": 0,
+        "saveState": 2,
+        "restoreState": 2,
+        "isEOF": 1,
+        "sortPattern": {
+          "$computed0": {
+            "$meta": "textScore"
+          }
+        },
+        "memLimit": 104857600,
+        "type": "default",
+        "totalDataSizeSorted": 1571774,
+        "usedDisk": false,
+        "spills": 0,
+        "spilledDataStorageSize": 0,
+        "inputStage": {
+          "stage": "TEXT_MATCH",
+          "nReturned": 800,
+          "executionTimeMillisEstimate": 0,
+          "works": 1654,
+          "advanced": 800,
+          "needTime": 853,
+          "needYield": 0,
+          "saveState": 2,
+          "restoreState": 2,
+          "isEOF": 1,
+          "indexPrefix": {},
+          "indexName": "cast_text_fullplot_text_genres_text_title_text",
+          "parsedTextQuery": {
+            "terms": [
+              "alien",
+              "explor",
+              "space"
+            ],
+            "negatedTerms": [],
+            "phrases": [],
+            "negatedPhrases": []
+          },
+          "textIndexVersion": 3,
+          "docsRejected": 0,
+          "inputStage": {
+            "stage": "TEXT_OR",
+            "nReturned": 800,
+            "executionTimeMillisEstimate": 0,
+            "works": 1654,
+            "advanced": 800,
+            "needTime": 853,
+            "needYield": 0,
+            "saveState": 2,
+            "restoreState": 2,
+            "isEOF": 1,
+            "docsExamined": 800,
+            "inputStages": [
+              {
+                "stage": "IXSCAN",
+                "nReturned": 262,
+                "executionTimeMillisEstimate": 0,
+                "works": 263,
+                "advanced": 262,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 2,
+                "restoreState": 2,
+                "isEOF": 1,
+                "keyPattern": {
+                  "_fts": "text",
+                  "_ftsx": 1
+                },
+                "indexName": "cast_text_fullplot_text_genres_text_title_text",
+                "isMultiKey": true,
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "backward",
+                "indexBounds": {},
+                "keysExamined": 262,
+                "seeks": 1,
+                "dupsTested": 262,
+                "dupsDropped": 0
+              },
+              {
+                "stage": "IXSCAN",
+                "nReturned": 379,
+                "executionTimeMillisEstimate": 0,
+                "works": 380,
+                "advanced": 379,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 2,
+                "restoreState": 2,
+                "isEOF": 1,
+                "keyPattern": {
+                  "_fts": "text",
+                  "_ftsx": 1
+                },
+                "indexName": "cast_text_fullplot_text_genres_text_title_text",
+                "isMultiKey": true,
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "backward",
+                "indexBounds": {},
+                "keysExamined": 379,
+                "seeks": 1,
+                "dupsTested": 379,
+                "dupsDropped": 0
+              },
+              {
+                "stage": "IXSCAN",
+                "nReturned": 208,
+                "executionTimeMillisEstimate": 0,
+                "works": 209,
+                "advanced": 208,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 2,
+                "restoreState": 2,
+                "isEOF": 1,
+                "keyPattern": {
+                  "_fts": "text",
+                  "_ftsx": 1
+                },
+                "indexName": "cast_text_fullplot_text_genres_text_title_text",
+                "isMultiKey": true,
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "backward",
+                "indexBounds": {},
+                "keysExamined": 208,
+                "seeks": 1,
+                "dupsTested": 208,
+                "dupsDropped": 0
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "command": {
+    "find": "movies",
+    "filter": {
+      "$text": {
+        "$search": "space exploration alien"
+      }
+    },
+    "projection": {
+      "title": 1,
+      "score": {
+        "$meta": "textScore"
+      }
+    },
+    "sort": {
+      "score": {
+        "$meta": "textScore"
+      }
+    },
+    "$db": "sample_mflix"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "7.0.30",
+    "gitVersion": "67480f41dfa5802ce14af5c95bd0e9826d3b2131"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine"
+  },
+  "ok": 1.0
+}

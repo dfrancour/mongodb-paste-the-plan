@@ -1,0 +1,113 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "sample_training.grades",
+    "parsedQuery": {
+      "scores": {
+        "$elemMatch": {
+          "$and": [
+            {
+              "type": {
+                "$eq": "exam"
+              }
+            },
+            {
+              "score": {
+                "$gte": 90
+              }
+            }
+          ]
+        }
+      }
+    },
+    "indexFilterSet": false,
+    "queryHash": "25695DB6",
+    "planCacheShapeHash": "25695DB6",
+    "planCacheKey": "E23B311D",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "FETCH",
+      "filter": {
+        "scores": {
+          "$elemMatch": {
+            "$and": [
+              {
+                "type": {
+                  "$eq": "exam"
+                }
+              },
+              {
+                "score": {
+                  "$gte": 90
+                }
+              }
+            ]
+          }
+        }
+      },
+      "inputStage": {
+        "stage": "IXSCAN",
+        "keyPattern": {
+          "scores.type": 1
+        },
+        "indexName": "scores_type_idx",
+        "isMultiKey": true,
+        "multiKeyPaths": {
+          "scores.type": [
+            "scores"
+          ]
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "scores.type": [
+            "[\"exam\", \"exam\"]"
+          ]
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "queryShapeHash": "1F624680176F0E6D1A99D58136119DDC5FB3942D1B7FC4E515CC659A427CD97D",
+  "command": {
+    "find": "grades",
+    "filter": {
+      "scores": {
+        "$elemMatch": {
+          "type": "exam",
+          "score": {
+            "$gte": 90
+          }
+        }
+      }
+    },
+    "$db": "sample_training"
+  },
+  "serverInfo": {
+    "host": "mongodb-podman-container",
+    "port": 27017,
+    "version": "8.0.12",
+    "gitVersion": "b60fc6875b5fb4b63cc0dbbd8dda0d6d6277921a"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1.0
+}
