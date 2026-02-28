@@ -1,5 +1,6 @@
 import type { PlanningStage } from "../types";
 import { StageCategory, StageIds, QuerySolutionStageType } from "../types";
+import { INDEX_METADATA_FIELDS } from "../fields/index_metadata";
 
 export const INDEX_PROBE_NODE: PlanningStage = {
   layer: "planning",
@@ -23,4 +24,6 @@ export const INDEX_PROBE_NODE: PlanningStage = {
 
   sourceFile:
     "src/mongo/db/query/compiler/physical_model/query_solution/query_solution.h",
+
+  explainFields: [...INDEX_METADATA_FIELDS],
 } as const;

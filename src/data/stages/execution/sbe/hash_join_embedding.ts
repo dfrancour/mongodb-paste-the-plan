@@ -22,4 +22,7 @@ export const hash_join_embedding: ExecutionStage = {
     "Memory usage depends on the number of embeddings in the inner collection.",
 
   sourceFile: "src/mongo/db/query/stage_builder/sbe/gen_lookup.cpp",
+
+  // No stage-specific explain serialization — only SBE common fields emitted
+  explainFields: [],
 } as const;

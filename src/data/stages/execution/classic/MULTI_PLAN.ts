@@ -25,4 +25,7 @@ export const MULTI_PLAN: ExecutionStage = {
     "Adds overhead to first execution but improves subsequent query performance.",
 
   sourceFile: "src/mongo/db/exec/classic/multi_plan.h",
+
+  // Orchestration wrapper — trial-runs candidate plans; no stage-specific metrics
+  explainFields: [],
 } as const;

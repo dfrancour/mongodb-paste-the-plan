@@ -24,4 +24,7 @@ export const indexed_nested_loop_join_embedding: ExecutionStage = {
     "of the inner side. Preferred when a suitable index exists on the embedding field.",
 
   sourceFile: "src/mongo/db/query/stage_builder/sbe/gen_lookup.cpp",
+
+  // No stage-specific explain serialization — only SBE common fields emitted
+  explainFields: [],
 } as const;

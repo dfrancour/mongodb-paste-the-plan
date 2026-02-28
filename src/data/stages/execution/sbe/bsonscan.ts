@@ -22,4 +22,7 @@ export const bsonscan: ExecutionStage = {
     "Documents are stored in-memory. Unlikely to appear in production query plans.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/bson_scan.h",
+
+  // Testing-only in-memory scan — no stage-specific metrics beyond SBE common fields
+  explainFields: [],
 } as const;

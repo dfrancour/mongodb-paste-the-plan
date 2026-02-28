@@ -25,4 +25,21 @@ export const nlj: ExecutionStage = {
     "Useful for correlated subqueries where the inner side depends on outer values.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/loop_join.h",
+
+  explainFields: [
+    {
+      bsonKey: "innerOpens",
+      description: "Times the inner side was opened",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "innerCloses",
+      description: "Times the inner side was closed",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

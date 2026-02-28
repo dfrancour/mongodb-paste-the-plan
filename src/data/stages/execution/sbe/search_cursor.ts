@@ -25,4 +25,22 @@ export const search_cursor: ExecutionStage = {
     "Supports sort spec, limit, and collation for server-side optimization.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/search_cursor.h",
+
+  // Source: sbe::SearchStats (sbe/stages/plan_stats.h:429)
+  explainFields: [
+    {
+      bsonKey: "msWaitingForMongot",
+      description: "Time waiting for mongot search service",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "ms",
+    },
+    {
+      bsonKey: "batchNum",
+      description: "Batch number from mongot service",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

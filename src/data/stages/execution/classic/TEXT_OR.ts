@@ -1,5 +1,6 @@
 import type { ExecutionStage } from "../../types";
 import { StageCategory, StageIds, QuerySolutionStageType } from "../../types";
+import { SPILLING_FIELDS } from "../../fields/spilling";
 
 export const TEXT_OR: ExecutionStage = {
   layer: "execution",
@@ -18,7 +19,7 @@ export const TEXT_OR: ExecutionStage = {
   // TEXT_OR is used when processing text queries in $match or find().
 
   blockingStage: false,
-  canSpillToDisk: false,
+  canSpillToDisk: true,
 
   performanceNotes:
     "Non-blocking streaming stage. Merges results from multiple text search terms. " +
@@ -26,4 +27,16 @@ export const TEXT_OR: ExecutionStage = {
     "Aggregates text scores across terms. Used internally for text search queries.",
 
   sourceFile: "src/mongo/db/exec/classic/text_or.h",
+
+  explainFields: [
+    {
+      bsonKey: "docsExamined",
+      description: "Number of documents fetched for scoring",
+      valueType: "number",
+      verbosity: "executionStats",
+      cppName: "fetches",
+      unit: "count",
+    },
+    ...SPILLING_FIELDS,
+  ],
 } as const;

@@ -22,4 +22,7 @@ export const union: ExecutionStage = {
     "Results from all branches are combined into a single output stream.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/union.h",
+
+  // Sequential branch concatenation — no stage-specific metrics beyond SBE common fields
+  explainFields: [],
 } as const;

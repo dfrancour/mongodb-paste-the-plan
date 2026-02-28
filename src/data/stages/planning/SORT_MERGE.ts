@@ -24,4 +24,13 @@ export const SORT_MERGE: PlanningStage = {
 
   sourceFile:
     "src/mongo/db/query/compiler/physical_model/query_solution/query_solution.h",
+
+  explainFields: [
+    {
+      bsonKey: "sortPattern",
+      description: "Sort key specification for merge ordering",
+      valueType: "object",
+      verbosity: "queryPlanner",
+    },
+  ],
 } as const;

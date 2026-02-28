@@ -22,4 +22,14 @@ export const filter: ExecutionStage = {
     "Efficient for selective predicates. See also cfilter (constant predicates) and efilter (early-exit).",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/filter.h",
+
+  explainFields: [
+    {
+      bsonKey: "numTested",
+      description: "Number of rows evaluated against the predicate",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

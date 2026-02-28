@@ -23,4 +23,7 @@ export const smerge: ExecutionStage = {
     "Commonly used when merging results from multiple index scans.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/sorted_merge.h",
+
+  // Merges pre-sorted streams — no stage-specific metrics beyond SBE common fields
+  explainFields: [],
 } as const;

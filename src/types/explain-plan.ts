@@ -632,7 +632,9 @@ export const explainPlanSchema = z.union([
 // Normalized structures for visualization
 // ============================================================================
 
-// Shared structural fields for both plan and execution stages
+// Shared structural fields for both plan and execution stages.
+// Well-known fields are explicitly typed; additional queryPlanner fields
+// extracted by structureExtractor are accessed via index signature.
 export type StageStructure = {
   indexName?: string;
   direction?: string;
@@ -641,10 +643,21 @@ export type StageStructure = {
   keyPattern?: unknown;
   sortPattern?: unknown;
   limitAmount?: number;
+  memLimit?: number;
+  type?: string;
   sort?: unknown;
   limit?: number;
   skip?: number;
   projection?: unknown;
+  collation?: unknown;
+  isMultiKey?: boolean;
+  multiKeyPaths?: unknown;
+  isUnique?: boolean;
+  isSparse?: boolean;
+  isPartial?: boolean;
+  indexVersion?: number;
+  /** Additional queryPlanner fields from stage declarations */
+  [key: string]: string | number | boolean | unknown | undefined;
 };
 
 // Structural fields only (for query plan visualization)
@@ -693,6 +706,8 @@ export type NormalizedExecutionStage = {
     dupsTested?: number;
     dupsDropped?: number;
     alreadyHasObj?: number;
+    /** Stage-specific fields from explainFields declarations */
+    [key: string]: number | boolean | string | undefined;
   };
   children: NormalizedExecutionStage[];
   depth: number;

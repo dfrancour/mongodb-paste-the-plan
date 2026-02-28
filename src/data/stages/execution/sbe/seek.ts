@@ -24,4 +24,15 @@ export const seek: ExecutionStage = {
     "Index key consistency checks may be performed to detect snapshot inconsistencies after yields.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/scan.h",
+
+  // Shares ScanStats with scan stage (sbe/stages/plan_stats.h)
+  explainFields: [
+    {
+      bsonKey: "numReads",
+      description: "Number of document reads by RecordId",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

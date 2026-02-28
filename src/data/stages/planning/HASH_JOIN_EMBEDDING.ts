@@ -23,4 +23,25 @@ export const HASH_JOIN_EMBEDDING: PlanningStage = {
 
   sourceFile:
     "src/mongo/db/query/compiler/physical_model/query_solution/query_solution.h",
+
+  explainFields: [
+    {
+      bsonKey: "leftEmbeddingField",
+      description: "Embedding field from the left (outer) side of the join",
+      valueType: "string",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "rightEmbeddingField",
+      description: "Embedding field from the right (inner) side of the join",
+      valueType: "string",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "joinPredicates",
+      description: "Predicates used for the embedding join",
+      valueType: "object",
+      verbosity: "queryPlanner",
+    },
+  ],
 } as const;

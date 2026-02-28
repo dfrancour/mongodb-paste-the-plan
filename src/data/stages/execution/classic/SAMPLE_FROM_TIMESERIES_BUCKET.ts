@@ -25,4 +25,28 @@ export const SAMPLE_FROM_TIMESERIES_BUCKET: ExecutionStage = {
     "Introduced in MongoDB 5.0 for optimized $sample on time-series collections.",
 
   sourceFile: "src/mongo/db/exec/classic/sample_from_timeseries_bucket.h",
+
+  explainFields: [
+    {
+      bsonKey: "nBucketsDiscarded",
+      description: "Buckets discarded during sampling",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "dupsTested",
+      description: "Measurements tested for duplicates",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "dupsDropped",
+      description: "Duplicate measurements dropped",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

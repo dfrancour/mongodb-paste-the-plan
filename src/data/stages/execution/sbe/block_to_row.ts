@@ -23,4 +23,7 @@ export const block_to_row: ExecutionStage = {
     "Memory for deblocked values owned by the input blocks.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/block_to_row.h",
+
+  // Format conversion — no stage-specific metrics beyond SBE common fields
+  explainFields: [],
 } as const;

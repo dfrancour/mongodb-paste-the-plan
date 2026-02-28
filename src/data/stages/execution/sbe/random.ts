@@ -23,4 +23,7 @@ export const random: ExecutionStage = {
     "sampling without scanning the entire collection.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/random_scan.h",
+
+  // Storage engine random cursor — no stage-specific metrics beyond SBE common fields
+  explainFields: [],
 } as const;

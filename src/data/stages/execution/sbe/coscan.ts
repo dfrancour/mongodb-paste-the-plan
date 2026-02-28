@@ -22,4 +22,7 @@ export const coscan: ExecutionStage = {
     "Typically combined with project stages to produce constant values or drive nested loops.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/co_scan.h",
+
+  // Virtual data source — no stage-specific metrics beyond SBE common fields
+  explainFields: [],
 } as const;

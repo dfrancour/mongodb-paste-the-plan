@@ -28,4 +28,38 @@ export const EQ_LOOKUP: PlanningStage = {
 
   sourceFile:
     "src/mongo/db/query/compiler/physical_model/query_solution/query_solution.h",
+
+  explainFields: [
+    {
+      bsonKey: "foreignCollection",
+      description: "Namespace of the foreign collection to join",
+      valueType: "string",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "localField",
+      description: "Field from the local collection used for the join",
+      valueType: "string",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "foreignField",
+      description: "Field from the foreign collection used for the join",
+      valueType: "string",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "asField",
+      description: "Output field name for joined documents",
+      valueType: "string",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "strategy",
+      description:
+        "Join strategy (e.g. IndexedLoopJoin, HashJoin, NestedLoopJoin)",
+      valueType: "string",
+      verbosity: "queryPlanner",
+    },
+  ],
 } as const;

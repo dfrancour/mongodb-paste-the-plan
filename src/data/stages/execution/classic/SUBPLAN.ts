@@ -24,4 +24,7 @@ export const SUBPLAN: ExecutionStage = {
     "Can leverage different indexes for different branches.",
 
   sourceFile: "src/mongo/db/exec/classic/subplan.h",
+
+  // Orchestration wrapper — plans $or branches independently; no stage-specific metrics
+  explainFields: [],
 } as const;

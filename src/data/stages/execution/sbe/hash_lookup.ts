@@ -1,5 +1,6 @@
 import type { ExecutionStage } from "../../types";
 import { StageCategory, StageIds, QuerySolutionStageType } from "../../types";
+import { SPILLING_FIELDS } from "../../fields/spilling";
 
 export const hash_lookup: ExecutionStage = {
   layer: "execution",
@@ -26,4 +27,15 @@ export const hash_lookup: ExecutionStage = {
   analysisNote: "Join operation - can be expensive for large collections",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/hash_lookup.h",
+
+  explainFields: [
+    ...SPILLING_FIELDS,
+    {
+      bsonKey: "peakTrackedMemBytes",
+      description: "Peak tracked memory usage",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "bytes",
+    },
+  ],
 } as const;

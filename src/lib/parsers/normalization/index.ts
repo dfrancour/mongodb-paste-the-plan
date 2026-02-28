@@ -195,7 +195,6 @@ function normalizeExecutionStage(
   path: string,
 ): NormalizedExecutionStage {
   const structure = extractStructure(stage);
-  const metrics = extractMetrics(stage);
   const children = collectChildren(stage, depth, path, normalizeExecutionStage);
 
   // Shard expansion produces NormalizedExecutionStage[] (with metrics),
@@ -214,11 +213,11 @@ function normalizeExecutionStage(
     );
   }
 
-  const efficiency = calculateEfficiency(metrics);
-
   const stageName = getStringProperty(stage, "stage") ?? "UNKNOWN";
   const definition =
     getStage("execution", stageName) ?? getStage("mongos", stageName);
+  const metrics = extractMetrics(stage, definition);
+  const efficiency = calculateEfficiency(metrics);
 
   return {
     id: path,

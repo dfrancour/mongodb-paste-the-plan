@@ -25,4 +25,15 @@ export const SKIP: PlanningStage = {
 
   sourceFile:
     "src/mongo/db/query/compiler/physical_model/query_solution/query_solution.h",
+
+  explainFields: [
+    {
+      bsonKey: "skipAmount",
+      description: "Number of documents to skip",
+      valueType: "number",
+      verbosity: "queryPlanner",
+      cppName: "skip",
+      unit: "count",
+    },
+  ],
 } as const;

@@ -24,4 +24,6 @@ export const SUBPLAN: PlanningStage = {
 
   sourceFile:
     "src/mongo/db/query/compiler/physical_model/query_solution/query_solution.h",
+
+  explainFields: [],
 } as const;

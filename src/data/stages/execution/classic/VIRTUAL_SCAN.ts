@@ -24,4 +24,7 @@ export const VIRTUAL_SCAN: ExecutionStage = {
     "Very fast since no disk I/O involved.",
 
   sourceFile: "src/mongo/db/exec/classic/virtual_scan.h",
+
+  // Testing-only in-memory scan — no explain-visible metrics beyond common fields
+  explainFields: [],
 } as const;

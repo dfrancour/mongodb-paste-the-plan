@@ -1,5 +1,6 @@
 import type { ExecutionStage } from "../../types";
 import { StageCategory, StageIds, QuerySolutionStageType } from "../../types";
+import { SPILLING_FIELDS } from "../../fields/spilling";
 
 export const GEO_NEAR_2D: ExecutionStage = {
   layer: "execution",
@@ -15,7 +16,7 @@ export const GEO_NEAR_2D: ExecutionStage = {
   iconName: "MapPin",
 
   blockingStage: true,
-  canSpillToDisk: false,
+  canSpillToDisk: true,
 
   performanceNotes:
     "Blocking stage - must fetch and sort all matching documents by distance. " +
@@ -24,4 +25,32 @@ export const GEO_NEAR_2D: ExecutionStage = {
     "Performance depends on search radius and document density.",
 
   sourceFile: "src/mongo/db/exec/classic/geo_near.h",
+
+  explainFields: [
+    {
+      bsonKey: "keyPattern",
+      description: "Geospatial index key specification",
+      valueType: "object",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "indexName",
+      description: "Name of the geospatial index",
+      valueType: "string",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "indexVersion",
+      description: "Index version",
+      valueType: "number",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "searchIntervals",
+      description: "Distance intervals searched with buffered/returned counts",
+      valueType: "object",
+      verbosity: "executionStats",
+    },
+    ...SPILLING_FIELDS,
+  ],
 } as const;

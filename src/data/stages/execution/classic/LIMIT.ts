@@ -22,4 +22,15 @@ export const LIMIT: ExecutionStage = {
     "Can stop pipeline execution early once limit is reached.",
 
   sourceFile: "src/mongo/db/exec/classic/limit.h",
+
+  explainFields: [
+    {
+      bsonKey: "limitAmount",
+      description: "Maximum number of documents to return",
+      valueType: "number",
+      verbosity: "queryPlanner",
+      cppName: "limit",
+      unit: "count",
+    },
+  ],
 } as const;

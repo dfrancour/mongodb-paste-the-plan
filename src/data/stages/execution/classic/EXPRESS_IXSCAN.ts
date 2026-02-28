@@ -23,4 +23,22 @@ export const EXPRESS_IXSCAN: ExecutionStage = {
     "Tends to be faster than traditional IXSCAN for simple equality queries.",
 
   sourceFile: "src/mongo/db/exec/express/express_plan.h",
+
+  // Express stages emit basic scan stats via ExpressPlanStats
+  explainFields: [
+    {
+      bsonKey: "keysExamined",
+      description: "Number of index keys examined",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "docsExamined",
+      description: "Number of documents examined",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

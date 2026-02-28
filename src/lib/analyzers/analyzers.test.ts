@@ -51,8 +51,8 @@ describe("Analyzer Registry", () => {
 
   describe("analyzer counts", () => {
     it("has expected total analyzer count", () => {
-      // 4 stage-definition + 4 stage + 1 subtree + 3 plan + 1 aggregation = 13
-      expect(allAnalyzers.length).toBe(13);
+      // 4 stage-definition + 5 stage + 1 subtree + 3 plan + 1 aggregation = 14
+      expect(allAnalyzers.length).toBe(14);
     });
 
     it("has analyzers in each layer", () => {

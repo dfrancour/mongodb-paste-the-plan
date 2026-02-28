@@ -23,4 +23,7 @@ export const replace_root: ExecutionStage = {
     "by evaluating the replacement expression in the SBE VM.",
 
   sourceFile: "src/mongo/db/query/stage_builder/sbe/builder.cpp",
+
+  // Pure expression evaluation — no stage-specific metrics beyond SBE common fields
+  explainFields: [],
 } as const;

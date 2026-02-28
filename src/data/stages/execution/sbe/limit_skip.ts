@@ -22,4 +22,21 @@ export const limitskip: ExecutionStage = {
     "If both skip and limit are present, skips first then applies limit.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/limit_skip.h",
+
+  explainFields: [
+    {
+      bsonKey: "limit",
+      description: "Maximum number of documents to return",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "skip",
+      description: "Number of documents to skip",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

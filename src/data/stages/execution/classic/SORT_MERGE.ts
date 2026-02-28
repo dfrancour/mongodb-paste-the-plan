@@ -24,4 +24,27 @@ export const SORT_MERGE: ExecutionStage = {
     "Common when combining results from multiple index scans.",
 
   sourceFile: "src/mongo/db/exec/classic/merge_sort.h",
+
+  explainFields: [
+    {
+      bsonKey: "sortPattern",
+      description: "Sort key specification for merge order",
+      valueType: "object",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "dupsTested",
+      description: "Number of keys tested for duplicates",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "dupsDropped",
+      description: "Number of duplicate keys dropped",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

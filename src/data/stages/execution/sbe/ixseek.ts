@@ -23,4 +23,7 @@ export const ixseek: ExecutionStage = {
     "Ideal for equality predicates and IN queries with specific values.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/ix_scan.h",
+
+  // Point-lookup variant of ixscan — see ixscan for field declarations
+  explainFields: [],
 } as const;

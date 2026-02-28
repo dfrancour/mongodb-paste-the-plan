@@ -24,4 +24,15 @@ export const DELETE: ExecutionStage = {
     "May yield during execution to allow other operations.",
 
   sourceFile: "src/mongo/db/exec/classic/delete_stage.h",
+
+  explainFields: [
+    {
+      bsonKey: "nWouldDelete",
+      description: "Number of documents that would be deleted",
+      valueType: "number",
+      verbosity: "executionStats",
+      cppName: "docsDeleted",
+      unit: "count",
+    },
+  ],
 } as const;

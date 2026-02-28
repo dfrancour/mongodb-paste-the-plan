@@ -22,4 +22,29 @@ export const ts_bucket_to_cellblock: ExecutionStage = {
     "Enables block-based processing optimizations for time series queries.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/ts_bucket_to_cell_block.h",
+
+  // Source: sbe::TsBucketToBlockStats (sbe/stages/plan_stats.h:450)
+  explainFields: [
+    {
+      bsonKey: "numStorageBlocksDecompressed",
+      description: "Storage blocks decompressed from buckets",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "numStorageBlocks",
+      description: "Total storage blocks processed",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "numCellBlocksProduced",
+      description: "Cell blocks produced for downstream processing",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

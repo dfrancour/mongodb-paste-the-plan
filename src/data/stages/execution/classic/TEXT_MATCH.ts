@@ -26,4 +26,32 @@ export const TEXT_MATCH: ExecutionStage = {
     "Performance depends on text complexity and number of terms.",
 
   sourceFile: "src/mongo/db/exec/classic/text_match.h",
+
+  explainFields: [
+    {
+      bsonKey: "indexPrefix",
+      description: "Index prefix for text search",
+      valueType: "object",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "indexName",
+      description: "Name of the text index",
+      valueType: "string",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "parsedTextQuery",
+      description: "Parsed text search query",
+      valueType: "object",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "docsRejected",
+      description: "Documents that failed text match criteria",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

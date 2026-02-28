@@ -23,4 +23,21 @@ export const RECORD_STORE_FAST_COUNT: ExecutionStage = {
     "Only usable when query has no predicates and collection is not capped.",
 
   sourceFile: "src/mongo/db/exec/classic/record_store_fast_count.h",
+
+  explainFields: [
+    {
+      bsonKey: "nCounted",
+      description: "Number of documents counted from metadata",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+    {
+      bsonKey: "nSkipped",
+      description: "Number of documents skipped",
+      valueType: "number",
+      verbosity: "executionStats",
+      unit: "count",
+    },
+  ],
 } as const;

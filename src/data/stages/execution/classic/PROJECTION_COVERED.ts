@@ -25,4 +25,13 @@ export const PROJECTION_COVERED: ExecutionStage = {
     "Requires index containing all projected fields and query predicates.",
 
   sourceFile: "src/mongo/db/exec/classic/projection.h",
+
+  explainFields: [
+    {
+      bsonKey: "transformBy",
+      description: "Projection specification document",
+      valueType: "object",
+      verbosity: "queryPlanner",
+    },
+  ],
 } as const;

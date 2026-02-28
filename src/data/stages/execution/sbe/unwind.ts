@@ -23,4 +23,7 @@ export const unwind: ExecutionStage = {
     "Generally efficient unless arrays are very large.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/unwind.h",
+
+  // Pure streaming transform — no stage-specific metrics beyond SBE common fields
+  explainFields: [],
 } as const;

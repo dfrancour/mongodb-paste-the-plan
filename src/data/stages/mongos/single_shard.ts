@@ -1,5 +1,6 @@
 import type { MongosStage } from "../types";
 import { StageCategory, StageIds } from "../types";
+import { MONGOS_COMMON_FIELDS } from "../fields/mongos";
 
 export const SINGLE_SHARD: MongosStage = {
   layer: "mongos",
@@ -21,4 +22,6 @@ export const SINGLE_SHARD: MongosStage = {
     "avoiding the overhead of scatter-gather operations across multiple shards.",
 
   sourceFile: "src/mongo/s/commands/query_cmd/cluster_explain.cpp",
+
+  explainFields: [...MONGOS_COMMON_FIELDS],
 } as const;

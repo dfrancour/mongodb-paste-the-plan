@@ -22,4 +22,7 @@ export const mkobj: ExecutionStage = {
     "See also mkbson for BSON object construction.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/makeobj.h",
+
+  // Pure slot-to-object transform — no stage-specific metrics beyond SBE common fields
+  explainFields: [],
 } as const;

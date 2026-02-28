@@ -23,4 +23,7 @@ export const agg_project: ExecutionStage = {
     "Used for aggregation operations that can be computed row-by-row.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/agg_project.h",
+
+  // Stateful accumulator evaluation — no stage-specific metrics beyond SBE common fields
+  explainFields: [],
 } as const;

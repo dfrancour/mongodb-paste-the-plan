@@ -24,4 +24,7 @@ export const RETURN_KEY: ExecutionStage = {
     "Minimal overhead compared to full document retrieval.",
 
   sourceFile: "src/mongo/db/exec/classic/return_key.h",
+
+  // Pure pass-through transform — returns index keys without additional metrics
+  explainFields: [],
 } as const;

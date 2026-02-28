@@ -24,4 +24,7 @@ export const CACHED_PLAN: ExecutionStage = {
     "Reduces overhead by skipping query planning for repeated query shapes.",
 
   sourceFile: "src/mongo/db/exec/classic/cached_plan.h",
+
+  // Orchestration wrapper — delegates to child plan; no stage-specific metrics
+  explainFields: [],
 } as const;

@@ -22,4 +22,7 @@ export const cfilter: ExecutionStage = {
     "The filter is evaluated once at the start rather than per document.",
 
   sourceFile: "src/mongo/db/exec/sbe/stages/filter.h",
+
+  // Predicate evaluated once at start — no per-document metrics beyond SBE common fields
+  explainFields: [],
 } as const;

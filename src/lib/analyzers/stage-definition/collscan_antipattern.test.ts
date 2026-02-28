@@ -16,6 +16,7 @@ describe("collscanAntipattern", () => {
         iconName: "FolderSearch",
         blockingStage: false,
         canSpillToDisk: false,
+        explainFields: [],
       },
       stageId: "stage-1",
     };
@@ -40,6 +41,7 @@ describe("collscanAntipattern", () => {
         iconName: "Search",
         blockingStage: false,
         canSpillToDisk: false,
+        explainFields: [],
       },
       stageId: "stage-1",
     };

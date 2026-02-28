@@ -24,4 +24,19 @@ export const UNPACK_TS_BUCKET: PlanningStage = {
 
   sourceFile:
     "src/mongo/db/query/compiler/physical_model/query_solution/query_solution.h",
+
+  explainFields: [
+    {
+      bsonKey: "eventFilter",
+      description: "Per-measurement filter pushed into bucket unpacking",
+      valueType: "object",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "wholeBucketFilter",
+      description: "Filter applied to entire buckets before unpacking",
+      valueType: "object",
+      verbosity: "queryPlanner",
+    },
+  ],
 } as const;

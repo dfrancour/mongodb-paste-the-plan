@@ -25,4 +25,15 @@ export const LIMIT: PlanningStage = {
 
   sourceFile:
     "src/mongo/db/query/compiler/physical_model/query_solution/query_solution.h",
+
+  explainFields: [
+    {
+      bsonKey: "limitAmount",
+      description: "Maximum number of documents to return",
+      valueType: "number",
+      verbosity: "queryPlanner",
+      cppName: "limit",
+      unit: "count",
+    },
+  ],
 } as const;

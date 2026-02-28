@@ -26,4 +26,35 @@ export const SORT: PlanningStage = {
 
   sourceFile:
     "src/mongo/db/query/compiler/physical_model/query_solution/query_solution.h",
+
+  explainFields: [
+    {
+      bsonKey: "sortPattern",
+      description: "Sort key specification",
+      valueType: "object",
+      verbosity: "queryPlanner",
+    },
+    {
+      bsonKey: "memLimit",
+      description: "Memory limit for in-memory sort",
+      valueType: "number",
+      verbosity: "queryPlanner",
+      cppName: "maxMemoryUsageBytes",
+      unit: "bytes",
+    },
+    {
+      bsonKey: "limitAmount",
+      description: "Maximum number of results to sort",
+      valueType: "number",
+      verbosity: "queryPlanner",
+      cppName: "limit",
+      unit: "count",
+    },
+    {
+      bsonKey: "type",
+      description: "Sort algorithm used (simple or default)",
+      valueType: "string",
+      verbosity: "queryPlanner",
+    },
+  ],
 } as const;

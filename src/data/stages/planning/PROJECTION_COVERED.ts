@@ -26,4 +26,13 @@ export const PROJECTION_COVERED: PlanningStage = {
 
   sourceFile:
     "src/mongo/db/query/compiler/physical_model/query_solution/query_solution.h",
+
+  explainFields: [
+    {
+      bsonKey: "transformBy",
+      description: "Projection specification applied to documents",
+      valueType: "object",
+      verbosity: "queryPlanner",
+    },
+  ],
 } as const;

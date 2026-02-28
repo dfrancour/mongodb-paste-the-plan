@@ -16,6 +16,7 @@ describe("blockingStageWarning", () => {
         iconName: "SortAsc",
         blockingStage: true,
         canSpillToDisk: true,
+        explainFields: [],
       },
       stageId: "sort-1",
     };
@@ -41,6 +42,7 @@ describe("blockingStageWarning", () => {
         iconName: "Search",
         blockingStage: false,
         canSpillToDisk: false,
+        explainFields: [],
       },
       stageId: "ix-1",
     };
