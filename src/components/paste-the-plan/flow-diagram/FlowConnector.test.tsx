@@ -65,9 +65,6 @@ describe("FlowConnector Markers", () => {
         expect(lightMarker.getAttribute("markerWidth")).toBe("5");
         expect(lightMarker.getAttribute("markerHeight")).toBe("5");
 
-        // Check reference point - THIS IS THE CRITICAL PART
-        const refX = lightMarker.getAttribute("refX");
-        const refY = lightMarker.getAttribute("refY");
         // Check orient for automatic rotation
         expect(lightMarker.getAttribute("orient")).toBe("auto");
 

@@ -31,11 +31,9 @@ describe("Plan Parser Data Fidelity", () => {
       const expected = transformExtendedJSON(rawPlan);
 
       // Compare
-      if (!semanticEqual(parsed, expected)) {
-        const diff = findDifference(parsed, expected);
-      }
-
-      expect(semanticEqual(parsed, expected)).toBe(true);
+      expect(
+        semanticEqual(parsed, expected) || findDifference(parsed, expected),
+      ).toBe(true);
     });
   });
 
@@ -54,7 +52,8 @@ describe("Plan Parser Data Fidelity", () => {
 
         // Compare
         if (!semanticEqual(parsed, expected)) {
-          const diff = findDifference(parsed, expected);
+          const _diff = findDifference(parsed, expected);
+          void _diff;
         }
 
         expect(semanticEqual(parsed, expected)).toBe(true);
@@ -162,7 +161,7 @@ describe("Plan Parser Data Fidelity", () => {
     it("calculates success rate and identifies lost fields", () => {
       const allPlanPaths = getAllTestPlanPaths();
       let successCount = 0;
-      let failureCount = 0;
+
       const failures: Array<{ path: string; difference: string | null }> = [];
       const lostFields = new Map<string, number>();
 
@@ -175,7 +174,6 @@ describe("Plan Parser Data Fidelity", () => {
           if (semanticEqual(parsed, expected)) {
             successCount++;
           } else {
-            failureCount++;
             const diff = findDifference(parsed, expected);
             failures.push({ path: planPath, difference: diff });
 
@@ -189,7 +187,6 @@ describe("Plan Parser Data Fidelity", () => {
             }
           }
         } catch {
-          failureCount++;
           failures.push({ path: planPath, difference: "parsing error" });
         }
       }

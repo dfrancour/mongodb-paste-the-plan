@@ -326,16 +326,11 @@ describe("Stage sourceFile validation", () => {
 
   describe("Coverage summary", () => {
     it("reports sourceFile coverage statistics", () => {
-      const withSourceFile = allStages.filter((s) => s.sourceFile);
-      const withoutSourceFile = allStages.filter((s) => !s.sourceFile);
+      // Verify that filtering by sourceFile works without errors
+      const withSourceCount = allStages.filter((s) => s.sourceFile).length;
+      const withoutSourceCount = allStages.filter((s) => !s.sourceFile).length;
 
-      const pipelineWithSource = pipelineStages.filter((s) => s.sourceFile);
-      const planningWithSource = planningStages.filter((s) => s.sourceFile);
-      const sbeWithSource = sbeStages.filter((s) => s.sourceFile);
-      const classicWithSource = classicStages.filter((s) => s.sourceFile);
-
-      // This test always passes - it's informational
-      expect(true).toBe(true);
+      expect(withSourceCount + withoutSourceCount).toBe(allStages.length);
     });
   });
 });
