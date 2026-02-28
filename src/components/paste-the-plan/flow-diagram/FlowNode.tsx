@@ -17,7 +17,7 @@ import {
   extractGridMetrics,
   type StageFieldDisplay,
 } from "#lib/visualization/stageDisplayFormatter";
-import { safeRenderJson } from "#lib/utils/jsxUtils";
+import { safeRenderJson, isNonEmptyObject } from "#lib/utils/jsxUtils";
 import {
   getPerformanceIcon,
   getPerformanceContainerClasses,
@@ -249,13 +249,36 @@ export const FlowNode = forwardRef<HTMLDivElement, FlowNodeProps>(
   },
 );
 
+/**
+ * Reconstruct a flat stage object that mirrors the original MongoDB explain JSON.
+ * In the raw output, structure fields (indexName, direction, filter, etc.) and
+ * metrics fields (nReturned, docsExamined, works, etc.) all sit at the same level.
+ */
+function reconstructRawStageJson(stage: FlowStage): Record<string, unknown> {
+  const raw: Record<string, unknown> = { stage: stage.stage };
+
+  // Structure fields (query planner configuration)
+  if (stage.structure && isNonEmptyObject(stage.structure)) {
+    Object.assign(raw, stage.structure);
+  }
+
+  // Execution metrics (flat, same level as structure in raw output)
+  if (stage.metrics && isNonEmptyObject(stage.metrics)) {
+    Object.assign(raw, stage.metrics);
+  }
+
+  return raw;
+}
+
 // JSON View Subcomponent
 function FlowNodeJsonView({ stage }: { stage: FlowStage }) {
+  const jsonData = reconstructRawStageJson(stage);
+
   return (
     <div className="mb-4 text-xs">
       <div className="rounded border border-neutral-200 bg-neutral-50 p-2 dark:border-neutral-700 dark:bg-neutral-900">
         <pre className="font-mono text-xs break-all whitespace-pre-wrap text-neutral-700 dark:text-neutral-300">
-          {safeRenderJson(stage.metrics)}
+          {safeRenderJson(jsonData)}
         </pre>
       </div>
     </div>
