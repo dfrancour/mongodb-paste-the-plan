@@ -7,7 +7,7 @@ import {
   getSortMetrics,
 } from "./visualization_adapter";
 import { coveredQueryOptimal } from "./stage-definition";
-import { lowSelectivity } from "./stage";
+import { lowDocumentEfficiency } from "./stage";
 import { overallEfficiency, inMemorySort } from "./plan";
 import { collscanAntipattern } from "./stage-definition";
 import { AnalyzerIds } from "./types";
@@ -25,7 +25,7 @@ describe("Visualization Adapter", () => {
       const findings: AnalysisFinding[] = [
         {
           id: "f1",
-          analyzerId: lowSelectivity.id,
+          analyzerId: lowDocumentEfficiency.id,
           severity: "critical",
           category: "performance",
           title: "Test",
@@ -40,7 +40,7 @@ describe("Visualization Adapter", () => {
       const findings: AnalysisFinding[] = [
         {
           id: "f1",
-          analyzerId: lowSelectivity.id,
+          analyzerId: lowDocumentEfficiency.id,
           severity: "warning",
           category: "performance",
           title: "Test",
@@ -87,7 +87,7 @@ describe("Visualization Adapter", () => {
       const findings: AnalysisFinding[] = [
         {
           id: "f1",
-          analyzerId: lowSelectivity.id,
+          analyzerId: lowDocumentEfficiency.id,
           severity: "warning",
           category: "performance",
           title: "Warning One",
@@ -95,7 +95,7 @@ describe("Visualization Adapter", () => {
         },
         {
           id: "f2",
-          analyzerId: lowSelectivity.id,
+          analyzerId: lowDocumentEfficiency.id,
           severity: "info",
           category: "performance",
           title: "Info",
@@ -103,7 +103,7 @@ describe("Visualization Adapter", () => {
         },
         {
           id: "f3",
-          analyzerId: lowSelectivity.id,
+          analyzerId: lowDocumentEfficiency.id,
           severity: "critical",
           category: "performance",
           title: "Critical One",

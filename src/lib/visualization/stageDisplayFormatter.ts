@@ -104,8 +104,8 @@ export interface StageGridMetrics {
     secondary: string;
   };
   performanceIndicators: {
-    selectivity: { value: string; color: string };
-    efficiency: { value: string; color: string };
+    documentEfficiency: { value: string; color: string };
+    indexEfficiency: { value: string; color: string };
   };
   /** Fields grouped by section — replaces both coreMetrics and stageFields */
   fieldSections: FieldSections;
@@ -181,13 +181,13 @@ export function extractGridMetrics(
 
   // Performance Indicators - calculated ratios with colors from warnings
   const performanceIndicators = {
-    selectivity: {
-      value: getSelectivityRatio(stage),
-      color: getColorFromWarnings("selectivity", warnings),
+    documentEfficiency: {
+      value: getDocumentEfficiencyRatio(stage),
+      color: getColorFromWarnings("documentEfficiency", warnings),
     },
-    efficiency: {
-      value: getEfficiencyRatio(stage),
-      color: getColorFromWarnings("efficiency", warnings),
+    indexEfficiency: {
+      value: getIndexEfficiencyRatio(stage),
+      color: getColorFromWarnings("indexEfficiency", warnings),
     },
   };
 
@@ -441,14 +441,14 @@ function getWorkInfo(stage: NormalizedStage): string {
 }
 
 /**
- * Calculate selectivity ratio
+ * Calculate document efficiency ratio (nReturned / docsExamined)
  */
-function getSelectivityRatio(stage: NormalizedStage): string {
+function getDocumentEfficiencyRatio(stage: NormalizedStage): string {
   const metrics = stage.metrics ?? {};
   const efficiency = "efficiency" in stage ? stage.efficiency : undefined;
 
-  if (efficiency?.selectivity !== undefined) {
-    return `${(efficiency.selectivity * 100).toFixed(1)}%`;
+  if (efficiency?.documentEfficiency !== undefined) {
+    return `${(efficiency.documentEfficiency * 100).toFixed(1)}%`;
   }
 
   // Fallback calculation
@@ -456,24 +456,24 @@ function getSelectivityRatio(stage: NormalizedStage): string {
   const docsExamined = metrics.docsExamined ?? 0;
 
   if (docsExamined > 0) {
-    const selectivity = nReturned / docsExamined;
-    return `${(selectivity * 100).toFixed(1)}%`;
+    const ratio = nReturned / docsExamined;
+    return `${(ratio * 100).toFixed(1)}%`;
   }
 
   return "—";
 }
 
 /**
- * Calculate efficiency ratio (nReturned / keysExamined)
+ * Calculate index efficiency ratio (nReturned / keysExamined)
  */
-function getEfficiencyRatio(stage: NormalizedStage): string {
+function getIndexEfficiencyRatio(stage: NormalizedStage): string {
   const metrics = stage.metrics ?? {};
   const nReturned = metrics.nReturned ?? 0;
   const keysExamined = metrics.keysExamined ?? 0;
 
   if (keysExamined > 0) {
-    const efficiency = nReturned / keysExamined;
-    return `${(efficiency * 100).toFixed(1)}%`;
+    const ratio = nReturned / keysExamined;
+    return `${(ratio * 100).toFixed(1)}%`;
   }
 
   return "—";
@@ -488,8 +488,8 @@ const WARNING_METRIC_KEYS = new Set([
   "docsExamined",
   "keysExamined",
   "executionTime",
-  "selectivity",
-  "efficiency",
+  "documentEfficiency",
+  "indexEfficiency",
 ]);
 
 /**

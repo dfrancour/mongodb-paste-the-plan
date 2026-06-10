@@ -38,10 +38,12 @@ describe("overallEfficiency", () => {
 
     const findings = overallEfficiency.analyze(input);
 
-    const docFinding = findings.find((f) => f.id === "overall-doc-efficiency");
+    const docFinding = findings.find(
+      (f) => f.id === "overall-document-efficiency",
+    );
     expect(docFinding).toBeDefined();
     expect(docFinding!.severity).toBe("critical");
-    expect(docFinding!.metadata?.docEfficiency).toBeCloseTo(0.0005);
+    expect(docFinding!.metadata?.documentEfficiency).toBeCloseTo(0.0005);
   });
 
   it("detects warning-level document efficiency (1-10%)", () => {
@@ -63,7 +65,9 @@ describe("overallEfficiency", () => {
 
     const findings = overallEfficiency.analyze(input);
 
-    const docFinding = findings.find((f) => f.id === "overall-doc-efficiency");
+    const docFinding = findings.find(
+      (f) => f.id === "overall-document-efficiency",
+    );
     expect(docFinding).toBeDefined();
     expect(docFinding!.severity).toBe("warning");
   });
@@ -114,7 +118,9 @@ describe("overallEfficiency", () => {
 
     const findings = overallEfficiency.analyze(input);
 
-    const docFinding = findings.find((f) => f.id === "overall-doc-efficiency");
+    const docFinding = findings.find(
+      (f) => f.id === "overall-document-efficiency",
+    );
     expect(docFinding).toBeUndefined();
   });
 
@@ -151,7 +157,7 @@ describe("overallEfficiency", () => {
       explainPlan: {
         executionStats: {
           totalDocsExamined: 100,
-          totalKeysExamined: 100000, // 10x docs, keyEfficiency = 0.00005
+          totalKeysExamined: 100000, // 10x docs, indexEfficiency = 0.00005
           nReturned: 5,
         },
       } as PlanInput["explainPlan"],
@@ -159,7 +165,9 @@ describe("overallEfficiency", () => {
 
     const findings = overallEfficiency.analyze(input);
 
-    const keyFinding = findings.find((f) => f.id === "overall-key-efficiency");
+    const keyFinding = findings.find(
+      (f) => f.id === "overall-index-efficiency",
+    );
     expect(keyFinding).toBeDefined();
     expect(keyFinding!.severity).toBe("info");
     expect(keyFinding!.category).toBe("indexUsage");

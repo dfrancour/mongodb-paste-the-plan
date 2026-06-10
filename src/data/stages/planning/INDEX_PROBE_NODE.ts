@@ -19,7 +19,7 @@ export const INDEX_PROBE_NODE: PlanningStage = {
   canSpillToDisk: false,
 
   performanceNotes:
-    "Non-blocking streaming stage. Efficiency depends on index selectivity " +
+    "Non-blocking streaming stage. Performance depends on index efficiency " +
     "and the number of probes required by the parent join node.",
 
   sourceFile:

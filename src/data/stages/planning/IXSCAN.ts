@@ -19,7 +19,7 @@ export const IXSCAN: PlanningStage = {
   canSpillToDisk: false,
 
   performanceNotes:
-    "Non-blocking streaming stage. Efficiency depends on index selectivity " +
+    "Non-blocking streaming stage. Performance depends on index efficiency " +
     "and the number of keys examined. Deduplicates on RecordId for " +
     "multikey indexes.",
 

@@ -22,7 +22,7 @@ export const IXSCAN: ExecutionStage = {
     "Non-blocking streaming stage. Scans index in order (forward or backward). " +
     "Deduplicates on RecordId for multikey indexes. " +
     "Can apply filter expressions over index fields during scan. " +
-    "Efficient when index selectivity is high.",
+    "Performant when index efficiency is high.",
 
   sourceFile: "src/mongo/db/exec/classic/index_scan.h",
 

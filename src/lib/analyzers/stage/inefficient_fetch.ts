@@ -66,11 +66,11 @@ export const inefficientFetch: StageMetricsAnalyzer = {
         analyzerId: ANALYZER_ID,
         severity: "critical",
         category: "performance",
-        metricKey: "efficiency",
+        metricKey: "documentEfficiency",
         title: "Very Inefficient Document Fetch",
         description:
           `This FETCH stage examined ${docsExamined.toLocaleString()} documents but only returned ` +
-          `${nReturned.toLocaleString()} (${(ratio * 100).toFixed(1)}% efficiency). ` +
+          `${nReturned.toLocaleString()} (${(ratio * 100).toFixed(1)}% document efficiency). ` +
           "The query is fetching many documents only to filter most of them out.",
         suggestion:
           "Consider creating a covered query where all needed fields are in the index, " +
@@ -89,11 +89,11 @@ export const inefficientFetch: StageMetricsAnalyzer = {
         analyzerId: ANALYZER_ID,
         severity: "warning",
         category: "performance",
-        metricKey: "efficiency",
+        metricKey: "documentEfficiency",
         title: "Inefficient Document Fetch",
         description:
           `This FETCH stage examined ${docsExamined.toLocaleString()} documents but only returned ` +
-          `${nReturned.toLocaleString()} (${(ratio * 100).toFixed(1)}% efficiency). ` +
+          `${nReturned.toLocaleString()} (${(ratio * 100).toFixed(1)}% document efficiency). ` +
           "Some filter conditions are being evaluated after fetching documents.",
         suggestion:
           "Review if filter conditions can be pushed to the index scan. " +

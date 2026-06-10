@@ -97,11 +97,11 @@ describe("createStageVisualization", () => {
     const stage = createMockNormalizedStage({ id: "s1" });
     const finding: AnalysisFinding = {
       id: "f1",
-      analyzerId: AnalyzerIds.stage("low_selectivity"),
+      analyzerId: AnalyzerIds.stage("low_document_efficiency"),
       severity: "critical",
       category: "performance",
-      title: "Low Selectivity",
-      description: "Very low selectivity",
+      title: "Low Document Efficiency",
+      description: "Very low document efficiency",
       suggestion: "Add an index",
       affectedStageIds: ["s1"],
     };
@@ -116,7 +116,7 @@ describe("createStageVisualization", () => {
     const stage = createMockNormalizedStage({ id: "s1" });
     const finding: AnalysisFinding = {
       id: "f1",
-      analyzerId: AnalyzerIds.stage("low_selectivity"),
+      analyzerId: AnalyzerIds.stage("low_document_efficiency"),
       severity: "warning",
       category: "performance",
       title: "Warning Title",
@@ -147,7 +147,7 @@ describe("createStageVisualization", () => {
     const stage = createMockNormalizedStage({ id: "s1" });
     const criticalFinding: AnalysisFinding = {
       id: "f1",
-      analyzerId: AnalyzerIds.stage("low_selectivity"),
+      analyzerId: AnalyzerIds.stage("low_document_efficiency"),
       severity: "critical",
       category: "performance",
       title: "Critical Issue",
@@ -241,24 +241,26 @@ describe("extractGridMetrics", () => {
       expect(grid.timeMetric.color).toContain("gray");
     });
 
-    it("applies red color for critical warning on selectivity", () => {
+    it("applies red color for critical warning on document efficiency", () => {
       const flowStage = createMockFlowStage(
         { metrics: { docsExamined: 1000, keysExamined: 100 } },
         [
           {
-            title: "Low Selectivity",
+            title: "Low Document Efficiency",
             description: "Bad",
             severity: "critical",
             layer: "stage",
             category: "performance",
-            metricKey: "selectivity",
+            metricKey: "documentEfficiency",
           },
         ],
       );
 
       const grid = extractGridMetrics(flowStage);
 
-      expect(grid.performanceIndicators.selectivity.color).toContain("red");
+      expect(grid.performanceIndicators.documentEfficiency.color).toContain(
+        "red",
+      );
     });
 
     it("applies orange color for warning severity on time metric", () => {

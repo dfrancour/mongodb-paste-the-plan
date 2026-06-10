@@ -5,7 +5,7 @@ import type { StageInput } from "../types";
 import { StageCategory } from "#data/stages/types";
 
 describe("inefficientFetch", () => {
-  it("detects critically inefficient fetch (< 10% efficiency)", () => {
+  it("detects critically inefficient fetch (< 10% document efficiency)", () => {
     const input: StageInput = {
       stage: createMockNormalizedStage({
         id: "fetch-1",
@@ -13,7 +13,7 @@ describe("inefficientFetch", () => {
         category: StageCategory.Fetch,
         metrics: {
           docsExamined: 1000,
-          nReturned: 5, // 0.5% efficiency
+          nReturned: 5, // 0.5% document efficiency
         },
       }),
     };
@@ -22,18 +22,18 @@ describe("inefficientFetch", () => {
 
     expect(findings.length).toBe(1);
     expect(findings[0]!.severity).toBe("critical");
-    expect(findings[0]!.metricKey).toBe("efficiency");
+    expect(findings[0]!.metricKey).toBe("documentEfficiency");
     expect(findings[0]!.metadata?.efficiencyRatio).toBeCloseTo(0.005);
   });
 
-  it("detects warning-level inefficient fetch (10-50% efficiency)", () => {
+  it("detects warning-level inefficient fetch (10-50% document efficiency)", () => {
     const input: StageInput = {
       stage: createMockNormalizedStage({
         stage: "FETCH",
         category: StageCategory.Fetch,
         metrics: {
           docsExamined: 100,
-          nReturned: 30, // 30% efficiency
+          nReturned: 30, // 30% document efficiency
         },
       }),
     };
@@ -44,7 +44,7 @@ describe("inefficientFetch", () => {
     expect(findings[0]!.severity).toBe("warning");
   });
 
-  it("does not flag efficient fetch (>= 50%)", () => {
+  it("does not flag fetch with healthy document efficiency (>= 50%)", () => {
     const input: StageInput = {
       stage: createMockNormalizedStage({
         stage: "FETCH",

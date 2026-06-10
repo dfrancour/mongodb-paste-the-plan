@@ -22,7 +22,7 @@ export const AND_SORTED: ExecutionStage = {
     "Non-blocking streaming stage. Advances children in lockstep to find matching RecordIds. " +
     "Very memory-efficient - no buffering required. " +
     "Requires pre-sorted inputs (typically from index scans). " +
-    "Performance depends on selectivity and number of children.",
+    "Performance depends on efficiency and number of children.",
 
   sourceFile: "src/mongo/db/exec/classic/and_sorted.h",
 

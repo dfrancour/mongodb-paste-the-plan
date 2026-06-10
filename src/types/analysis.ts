@@ -69,7 +69,10 @@ export type FindingCategory =
   | "optimization";
 
 /** Keys for display metrics that findings can be associated with */
-export type MetricKey = "selectivity" | "efficiency" | "executionTime";
+export type MetricKey =
+  | "documentEfficiency"
+  | "indexEfficiency"
+  | "executionTime";
 
 // ============================================================================
 // Unified Finding Output

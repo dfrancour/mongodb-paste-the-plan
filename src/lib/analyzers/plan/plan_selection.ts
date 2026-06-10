@@ -108,7 +108,8 @@ function createPlanComparison(
 
   const { works, advanced } = extractWorkMetrics(stats.executionStages);
 
-  const selectivity = totalDocsExamined > 0 ? nReturned / totalDocsExamined : 0;
+  const documentEfficiency =
+    totalDocsExamined > 0 ? nReturned / totalDocsExamined : 0;
   const keyEfficiency =
     totalKeysExamined > 0 ? nReturned / totalKeysExamined : 0;
   const timePerDoc = nReturned > 0 ? executionTimeMillis / nReturned : 0;
@@ -121,7 +122,7 @@ function createPlanComparison(
 
   return {
     planType,
-    efficiency: { selectivity, keyEfficiency, timePerDoc, productivity },
+    efficiency: { documentEfficiency, keyEfficiency, timePerDoc, productivity },
     metrics: {
       nReturned,
       totalKeysExamined,

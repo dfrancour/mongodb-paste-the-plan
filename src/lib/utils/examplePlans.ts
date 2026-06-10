@@ -30,13 +30,13 @@ export const EXAMPLE_PLANS: readonly ExamplePlan[] = [
     id: "collection-scan",
     name: "Collection Scan",
     description:
-      "COLLSCAN with poor selectivity: 58 returned / 5555 examined (Classic Engine)",
+      "COLLSCAN with poor document efficiency: 58 returned / 5555 examined (Classic Engine)",
     category: "basic",
     fixtureKey: "basic/collection-scan.executionStats.json",
     highlights: [
       "Classic execution",
       "COLLSCAN stage",
-      "Poor selectivity (1%)",
+      "Poor document efficiency (1%)",
       "Most basic pattern",
     ],
   },
@@ -49,7 +49,7 @@ export const EXAMPLE_PLANS: readonly ExamplePlan[] = [
     highlights: [
       "Classic execution",
       "FETCH → IXSCAN pattern",
-      "Index efficiency",
+      "Index Efficiency",
       "Foundation concept",
     ],
   },
@@ -98,13 +98,14 @@ export const EXAMPLE_PLANS: readonly ExamplePlan[] = [
   },
   {
     id: "inefficient-query",
-    name: "Poor Selectivity Pattern",
-    description: "COLLSCAN with poor selectivity ratio (Classic Engine)",
+    name: "Poor Document Efficiency Pattern",
+    description:
+      "COLLSCAN with poor document efficiency ratio (Classic Engine)",
     category: "performance",
     fixtureKey: "performance/inefficient-query.executionStats.json",
     highlights: [
       "Classic execution",
-      "Poor selectivity",
+      "Poor document efficiency",
       "High docs examined",
       "Performance anti-pattern",
     ],
@@ -239,7 +240,7 @@ export const EXAMPLE_PLANS: readonly ExamplePlan[] = [
       "SBE execution",
       "Large $in clause",
       "Set operations",
-      "Index selectivity",
+      "Index Efficiency",
     ],
   },
 ] as const;

@@ -331,35 +331,39 @@ function FlowNodeFormattedView({
         )}
 
       {/* Calculated Metrics - Derived performance ratios */}
-      {(gridMetrics.performanceIndicators.selectivity.value !== "—" ||
-        gridMetrics.performanceIndicators.efficiency.value !== "—") && (
+      {(gridMetrics.performanceIndicators.documentEfficiency.value !== "—" ||
+        gridMetrics.performanceIndicators.indexEfficiency.value !== "—") && (
         <>
           <div className="mt-3 mb-2 border-b border-neutral-200 pb-1 text-xs font-medium text-neutral-600 dark:border-neutral-600 dark:text-neutral-400">
             Calculated Metrics
           </div>
 
-          {gridMetrics.performanceIndicators.selectivity.value !== "—" && (
+          {gridMetrics.performanceIndicators.documentEfficiency.value !==
+            "—" && (
             <div className="mb-2 text-xs">
               <div className="flex items-center justify-between text-neutral-700 dark:text-neutral-300">
                 <span className="flex items-center gap-0.5">
-                  <span className="font-mono text-neutral-600 dark:text-neutral-400">
-                    selectivity:
+                  <span className="text-neutral-600 dark:text-neutral-400">
+                    Document Efficiency:
                   </span>
                   <Tooltip
                     content="Ratio of documents returned to documents examined (nReturned / docsExamined)"
                     side="left"
                   >
-                    <InfoButton aria-label="About selectivity" size="sm" />
+                    <InfoButton
+                      aria-label="About Document Efficiency"
+                      size="sm"
+                    />
                   </Tooltip>
                 </span>
                 <span className="flex items-center">
                   <span
-                    className={`font-mono font-semibold ${gridMetrics.performanceIndicators.selectivity.color}`}
+                    className={`font-mono font-semibold ${gridMetrics.performanceIndicators.documentEfficiency.color}`}
                   >
-                    {gridMetrics.performanceIndicators.selectivity.value}
+                    {gridMetrics.performanceIndicators.documentEfficiency.value}
                   </span>
                   <MetricWarningIndicator
-                    metricKey="selectivity"
+                    metricKey="documentEfficiency"
                     warnings={stage.visualization.warnings}
                   />
                 </span>
@@ -367,28 +371,28 @@ function FlowNodeFormattedView({
             </div>
           )}
 
-          {gridMetrics.performanceIndicators.efficiency.value !== "—" && (
+          {gridMetrics.performanceIndicators.indexEfficiency.value !== "—" && (
             <div className="mb-2 text-xs">
               <div className="flex items-center justify-between text-neutral-700 dark:text-neutral-300">
                 <span className="flex items-center gap-0.5">
-                  <span className="font-mono text-neutral-600 dark:text-neutral-400">
-                    efficiency:
+                  <span className="text-neutral-600 dark:text-neutral-400">
+                    Index Efficiency:
                   </span>
                   <Tooltip
                     content="Ratio of documents returned to index keys examined (nReturned / keysExamined)"
                     side="left"
                   >
-                    <InfoButton aria-label="About efficiency" size="sm" />
+                    <InfoButton aria-label="About Index Efficiency" size="sm" />
                   </Tooltip>
                 </span>
                 <span className="flex items-center">
                   <span
-                    className={`font-mono font-semibold ${gridMetrics.performanceIndicators.efficiency.color}`}
+                    className={`font-mono font-semibold ${gridMetrics.performanceIndicators.indexEfficiency.color}`}
                   >
-                    {gridMetrics.performanceIndicators.efficiency.value}
+                    {gridMetrics.performanceIndicators.indexEfficiency.value}
                   </span>
                   <MetricWarningIndicator
-                    metricKey="efficiency"
+                    metricKey="indexEfficiency"
                     warnings={stage.visualization.warnings}
                   />
                 </span>

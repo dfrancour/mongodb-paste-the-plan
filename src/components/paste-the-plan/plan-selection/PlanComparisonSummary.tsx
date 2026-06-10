@@ -152,12 +152,17 @@ export function PlanComparisonSummary({
               </span>
             </div>
             <div className="flex items-center gap-1">
-              Selectivity:
+              Document Efficiency:
               <Tooltip content="nReturned / totalDocsExamined">
-                <InfoButton aria-label="Selectivity formula" size="sm" />
+                <InfoButton
+                  aria-label="Document Efficiency formula"
+                  size="sm"
+                />
               </Tooltip>
               <span className="font-medium">
-                {formatEfficiency(winningPlan.efficiency.selectivity ?? 0)}
+                {formatEfficiency(
+                  winningPlan.efficiency.documentEfficiency ?? 0,
+                )}
               </span>
             </div>
           </div>
@@ -308,12 +313,17 @@ export function PlanComparisonSummary({
                 </span>
               </div>
               <div className="flex items-center gap-1">
-                Selectivity:
+                Document Efficiency:
                 <Tooltip content="nReturned / totalDocsExamined">
-                  <InfoButton aria-label="Selectivity formula" size="sm" />
+                  <InfoButton
+                    aria-label="Document Efficiency formula"
+                    size="sm"
+                  />
                 </Tooltip>
                 <span className="font-medium">
-                  {formatEfficiency(rejectedPlan.efficiency.selectivity ?? 0)}
+                  {formatEfficiency(
+                    rejectedPlan.efficiency.documentEfficiency ?? 0,
+                  )}
                 </span>
               </div>
             </div>

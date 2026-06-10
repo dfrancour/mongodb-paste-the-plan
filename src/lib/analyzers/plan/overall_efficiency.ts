@@ -21,11 +21,11 @@ const ANALYZER_ID = AnalyzerIds.plan("overall_efficiency");
 /** Thresholds for efficiency severity levels */
 const EFFICIENCY_THRESHOLDS = {
   /** Document efficiency below this is critical */
-  docCritical: 0.01, // 1% - examining 100x more docs than returned
+  documentCritical: 0.01, // 1% - examining 100x more docs than returned
   /** Document efficiency below this is warning */
-  docWarning: 0.1, // 10% - examining 10x more docs than returned
-  /** Key efficiency below this is warning (keys are cheaper than docs) */
-  keyWarning: 0.01, // 1% - more lenient for key examination
+  documentWarning: 0.1, // 10% - examining 10x more docs than returned
+  /** Index efficiency below this is warning (keys are cheaper than docs) */
+  indexWarning: 0.01, // 1% - more lenient for key examination
   /** Work efficiency (advanced/works) below this is warning */
   workWarning: 0.5, // 50% of work is productive
   /** Minimum documents examined to trigger analysis */
@@ -75,30 +75,30 @@ export const overallEfficiency: PlanAnalyzer = {
     );
 
     // Calculate efficiencies
-    const docEfficiency =
+    const documentEfficiency =
       totalDocsExamined > 0 ? nReturned / totalDocsExamined : undefined;
-    const keyEfficiency =
+    const indexEfficiency =
       totalKeysExamined > 0 ? nReturned / totalKeysExamined : undefined;
     const workEfficiency =
       totalWorks > 0 ? totalAdvanced / totalWorks : undefined;
 
     // Analyze document efficiency
     if (
-      docEfficiency !== undefined &&
+      documentEfficiency !== undefined &&
       totalDocsExamined >= EFFICIENCY_THRESHOLDS.minDocsExamined
     ) {
       let severity: FindingSeverity | undefined;
 
-      if (docEfficiency < EFFICIENCY_THRESHOLDS.docCritical) {
+      if (documentEfficiency < EFFICIENCY_THRESHOLDS.documentCritical) {
         severity = "critical";
-      } else if (docEfficiency < EFFICIENCY_THRESHOLDS.docWarning) {
+      } else if (documentEfficiency < EFFICIENCY_THRESHOLDS.documentWarning) {
         severity = "warning";
       }
 
       if (severity) {
         const ratio = Math.round(totalDocsExamined / Math.max(nReturned, 1));
         findings.push({
-          id: "overall-doc-efficiency",
+          id: "overall-document-efficiency",
           analyzerId: ANALYZER_ID,
           severity,
           category: "performance",
@@ -106,7 +106,7 @@ export const overallEfficiency: PlanAnalyzer = {
           title: "Low Document Efficiency",
           description:
             `The query examined ${totalDocsExamined.toLocaleString()} documents to return ${nReturned.toLocaleString()} ` +
-            `(${(docEfficiency * 100).toFixed(2)}% efficiency). MongoDB is reading ~${ratio}x more documents than needed.`,
+            `(${(documentEfficiency * 100).toFixed(2)}% document efficiency). MongoDB is reading ~${ratio}x more documents than needed.`,
           suggestion:
             severity === "critical"
               ? "This query is highly inefficient. Review indexes to ensure they cover the query filter. " +
@@ -114,7 +114,7 @@ export const overallEfficiency: PlanAnalyzer = {
               : "Consider improving index coverage to reduce document examination.",
           affectedStageIds: allStages.map((s) => s.id),
           metadata: {
-            docEfficiency,
+            documentEfficiency,
             totalDocsExamined,
             nReturned,
             ratio,
@@ -123,14 +123,14 @@ export const overallEfficiency: PlanAnalyzer = {
       }
     }
 
-    // Analyze key efficiency (only if docs efficiency is OK but keys are high)
+    // Analyze index efficiency (only if document efficiency is OK but keys are high)
     if (
-      keyEfficiency !== undefined &&
+      indexEfficiency !== undefined &&
       totalKeysExamined > totalDocsExamined * 10 && // Keys examined >> docs examined
-      keyEfficiency < EFFICIENCY_THRESHOLDS.keyWarning
+      indexEfficiency < EFFICIENCY_THRESHOLDS.indexWarning
     ) {
       findings.push({
-        id: "overall-key-efficiency",
+        id: "overall-index-efficiency",
         analyzerId: ANALYZER_ID,
         severity: "info",
         category: "indexUsage",
@@ -138,13 +138,13 @@ export const overallEfficiency: PlanAnalyzer = {
         title: "High Key Examination",
         description:
           `The query examined ${totalKeysExamined.toLocaleString()} index keys to return ${nReturned.toLocaleString()} documents. ` +
-          "While index scans are faster than document scans, this may indicate an opportunity for a more selective index.",
+          "While index scans are faster than document scans, this may indicate an opportunity for a more efficient index.",
         suggestion:
-          "Review if a more selective index could reduce the number of keys examined. " +
+          "Review if a more efficient index could reduce the number of keys examined. " +
           "Consider compound indexes that better match the query filter.",
         affectedStageIds: allStages.map((s) => s.id),
         metadata: {
-          keyEfficiency,
+          indexEfficiency,
           totalKeysExamined,
           nReturned,
         },
@@ -181,8 +181,8 @@ export const overallEfficiency: PlanAnalyzer = {
 
     // Check for positive patterns - excellent efficiency
     if (
-      docEfficiency !== undefined &&
-      docEfficiency >= 0.9 &&
+      documentEfficiency !== undefined &&
+      documentEfficiency >= 0.9 &&
       totalDocsExamined >= EFFICIENCY_THRESHOLDS.minDocsExamined
     ) {
       findings.push({
@@ -192,11 +192,11 @@ export const overallEfficiency: PlanAnalyzer = {
         category: "optimization",
         title: "Excellent Query Efficiency",
         description:
-          `This query has excellent efficiency: ${nReturned.toLocaleString()} documents returned from ` +
-          `${totalDocsExamined.toLocaleString()} examined (${(docEfficiency * 100).toFixed(1)}% efficiency).`,
+          `This query has excellent document efficiency: ${nReturned.toLocaleString()} documents returned from ` +
+          `${totalDocsExamined.toLocaleString()} examined (${(documentEfficiency * 100).toFixed(1)}% document efficiency).`,
         affectedStageIds: [rootStage.id],
         metadata: {
-          docEfficiency,
+          documentEfficiency,
           totalDocsExamined,
           nReturned,
         },

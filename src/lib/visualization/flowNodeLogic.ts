@@ -279,20 +279,20 @@ export function calculateNodeHeight(
 
   // Calculated Metrics section (execution mode only)
   if (mode === "execution") {
-    const hasSelectivity =
+    const hasDocumentEfficiency =
       metrics.nReturned !== undefined &&
       metrics.docsExamined !== undefined &&
       metrics.docsExamined > 0;
-    const hasEfficiency =
+    const hasIndexEfficiency =
       metrics.nReturned !== undefined &&
       metrics.keysExamined !== undefined &&
       metrics.keysExamined > 0;
 
-    if (hasSelectivity || hasEfficiency) {
+    if (hasDocumentEfficiency || hasIndexEfficiency) {
       totalHeight += SECTION_HEADER_HEIGHT + SECTION_MARGIN;
       let metricsCount = 0;
-      if (hasSelectivity) metricsCount++;
-      if (hasEfficiency) metricsCount++;
+      if (hasDocumentEfficiency) metricsCount++;
+      if (hasIndexEfficiency) metricsCount++;
       totalHeight += metricsCount * FIELD_HEIGHT;
     }
   }

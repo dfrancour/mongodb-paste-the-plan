@@ -3,7 +3,7 @@
  *
  * This module defines the analyzer framework with 5 distinct layers:
  * 1. Stage Definition - Static analysis from stage type (e.g., COLLSCAN is anti-pattern)
- * 2. Stage - Runtime metrics analysis (e.g., low selectivity, high execution time)
+ * 2. Stage - Runtime metrics analysis (e.g., low efficiency, high execution time)
  * 3. Subtree - Context-aware analysis with children/ancestors
  * 4. Plan - Holistic plan analysis (e.g., ESR compliance, overall efficiency)
  * 5. Aggregation - Pipeline ordering analysis (e.g., $match after $project)
@@ -77,7 +77,7 @@ export interface StageDefinitionInput {
 export interface StageInput {
   /** The normalized stage with metrics */
   stage: NormalizedStage;
-  /** Root nReturned for calculating selectivity ratios */
+  /** Root nReturned for calculating efficiency ratios */
   rootNReturned?: number;
   /** Total execution time for calculating time percentages */
   totalExecutionTime?: number;
@@ -94,7 +94,7 @@ export interface SubtreeInput {
   children: NormalizedStage[];
   /** All ancestors from this stage to root (immediate parent first) */
   ancestors: NormalizedStage[];
-  /** Root nReturned for calculating selectivity ratios */
+  /** Root nReturned for calculating efficiency ratios */
   rootNReturned?: number;
   /** Total execution time for calculating time percentages */
   totalExecutionTime?: number;

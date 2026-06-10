@@ -188,20 +188,23 @@ export function FlowVisualization(props: FlowVisualizationProps) {
   // Get plan-level findings for metrics coloring
   const planFindings = useMemo(() => {
     if (!props.analysisResults)
-      return { docEfficiency: null, keyEfficiency: null };
+      return { documentEfficiency: null, indexEfficiency: null };
 
-    const docFinding = props.analysisResults.findings.find(
-      (f) => f.id === "overall-doc-efficiency",
+    const documentFinding = props.analysisResults.findings.find(
+      (f) => f.id === "overall-document-efficiency",
     );
-    const keyFinding = props.analysisResults.findings.find(
-      (f) => f.id === "overall-key-efficiency",
+    const indexFinding = props.analysisResults.findings.find(
+      (f) => f.id === "overall-index-efficiency",
     );
 
-    return { docEfficiency: docFinding, keyEfficiency: keyFinding };
+    return {
+      documentEfficiency: documentFinding,
+      indexEfficiency: indexFinding,
+    };
   }, [props.analysisResults]);
 
-  // Calculate selectivity (nReturned / docsExamined) - uses analyzer findings for coloring
-  const getSelectivityMetric = useCallback(() => {
+  // Document Efficiency (nReturned / docsExamined) - uses analyzer findings for coloring
+  const getDocumentEfficiencyMetric = useCallback(() => {
     if (!executionStats || executionStats.totalDocsExamined === 0) {
       return {
         value: "N/A",
@@ -213,7 +216,7 @@ export function FlowVisualization(props: FlowVisualizationProps) {
     const percent = (ratio * 100).toFixed(1);
 
     // Use analyzer finding for color if available
-    const finding = planFindings.docEfficiency;
+    const finding = planFindings.documentEfficiency;
     let color = "text-green-600 dark:text-green-400";
     if (finding?.severity === "critical") {
       color = "text-red-600 dark:text-red-400";
@@ -224,8 +227,8 @@ export function FlowVisualization(props: FlowVisualizationProps) {
     return { value: `${percent}%`, color, finding };
   }, [executionStats, planFindings]);
 
-  // Calculate efficiency (nReturned / keysExamined) - uses analyzer findings for coloring
-  const getEfficiencyMetric = useCallback(() => {
+  // Index Efficiency (nReturned / keysExamined) - uses analyzer findings for coloring
+  const getIndexEfficiencyMetric = useCallback(() => {
     if (!executionStats || executionStats.totalKeysExamined === 0) {
       return {
         value: "N/A",
@@ -237,7 +240,7 @@ export function FlowVisualization(props: FlowVisualizationProps) {
     const percent = (ratio * 100).toFixed(1);
 
     // Use analyzer finding for color if available
-    const finding = planFindings.keyEfficiency;
+    const finding = planFindings.indexEfficiency;
     let color = "text-green-600 dark:text-green-400";
     if (finding?.severity === "critical") {
       color = "text-red-600 dark:text-red-400";
@@ -347,23 +350,28 @@ export function FlowVisualization(props: FlowVisualizationProps) {
 
                 <div>
                   <div className="flex items-center gap-1 text-neutral-600 dark:text-neutral-400">
-                    <span>Selectivity</span>
+                    <span>Document Efficiency</span>
                     <Tooltip content="nReturned / docsExamined">
-                      <InfoButton aria-label="Selectivity formula" size="sm" />
+                      <InfoButton
+                        aria-label="Document Efficiency formula"
+                        size="sm"
+                      />
                     </Tooltip>
                   </div>
                   <div className="flex items-center">
                     <span
-                      className={`font-semibold ${getSelectivityMetric().color}`}
+                      className={`font-semibold ${getDocumentEfficiencyMetric().color}`}
                     >
-                      {getSelectivityMetric().value}
+                      {getDocumentEfficiencyMetric().value}
                     </span>
-                    {getSelectivityMetric().finding && (
+                    {getDocumentEfficiencyMetric().finding && (
                       <Tooltip
-                        content={getSelectivityMetric().finding?.description}
+                        content={
+                          getDocumentEfficiencyMetric().finding?.description
+                        }
                         side="right"
                       >
-                        {getSelectivityMetric().finding?.severity ===
+                        {getDocumentEfficiencyMetric().finding?.severity ===
                         "critical" ? (
                           <AlertCircle className="ml-1 h-3.5 w-3.5 text-red-500" />
                         ) : (
@@ -376,23 +384,28 @@ export function FlowVisualization(props: FlowVisualizationProps) {
 
                 <div>
                   <div className="flex items-center gap-1 text-neutral-600 dark:text-neutral-400">
-                    <span>Efficiency</span>
+                    <span>Index Efficiency</span>
                     <Tooltip content="nReturned / keysExamined">
-                      <InfoButton aria-label="Efficiency formula" size="sm" />
+                      <InfoButton
+                        aria-label="Index Efficiency formula"
+                        size="sm"
+                      />
                     </Tooltip>
                   </div>
                   <div className="flex items-center">
                     <span
-                      className={`font-semibold ${getEfficiencyMetric().color}`}
+                      className={`font-semibold ${getIndexEfficiencyMetric().color}`}
                     >
-                      {getEfficiencyMetric().value}
+                      {getIndexEfficiencyMetric().value}
                     </span>
-                    {getEfficiencyMetric().finding && (
+                    {getIndexEfficiencyMetric().finding && (
                       <Tooltip
-                        content={getEfficiencyMetric().finding?.description}
+                        content={
+                          getIndexEfficiencyMetric().finding?.description
+                        }
                         side="right"
                       >
-                        {getEfficiencyMetric().finding?.severity ===
+                        {getIndexEfficiencyMetric().finding?.severity ===
                         "critical" ? (
                           <AlertCircle className="ml-1 h-3.5 w-3.5 text-red-500" />
                         ) : (

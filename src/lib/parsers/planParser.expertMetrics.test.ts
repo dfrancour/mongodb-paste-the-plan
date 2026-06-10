@@ -49,7 +49,7 @@ describe("Expert-Focused Metrics Extraction", () => {
       },
       {
         plan: "performance/inefficient-query.executionStats.json",
-        expectedAntiPattern: "poor-selectivity",
+        expectedAntiPattern: "poor-document-efficiency",
       },
       {
         plan: "performance/sort-without-index.executionStats.json",
@@ -68,14 +68,14 @@ describe("Expert-Focused Metrics Extraction", () => {
         case "collection-scan":
           expect(summary.hasCollectionScans).toBe(true);
           break;
-        case "poor-selectivity":
-          // Check for poor selectivity using the root stage metrics (more accurate)
+        case "poor-document-efficiency":
+          // Check for poor document efficiency using the root stage metrics (more accurate)
           const rootNReturned = normalized.metrics.nReturned ?? 0;
           const rootDocsExamined = normalized.metrics.docsExamined ?? 0;
 
           if (rootNReturned > 0 && rootDocsExamined > 0) {
-            const rootSelectivity = rootNReturned / rootDocsExamined;
-            expect(rootSelectivity).toBeLessThan(0.1); // Poor selectivity
+            const rootDocumentEfficiency = rootNReturned / rootDocsExamined;
+            expect(rootDocumentEfficiency).toBeLessThan(0.1); // Poor document efficiency
             expect(rootDocsExamined).toBeGreaterThan(rootNReturned * 10); // More examined than returned
           } else {
             // Fallback to checking general inefficiency indicators
@@ -190,14 +190,14 @@ describe("Expert-Focused Metrics Extraction", () => {
     const parsed = validatePlan(plan);
     const normalized = normalizeExecution(parsed);
 
-    // Behavioral expectation: Should calculate selectivity and efficiency ratios
+    // Behavioral expectation: Should calculate document and index efficiency ratios
     function findEfficiencyMetrics(stage: typeof normalized): Array<{
       stage: string;
-      efficiency?: { selectivity?: number; indexUsage?: number };
+      efficiency?: { documentEfficiency?: number; indexEfficiency?: number };
     }> {
       const metrics: Array<{
         stage: string;
-        efficiency?: { selectivity?: number; indexUsage?: number };
+        efficiency?: { documentEfficiency?: number; indexEfficiency?: number };
       }> = [
         {
           stage: stage.stage,
@@ -223,13 +223,13 @@ describe("Expert-Focused Metrics Extraction", () => {
 
     metricsWithEfficiency.forEach(({ stage, efficiency }) => {
       expect(stage).toBeDefined();
-      if (efficiency?.selectivity !== undefined) {
-        expect(efficiency.selectivity).toBeGreaterThanOrEqual(0);
-        expect(efficiency.selectivity).toBeLessThanOrEqual(1);
+      if (efficiency?.documentEfficiency !== undefined) {
+        expect(efficiency.documentEfficiency).toBeGreaterThanOrEqual(0);
+        expect(efficiency.documentEfficiency).toBeLessThanOrEqual(1);
       }
 
-      if (efficiency?.indexUsage !== undefined) {
-        expect(efficiency.indexUsage).toBeGreaterThanOrEqual(0);
+      if (efficiency?.indexEfficiency !== undefined) {
+        expect(efficiency.indexEfficiency).toBeGreaterThanOrEqual(0);
       }
     });
   });

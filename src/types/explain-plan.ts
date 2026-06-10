@@ -184,7 +184,7 @@ export const planComparisonSchema = z
     planType: z.enum(["winning", "rejected"]),
     efficiency: z
       .object({
-        selectivity: z.number().optional(), // nReturned / totalDocsExamined
+        documentEfficiency: z.number().optional(), // nReturned / totalDocsExamined
         keyEfficiency: z.number().optional(), // nReturned / totalKeysExamined
         timePerDoc: z.number().optional(), // executionTimeMillis / nReturned
         productivity: z.number().optional(), // advanced / works (MongoDB's core metric)
@@ -712,8 +712,8 @@ export type NormalizedExecutionStage = {
   children: NormalizedExecutionStage[];
   depth: number;
   efficiency?: {
-    selectivity?: number;
-    indexUsage?: number;
+    documentEfficiency?: number;
+    indexEfficiency?: number;
   };
 };
 

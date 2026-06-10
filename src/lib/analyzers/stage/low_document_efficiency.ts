@@ -1,12 +1,12 @@
 /**
- * Low Selectivity Analyzer
+ * Low Document Efficiency Analyzer
  *
  * Detects stages where the ratio of documents returned to documents examined
  * is very low, indicating that the query is reading much more data than needed.
  *
- * Selectivity = nReturned / docsExamined
+ * Document Efficiency = nReturned / docsExamined
  *
- * Low selectivity typically indicates:
+ * Low document efficiency typically indicates:
  * - Missing or inefficient index
  * - Filter conditions that don't match the index
  * - Queries that naturally need to scan many documents
@@ -19,10 +19,10 @@ import type {
 } from "../types";
 import { AnalyzerIds } from "../types";
 
-const ANALYZER_ID = AnalyzerIds.stage("low_selectivity");
+const ANALYZER_ID = AnalyzerIds.stage("low_document_efficiency");
 
-/** Thresholds for selectivity severity levels */
-const SELECTIVITY_THRESHOLDS = {
+/** Thresholds for document efficiency severity levels */
+const DOCUMENT_EFFICIENCY_THRESHOLDS = {
   /** Below this is critical (examining 100x+ more docs than returned) */
   critical: 0.01,
   /** Below this is warning (examining 10x+ more docs than returned) */
@@ -32,13 +32,13 @@ const SELECTIVITY_THRESHOLDS = {
 /** Minimum docs examined to trigger this analyzer (avoid noise on small scans) */
 const MIN_DOCS_EXAMINED = 100;
 
-export const lowSelectivity: StageMetricsAnalyzer = {
+export const lowDocumentEfficiency: StageMetricsAnalyzer = {
   layer: "stage",
   id: ANALYZER_ID,
 
-  name: "Low Selectivity Detection",
+  name: "Low Document Efficiency Detection",
   description:
-    "Identifies stages with poor selectivity where many documents are examined to return few.",
+    "Identifies stages with poor document efficiency where many documents are examined to return few.",
   enabledByDefault: true,
 
   analyze: (input) => {
@@ -50,7 +50,7 @@ export const lowSelectivity: StageMetricsAnalyzer = {
     const docsExamined = stage.metrics.docsExamined;
     const nReturned = stage.metrics.nReturned;
 
-    // Need both metrics to calculate selectivity
+    // Need both metrics to calculate document efficiency
     if (docsExamined === undefined || nReturned === undefined) {
       return findings;
     }
@@ -60,41 +60,39 @@ export const lowSelectivity: StageMetricsAnalyzer = {
       return findings;
     }
 
-    const selectivity = nReturned / docsExamined;
+    const documentEfficiency = nReturned / docsExamined;
 
-    // Determine severity based on selectivity
     let severity: FindingSeverity;
-    if (selectivity < SELECTIVITY_THRESHOLDS.critical) {
+    if (documentEfficiency < DOCUMENT_EFFICIENCY_THRESHOLDS.critical) {
       severity = "critical";
-    } else if (selectivity < SELECTIVITY_THRESHOLDS.warning) {
+    } else if (documentEfficiency < DOCUMENT_EFFICIENCY_THRESHOLDS.warning) {
       severity = "warning";
     } else {
-      // Selectivity is acceptable
       return findings;
     }
 
-    const selectivityPercentage = (selectivity * 100).toFixed(2);
+    const documentEfficiencyPercentage = (documentEfficiency * 100).toFixed(2);
     const ratio = Math.round(docsExamined / Math.max(nReturned, 1));
 
     findings.push({
-      id: `low-selectivity-${stage.id}`,
+      id: `low-document-efficiency-${stage.id}`,
       analyzerId: ANALYZER_ID,
       severity,
       category: "performance",
-      metricKey: "selectivity",
-      title: "Low Selectivity",
+      metricKey: "documentEfficiency",
+      title: "Low Document Efficiency",
       description:
         `This stage examined ${docsExamined.toLocaleString()} documents to return ${nReturned.toLocaleString()} ` +
-        `(${selectivityPercentage}% selectivity). MongoDB is reading ~${ratio}x more data than needed.`,
+        `(${documentEfficiencyPercentage}% document efficiency). MongoDB is reading ~${ratio}x more data than needed.`,
       suggestion:
-        selectivity < SELECTIVITY_THRESHOLDS.critical
+        documentEfficiency < DOCUMENT_EFFICIENCY_THRESHOLDS.critical
           ? "This is critically inefficient. Consider adding a compound index that covers the filter fields, " +
             "or restructuring the query to be more selective."
           : "Consider improving index coverage for the filter conditions used in this query stage.",
       affectedStageIds: [stage.id],
       metadata: {
-        selectivity,
-        selectivityPercentage: parseFloat(selectivityPercentage),
+        documentEfficiency,
+        documentEfficiencyPercentage: parseFloat(documentEfficiencyPercentage),
         docsExamined,
         nReturned,
         examinedToReturnedRatio: ratio,

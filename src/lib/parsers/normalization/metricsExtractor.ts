@@ -90,17 +90,20 @@ export function extractMetrics(
 
 export function calculateEfficiency(
   metrics: ExecutionMetrics,
-): { selectivity?: number; indexUsage?: number } | undefined {
+): { documentEfficiency?: number; indexEfficiency?: number } | undefined {
   if (
     metrics.nReturned !== undefined &&
     metrics.docsExamined !== undefined &&
     metrics.docsExamined > 0
   ) {
-    const efficiency: { selectivity?: number; indexUsage?: number } = {
-      selectivity: metrics.nReturned / metrics.docsExamined,
+    const efficiency: {
+      documentEfficiency?: number;
+      indexEfficiency?: number;
+    } = {
+      documentEfficiency: metrics.nReturned / metrics.docsExamined,
     };
     if (metrics.keysExamined !== undefined && metrics.keysExamined > 0) {
-      efficiency.indexUsage = metrics.nReturned / metrics.keysExamined;
+      efficiency.indexEfficiency = metrics.nReturned / metrics.keysExamined;
     }
     return efficiency;
   }

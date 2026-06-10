@@ -34,7 +34,7 @@ import {
   getMostSevereFinding,
   // Individual analyzers (for test data)
   collscanAntipattern,
-  lowSelectivity,
+  lowDocumentEfficiency,
   selfTimeAnalysis,
   overallEfficiency,
   matchAfterProject,
@@ -159,14 +159,14 @@ describe("Analyzer Type Guards", () => {
     });
 
     it("returns false for other analyzer types", () => {
-      expect(isStageDefinitionAnalyzer(lowSelectivity)).toBe(false);
+      expect(isStageDefinitionAnalyzer(lowDocumentEfficiency)).toBe(false);
       expect(isStageDefinitionAnalyzer(selfTimeAnalysis)).toBe(false);
     });
   });
 
   describe("isStageAnalyzer", () => {
     it("returns true for stage analyzers", () => {
-      expect(isStageAnalyzer(lowSelectivity)).toBe(true);
+      expect(isStageAnalyzer(lowDocumentEfficiency)).toBe(true);
     });
 
     it("returns false for other analyzer types", () => {
@@ -180,7 +180,7 @@ describe("Analyzer Type Guards", () => {
     });
 
     it("returns false for other analyzer types", () => {
-      expect(isSubtreeAnalyzer(lowSelectivity)).toBe(false);
+      expect(isSubtreeAnalyzer(lowDocumentEfficiency)).toBe(false);
     });
   });
 
@@ -190,7 +190,7 @@ describe("Analyzer Type Guards", () => {
     });
 
     it("returns false for other analyzer types", () => {
-      expect(isPlanAnalyzer(lowSelectivity)).toBe(false);
+      expect(isPlanAnalyzer(lowDocumentEfficiency)).toBe(false);
     });
   });
 
@@ -200,7 +200,7 @@ describe("Analyzer Type Guards", () => {
     });
 
     it("returns false for other analyzer types", () => {
-      expect(isAggregationAnalyzer(lowSelectivity)).toBe(false);
+      expect(isAggregationAnalyzer(lowDocumentEfficiency)).toBe(false);
     });
   });
 
@@ -358,7 +358,7 @@ describe("Utility Functions", () => {
         },
         {
           id: "f2",
-          analyzerId: lowSelectivity.id,
+          analyzerId: lowDocumentEfficiency.id,
           severity: "warning",
           category: "indexUsage",
           title: "Test 2",
@@ -392,7 +392,7 @@ describe("Utility Functions", () => {
       const findings: AnalysisFinding[] = [
         {
           id: "f1",
-          analyzerId: lowSelectivity.id,
+          analyzerId: lowDocumentEfficiency.id,
           severity: "info",
           category: "performance",
           title: "Info",
@@ -400,7 +400,7 @@ describe("Utility Functions", () => {
         },
         {
           id: "f2",
-          analyzerId: lowSelectivity.id,
+          analyzerId: lowDocumentEfficiency.id,
           severity: "critical",
           category: "performance",
           title: "Critical",
@@ -408,7 +408,7 @@ describe("Utility Functions", () => {
         },
         {
           id: "f3",
-          analyzerId: lowSelectivity.id,
+          analyzerId: lowDocumentEfficiency.id,
           severity: "warning",
           category: "performance",
           title: "Warning",
@@ -424,7 +424,7 @@ describe("Utility Functions", () => {
       const findings: AnalysisFinding[] = [
         {
           id: "f1",
-          analyzerId: lowSelectivity.id,
+          analyzerId: lowDocumentEfficiency.id,
           severity: "info",
           category: "performance",
           title: "Info",
@@ -432,7 +432,7 @@ describe("Utility Functions", () => {
         },
         {
           id: "f2",
-          analyzerId: lowSelectivity.id,
+          analyzerId: lowDocumentEfficiency.id,
           severity: "warning",
           category: "performance",
           title: "Warning",

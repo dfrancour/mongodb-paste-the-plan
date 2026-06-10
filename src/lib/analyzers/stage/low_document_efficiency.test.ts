@@ -1,53 +1,53 @@
 import { describe, it, expect } from "vitest";
-import { lowSelectivity } from "./low_selectivity";
+import { lowDocumentEfficiency } from "./low_document_efficiency";
 import { createMockNormalizedStage } from "../test-helpers";
 import type { StageInput } from "../types";
 
-describe("lowSelectivity", () => {
-  it("detects critically low selectivity", () => {
+describe("lowDocumentEfficiency", () => {
+  it("detects critically low document efficiency", () => {
     const input: StageInput = {
       stage: createMockNormalizedStage({
         metrics: {
           docsExamined: 10000,
-          nReturned: 10, // 0.1% selectivity
+          nReturned: 10, // 0.1% document efficiency
         },
       }),
     };
 
-    const findings = lowSelectivity.analyze(input);
+    const findings = lowDocumentEfficiency.analyze(input);
 
     expect(findings.length).toBe(1);
     expect(findings[0]!.severity).toBe("critical");
-    expect(findings[0]!.metadata?.selectivity).toBeCloseTo(0.001);
+    expect(findings[0]!.metadata?.documentEfficiency).toBeCloseTo(0.001);
   });
 
-  it("detects warning-level low selectivity", () => {
+  it("detects warning-level low document efficiency", () => {
     const input: StageInput = {
       stage: createMockNormalizedStage({
         metrics: {
           docsExamined: 1000,
-          nReturned: 50, // 5% selectivity
+          nReturned: 50, // 5% document efficiency
         },
       }),
     };
 
-    const findings = lowSelectivity.analyze(input);
+    const findings = lowDocumentEfficiency.analyze(input);
 
     expect(findings.length).toBe(1);
     expect(findings[0]!.severity).toBe("warning");
   });
 
-  it("does not flag good selectivity", () => {
+  it("does not flag good document efficiency", () => {
     const input: StageInput = {
       stage: createMockNormalizedStage({
         metrics: {
           docsExamined: 1000,
-          nReturned: 500, // 50% selectivity
+          nReturned: 500, // 50% document efficiency
         },
       }),
     };
 
-    const findings = lowSelectivity.analyze(input);
+    const findings = lowDocumentEfficiency.analyze(input);
     expect(findings.length).toBe(0);
   });
 
@@ -61,7 +61,7 @@ describe("lowSelectivity", () => {
       }),
     };
 
-    const findings = lowSelectivity.analyze(input);
+    const findings = lowDocumentEfficiency.analyze(input);
     expect(findings.length).toBe(0);
   });
 });
