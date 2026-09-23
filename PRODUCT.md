@@ -69,6 +69,20 @@ The TypeScript types should be as rigid as possible while still allowing for rea
 - **Combinations:** 3 contexts × 2 engines = 6 format variants
 - Unified `mongoStageSchema` supports all cases
 
+### Slow Query Explorer
+
+A sibling tool over the same principles, for slow query logs rather than
+explain plans. Full design in `docs/slow-query-explorer-design.md`.
+
+- **Input** - Structured `Slow query` log lines (MongoDB 4.4+) as JSONL, a JSON array, or one object; parsed in the browser, in a Web Worker above 5 MB
+- **Validation** - Each record is `unknown`, validated by a loose Zod schema; non-matching records are counted as skipped, never dropped silently
+- **Normalization** - `SlowQueryEntry` in `/src/types/slow-query.ts`; metrics are `undefined` when not recorded, never `0`
+- **Shape** - A local canonical query shape (values become type tokens, sorts keep order) groups entries across literal values; cursor batches join their originating command's shape
+- **Analysis** - Entry, group, and workload analyzers in `/src/lib/slow-query/analyzers/` reuse the explain-plan finding vocabulary
+- **Cross-tool links** - Plan-summary stages link into the Stage Glossary
+- **No sharing** - Logs hold literal query values; nothing is encoded into URLs
+- **Fixtures** - Real logs generated against a synthetic dataset by [mongodb-slow-query-log-generator](https://github.com/dfrancour/mongodb-slow-query-log-generator)
+
 ### SBE Architecture Notes
 
 - Parse `queryPlanStages` and `slotLineages`

@@ -11,6 +11,7 @@ Browser-based tool to analyze and share MongoDB query explain plans with executi
 - **ESR analysis** - Automatic Equality-Sort-Range index analysis with actionable recommendations
 - **Performance insights** - Color-coded stage performance, self-time analysis, and inefficiency detection
 - **Plan sharing** - Share explain plans via compressed URL (no server required)
+- **Slow query explorer** - Group a slow query log by query shape, namespace, or plan summary to see where the time goes and inspect any entry
 - **Stage glossary** - Complete reference for all MongoDB execution stages across pipeline, planning, and execution layers
 - **Dark mode** - Full light/dark theme support
 
@@ -49,6 +50,7 @@ pnpm add mongodb-paste-the-plan@github:dfrancour/mongodb-paste-the-plan
 
 ```typescript
 import { PasteThePlanContainer } from "mongodb-paste-the-plan/paste-the-plan";
+import { SlowQueryExplorerContainer } from "mongodb-paste-the-plan/slow-query-explorer";
 import { GlossaryContainer } from "mongodb-paste-the-plan/stage-glossary";
 ```
 

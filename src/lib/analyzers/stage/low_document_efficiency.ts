@@ -22,7 +22,7 @@ import { AnalyzerIds } from "../types";
 const ANALYZER_ID = AnalyzerIds.stage("low_document_efficiency");
 
 /** Thresholds for document efficiency severity levels */
-const DOCUMENT_EFFICIENCY_THRESHOLDS = {
+export const DOCUMENT_EFFICIENCY_THRESHOLDS = {
   /** Below this is critical (examining 100x+ more docs than returned) */
   critical: 0.01,
   /** Below this is warning (examining 10x+ more docs than returned) */
@@ -30,7 +30,7 @@ const DOCUMENT_EFFICIENCY_THRESHOLDS = {
 } as const;
 
 /** Minimum docs examined to trigger this analyzer (avoid noise on small scans) */
-const MIN_DOCS_EXAMINED = 100;
+export const MIN_DOCS_EXAMINED = 100;
 
 export const lowDocumentEfficiency: StageMetricsAnalyzer = {
   layer: "stage",
