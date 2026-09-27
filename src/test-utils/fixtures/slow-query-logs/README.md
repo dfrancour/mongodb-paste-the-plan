@@ -16,8 +16,15 @@ these contain proprietary data.
 To add a version, run the generator's `src/test-fixtures/run.sh <version>`
 against that `mongod` and copy the output here.
 
-The example log the app serves (`public/examples/slow-query-log.jsonl`) is a
-different capture from the same generator (`src/example-log/run.sh`): a
-multi-tenant helpdesk workload at the server's default 100 ms threshold
-against an 8.x `mongod`, so it reads like a production slow log rather than a
-trace of every operation. `src/lib/slow-query/exampleLog.test.ts` guards it.
+The example log the explorer offers
+(`src/data/fixtures/slow-query-logs/example.json`) is a different capture
+from the same generator (`src/example-log/run.sh`): a multi-tenant helpdesk
+workload at the server's default 100 ms threshold against an 8.x `mongod`, so
+it reads like a production slow log rather than a trace of every operation.
+The generator's `.jsonl` output is stored as a JSON array of raw lines:
+
+```bash
+jq -R . slow-query-log.jsonl | jq -s . > src/data/fixtures/slow-query-logs/example.json
+```
+
+`src/lib/slow-query/exampleLog.test.ts` guards it.

@@ -16,6 +16,7 @@ import { Icon } from "#components/common/Icon";
 import { useFileDrop } from "#components/common/useFileDrop";
 import { LARGE_LOG_CHARS } from "#hooks/useSlowQueryLoader";
 import { formatBytes } from "#lib/utils/formatters";
+import { exampleSlowQueryLog } from "#data/fixtures/slow-query-logs/index";
 import { LogHowToUse } from "./LogHowToUse";
 
 interface LogInputProps {
@@ -26,7 +27,6 @@ interface LogInputProps {
 
 const ACCEPTED_EXTENSIONS = [".jsonl", ".json", ".log", ".txt"];
 const EXAMPLE_NAME = "Example log";
-const EXAMPLE_URL = "/examples/slow-query-log.jsonl";
 
 const toolbarButtonClass =
   "flex cursor-pointer items-center gap-1 rounded border border-neutral-200 bg-white px-2 py-1 text-xs text-neutral-600 shadow transition-colors hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-600 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700";
@@ -66,16 +66,9 @@ export function LogInput({ isLoading, error, onLoad }: LogInputProps) {
     }
   };
 
-  const loadExample = async () => {
-    setFileError(null);
-    try {
-      const response = await fetch(EXAMPLE_URL);
-      if (!response.ok) throw new Error(response.statusText);
-      setText("");
-      load(await response.text(), EXAMPLE_NAME);
-    } catch {
-      setFileError("The example log could not be loaded");
-    }
+  const loadExample = () => {
+    setText("");
+    load(exampleSlowQueryLog, EXAMPLE_NAME);
   };
 
   /** A paste into an empty box is the whole log: explore it straight away. */
@@ -101,7 +94,7 @@ export function LogInput({ isLoading, error, onLoad }: LogInputProps) {
       </button>
       <button
         type="button"
-        onClick={() => void loadExample()}
+        onClick={loadExample}
         disabled={isLoading}
         className={toolbarButtonClass}
       >

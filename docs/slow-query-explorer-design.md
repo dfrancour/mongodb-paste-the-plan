@@ -167,7 +167,7 @@ stage catalog, so a click opens the glossary entry.
 - Route `/mongodb-slow-query-explorer`; container exported as
   `mongodb-paste-the-plan/slow-query-explorer`.
 - **Input** (featured card): textarea, drop zone, upload, and an example log
-  served from `public/examples/`.
+  from `src/data/fixtures/slow-query-logs/`.
 - **Loaded log** (the same featured card): a status line with name, entry
   count, cumulative time, skipped count and invalid lines, then the
   workload findings (dominant namespace, collection-scan share, cursor-batch

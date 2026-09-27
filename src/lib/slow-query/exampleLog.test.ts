@@ -1,17 +1,12 @@
-import fs from "fs";
-import path from "path";
 import { describe, it, expect } from "vitest";
+import { exampleSlowQueryLog } from "#data/fixtures/slow-query-logs/index";
 import { loadSlowQueryLog } from "./parse/loadSlowQueryLog";
 
 /** The server's default slow threshold; the example log is captured at it. */
 const SLOW_THRESHOLD_MS = 100;
 
-describe("the example log the app serves", () => {
-  const text = fs.readFileSync(
-    path.join(process.cwd(), "public", "examples", "slow-query-log.jsonl"),
-    "utf-8",
-  );
-  const result = loadSlowQueryLog(text);
+describe("the example log the explorer offers", () => {
+  const result = loadSlowQueryLog(exampleSlowQueryLog);
 
   it("loads every line as a slow-query entry", () => {
     expect(result.invalidLines).toEqual([]);
