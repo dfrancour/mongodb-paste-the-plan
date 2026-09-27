@@ -1,6 +1,6 @@
 import { type Metadata } from "next";
+import { ToolPage } from "#components/app/ToolPage";
 import { PasteThePlanContainer } from "#components/paste-the-plan/PasteThePlanContainer";
-import { ToolSwitch } from "#components/app/ToolSwitch";
 
 export const metadata: Metadata = {
   title: "MongoDB Paste the Plan",
@@ -10,13 +10,8 @@ export const metadata: Metadata = {
 
 export default function PasteThePlanPage() {
   return (
-    <div className="py-4 sm:py-8">
-      <div className="container mx-auto max-w-4xl px-4 sm:px-6">
-        <div className="mb-4 sm:mb-6">
-          <ToolSwitch />
-        </div>
-        <PasteThePlanContainer />
-      </div>
-    </div>
+    <ToolPage maxWidthClass="max-w-4xl">
+      <PasteThePlanContainer />
+    </ToolPage>
   );
 }

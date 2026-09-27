@@ -1,8 +1,9 @@
 # MongoDB Paste the Plan
 
-This project is a web app composed of two main sections:
+This project is a web app composed of three main sections:
 
 - **mongodb-paste-the-plan**: A tool for visualizing and sharing MongoDB query explain plans
+- **mongodb-slow-query-explorer**: A tool for exploring MongoDB slow query logs by query shape, namespace, and time
 - **mongodb-stage-glossary**: A companion tool that supports browsing the MongoDB query stage catalog
 
 ---
@@ -10,7 +11,9 @@ This project is a web app composed of two main sections:
 ## On-Demand Documentation
 
 - **PRODUCT.md** - Product context, architecture, parsing pipeline, testing philosophy
+- **docs/slow-query-explorer-design.md** - Slow Query Explorer design and data model
 - **src/data/stages/README.md** - MongoDB stage catalog
+- **src/test-utils/fixtures/slow-query-logs/README.md** - How slow-query log fixtures are generated
 
 ---
 

@@ -22,6 +22,7 @@ import type { ParsedPlan } from "#lib/parsers";
 import { HowToUse } from "./HowToUse";
 import { ContributeLink } from "#components/common/ContributeLink";
 import { ExpandableCard } from "#components/common/ExpandableCard";
+import { useFileDrop } from "#components/common/useFileDrop";
 import { CodeViewer } from "#components/common/CodeViewer";
 import { SharePlanButton } from "./SharePlanButton";
 
@@ -56,7 +57,6 @@ export function ExplainPlanInput({
   >("idle");
   const [validationError, setValidationError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
   const [copied, setCopied] = useState(false);
   const [lastAnalyzedPlan, setLastAnalyzedPlan] = useState<ParsedPlan | null>(
     null,
@@ -196,26 +196,9 @@ export function ExplainPlanInput({
     e.target.value = "";
   };
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      handleFileDrop(file);
-    }
-  };
-
+  const { isDragging, dropProps } = useFileDrop((file) => {
+    void handleFileDrop(file);
+  });
   const handleCopy = async () => {
     if (!planJson?.trim()) return;
     try {
@@ -317,12 +300,7 @@ export function ExplainPlanInput({
                 >
                   MongoDB explain plan JSON
                 </label>
-                <div
-                  className="relative"
-                  onDragOver={handleDragOver}
-                  onDragLeave={handleDragLeave}
-                  onDrop={handleDrop}
-                >
+                <div className="relative" {...dropProps}>
                   <textarea
                     {...planJsonRegistration}
                     id="planJson"

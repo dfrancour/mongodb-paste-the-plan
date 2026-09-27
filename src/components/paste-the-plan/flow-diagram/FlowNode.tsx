@@ -9,6 +9,7 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
+import { SeverityIcon } from "#components/common/SeverityIcon";
 import type {
   FlowStage,
   FlowInteractionEvents,
@@ -469,11 +470,11 @@ function IndicatorTray({ stage }: IndicatorTrayProps) {
                   : "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400"
               }`}
             >
-              {isCritical ? (
-                <AlertCircle className="h-2.5 w-2.5 shrink-0" />
-              ) : (
-                <AlertTriangle className="h-2.5 w-2.5 shrink-0" />
-              )}
+              <SeverityIcon
+                severity={warning.severity}
+                className="h-2.5 w-2.5"
+                inheritColor
+              />
               <span>{warning.title}</span>
             </span>
           </Tooltip>
@@ -556,15 +557,9 @@ function MetricWarningIndicator({
 
   if (!warning) return null;
 
-  const isCritical = warning.severity === "critical";
-  const IconComponent = isCritical ? AlertCircle : AlertTriangle;
-  const colorClass = isCritical
-    ? "text-red-500 dark:text-red-400"
-    : "text-orange-500 dark:text-orange-400";
-
   return (
     <Tooltip content={warning.description} side="left">
-      <IconComponent className={`ml-1 h-3 w-3 shrink-0 ${colorClass}`} />
+      <SeverityIcon severity={warning.severity} className="ml-1 h-3 w-3" />
     </Tooltip>
   );
 }
